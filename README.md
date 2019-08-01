@@ -4,7 +4,9 @@
 ### System Requirements
 ---
 **Node JS:** v10.16.0
+
 **Node Package Manager:** v6.9.0
+
 **Serverless:** v1.49.0
 
 

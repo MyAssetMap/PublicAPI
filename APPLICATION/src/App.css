@@ -1,13 +1,12 @@
 body {
-    background-color: #282c34;
+    background-color: #eee;
 	
 }
 
 p,h1,h2,h3,h4,h5,h6 {
-	color: white;
+	color: #1a1a1a;
 }
 .App {
-  margin-top: 15px;
 }
 
 .App .navbar-brand {

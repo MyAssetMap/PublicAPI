@@ -8,9 +8,9 @@ export default {
     URL: "https://ye8wu3frvb.execute-api.us-east-1.amazonaws.com/dev/"
   },
   cognito: {
-    REGION: "YOUR_COGNITO_REGION",
-    USER_POOL_ID: "YOUR_COGNITO_USER_POOL_ID",
-    APP_CLIENT_ID: "YOUR_COGNITO_APP_CLIENT_ID",
-    IDENTITY_POOL_ID: "YOUR_IDENTITY_POOL_ID"
+    REGION: "us-east-1",
+    USER_POOL_ID: "us-east-1_0HnrBnwXU",
+    APP_CLIENT_ID: "1iv0urf1ovrqkqoefsipc1mpf",
+    IDENTITY_POOL_ID: "us-east-1:ddc9dcd8-966c-4ba8-81cd-6b0db1a588a5"
   }
 };

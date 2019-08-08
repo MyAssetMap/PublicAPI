@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import logo from './logo.svg';
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
+import { Auth } from "aws-amplify";
 
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import Routes from "./Routes";
@@ -10,59 +11,94 @@ import Routes from "./Routes";
 import "./App.css";
 
 class App extends Component {
+	constructor(props) {
+	  super(props);
+
+	  this.state = {
+	    isAuthenticated: false,
+	    isAuthenticating: true
+	  };
+	  
+	}
+	
+	// ====================
+	// = SESSION HANDLING =
+	// ====================
+	async componentDidMount() {
+	  try {
+	    await Auth.currentSession();
+	    this.userHasAuthenticated(true);
+	  }
+	  catch(e) {
+	    if (e !== 'No current user') {
+	      alert(e);
+	    }
+	  }
+
+	  this.setState({ isAuthenticating: false });
+	}
+	
+
+	// ==========
+	// = EVENTS =
+	// ==========
+
+	userHasAuthenticated = authenticated => {
+	  this.setState({ isAuthenticated: authenticated });
+	}
+	
+	handleLogout = async event => {
+	  await Auth.signOut();
+
+	  this.userHasAuthenticated(false);
+	  
+	  this.props.history.push("/login");
+	}
+
+	
+	
 	render() {
+	  const childProps = {
+	    isAuthenticated: this.state.isAuthenticated,
+	    userHasAuthenticated: this.userHasAuthenticated
+	  };
+
 	  return (
-	    <div className="App container">
-	      <Navbar fluid collapseOnSelect>
-	        <Navbar.Header>
-	          <Navbar.Brand>
-	            <Link to="/">Scratch</Link>
-	          </Navbar.Brand>
-	          <Navbar.Toggle />
-	        </Navbar.Header>
-	        <Navbar.Collapse>
-	          <Nav pullRight>
-	            <LinkContainer to="/signup">
-	              <NavItem>Signup</NavItem>
-	            </LinkContainer>
-	            <LinkContainer to="/login">
-	              <NavItem>Login</NavItem>
-	            </LinkContainer>
-	          </Nav>
-	        </Navbar.Collapse>
-	      </Navbar>
-	      <Routes />
+	    !this.state.isAuthenticating &&
+	    <div className="App fluid-container">
+			<Navbar fluid collapseOnSelect>
+			  <Navbar.Header>
+			    <Navbar.Brand>
+			      <Link to="/">My Asset Map</Link>
+			    </Navbar.Brand>
+			    <Navbar.Toggle />
+			  </Navbar.Header>
+			  <Navbar.Collapse>
+			    <Nav pullRight>
+			      {this.state.isAuthenticated
+			        ? <Fragment>
+			            <LinkContainer to="/settings">
+			              <NavItem>Settings</NavItem>
+			            </LinkContainer>
+			            <NavItem onClick={this.handleLogout}>Logout</NavItem>
+			          </Fragment>
+			        : <Fragment>
+			            <LinkContainer to="/signup">
+			              <NavItem>Signup</NavItem>
+			            </LinkContainer>
+			            <LinkContainer to="/login">
+			              <NavItem>Login</NavItem>
+			            </LinkContainer>
+			          </Fragment>
+			      }
+			    </Nav>
+			  </Navbar.Collapse>
+			</Navbar>
+	      
+	      <Routes childProps={childProps} />
 	    </div>
 	  );
 	}
-	// render() {
-// 		return (
-// 			<div className="App container">
-// 				<Navbar fluid collapseOnSelect>
-// 					<Navbar.Header>
-// 						<Navbar.Brand>
-// 							<Link to="/">Scratch</Link>
-// 						</Navbar.Brand>
-// 						<Navbar.Toggle />
-// 					</Navbar.Header>
-// 					<Navbar.Collapse>
-// 						<Navbar pullRight>
-// 							<LinkContainer to="/signup">
-// 								<NavItem>Signup</NavItem>
-// 							</LinkContainer>
-// 							<LinkContainer to="/login">
-// 								<NavItem>Login</NavItem>
-// 							</LinkContainer>
-// 						</Navbar>
-// 					</Navbar.Collapse>
-// 				</Navbar>
-// 				<Routes />
-// 				
-// 			</div>
-//
-//
-//     );
-//   }
 }
 
-export default App;
+export default withRouter(App);

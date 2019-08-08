@@ -1,0 +1,58 @@
+body.boxedFormPage {
+	background-image: url('/background.png');
+	background-size: cover;
+	background-position: center;
+}
+
+@media all and (min-width: 480px) {
+  .boxedForm {
+    padding: 100px 0;
+  }
+
+  .boxedForm form {
+    margin: 0 auto;
+    max-width: 520px;
+	border-radius: 15px;
+	box-shadow: 0px 0px 20px rgba(0,0,0,0.15);
+	padding: 50px 85px;
+	background-color: white;
+	text-align: left;
+  }
+  
+  .boxedForm h2 {
+	  font-size: 20px;
+	  text-align: center;
+  }
+  
+  .boxedForm .logo {}
+  
+  .boxedForm button {
+	  background-color: #4E565E;
+	  color: white;
+  }
+  
+  .boxedForm button:hover {
+	  background-color: #646e77;
+	  color: white;
+  }
+  
+  .boxedForm .form-header {
+  	margin-bottom: 45px;
+  }
+  
+  .boxedForm label {
+	  font-weight: normal;
+  }
+  
+  .boxedForm .checkbox {
+	  margin-top: 30px;
+  }
+
+  .boxedForm .resetPassword {
+	  color: black;
+	  padding-top: 10px;
+  }
+  .boxedForm a {
+	  color: black;
+  }
+}

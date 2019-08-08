@@ -9,7 +9,10 @@ import {
   ControlLabel
 } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
-import "./Signup.css";
+
+import {ReactComponent as Logo } from '../logo.svg';
+
+import "./BoxedForm.css";
 
 export default class Signup extends Component {
   constructor(props) {
@@ -23,6 +26,14 @@ export default class Signup extends Component {
       confirmationCode: "",
       newUser: null
     };
+  }
+  
+  componentDidMount() {
+      document.getElementsByTagName('body')[0].className = 'boxedFormPage';
+  }
+
+  componentWillUnmount() {
+      document.getElementsByTagName('body')[0].className = '';
   }
 
   validateForm() {
@@ -84,6 +95,11 @@ export default class Signup extends Component {
   renderConfirmationForm() {
     return (
       <form onSubmit={this.handleConfirmationSubmit}>
+		<div className="form-header">
+			<div className="logo text-center">
+				<Logo height="60px"/>
+			</div>
+		</div>
         <FormGroup controlId="confirmationCode" bsSize="large">
           <ControlLabel>Confirmation Code</ControlLabel>
           <FormControl
@@ -110,6 +126,12 @@ export default class Signup extends Component {
   renderForm() {
     return (
       <form onSubmit={this.handleSubmit}>
+		<div className="form-header">
+			<div className="logo text-center">
+				<Logo height="60px"/>
+			</div>
+			<h2> Welcome! Let's Get Started!</h2>
+		</div>
         <FormGroup controlId="email" bsSize="large">
           <ControlLabel>Email</ControlLabel>
           <FormControl
@@ -150,7 +172,7 @@ export default class Signup extends Component {
 
   render() {
     return (
-      <div className="Signup">
+      <div className="boxedForm Signup">
         {this.state.newUser === null
           ? this.renderForm()
           : this.renderConfirmationForm()}

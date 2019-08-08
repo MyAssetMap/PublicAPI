@@ -31,6 +31,16 @@ body.boxedFormPage {
 	  color: white;
   }
   
+  .boxedForm button:disabled {
+	  background-color: #d2d6da;
+	  color: white;
+  }
+  
+  .boxedForm button:disabled:hover {
+	  background-color: #d2d6da;
+	  color: white;
+  }
+  
   .boxedForm button:hover {
 	  background-color: #646e77;
 	  color: white;

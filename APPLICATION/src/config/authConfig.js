@@ -1,3 +1,14 @@
+export const authConfig = {
+  loginUrl: "", // SSO ??
+  relayingParty: "urn:myassetmap-dev",
+  authTokenCookie: "myassetmap-token-local",
+  authIDCookie: "myassetmap-id-local",
+  authCookie: "myassetmap-auth-local",
+  authUsernameCookie: "myassetmap-user-local",
+  secretAccessKey: "1mqxM1c9/gZY/EhYocJrgWP111mHaLZvJDhROdzN",
+  accessKeyId: "AKIA3SSZS6TSSJX7JGPS"
+};
+
 export default {
   s3: {
     REGION: "us-east-1",
@@ -14,3 +25,4 @@ export default {
     IDENTITY_POOL_ID: "us-east-1:ddc9dcd8-966c-4ba8-81cd-6b0db1a588a5"
   }
 };
+

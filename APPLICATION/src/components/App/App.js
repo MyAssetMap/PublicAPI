@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from "react";
-import logo from './logo.svg';
+import logo from '../../logo.svg';
 import { Link, withRouter } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Auth } from "aws-amplify";
 
 import { Nav, Navbar, NavItem } from "react-bootstrap";
-import Routes from "./Routes";
+import Routes from "../../Routes";
 
 
 import "./App.css";

@@ -5,16 +5,16 @@
 // =====================
 const pg = require('pg')
 const pool = new pg.Pool({
-  database: 'myassetmapv2_db',
-  user: 'Javier_root',
-  host: 'myassetmapv2.c7tqiynvcd79.us-east-1.rds.amazonaws.com',
-  password: 'javierroot123',
-  port: 5432,
-  ssl: true,
-  max: 20, // set pool max size to 20
-  min: 4, // set min pool size to 4
-  idleTimeoutMillis: 1000, // close idle clients after 1 second
-  connectionTimeoutMillis: 1000, // return an error after 1 second if connection could not be established
+	database: 'myassetmapv2_db',
+	user: 'Javier_root',
+	host: 'myassetmapv2.c7tqiynvcd79.us-east-1.rds.amazonaws.com',
+	password: 'javierroot123',
+	port: 5432,
+	ssl: true,
+	max: 20, // set pool max size to 20
+	min: 4, // set min pool size to 4
+	idleTimeoutMillis: 1000, // close idle clients after 1 second
+	connectionTimeoutMillis: 1000, // return an error after 1 second if connection could not be established
 })
 
 // async function query (q) {
@@ -56,18 +56,18 @@ const pool = new pg.Pool({
 // };
 
 const testPG = (request, response) => {
-  pool.query('SELECT * FROM pg_tables', (error, results) => {
-    if (error) {
-      throw error
-    }
-    response.status(200).json(results.rows)
-  })
+	pool.query('SELECT * FROM pg_tables', (error, results) => {
+		if (error) {
+			throw error
+		}
+		response.status(200).json(results.rows)
+	})
 }
 
 const runQuery = (query, callback) => {
 	var queryMsg = query;
 	//console.log(queryMsg)
-	
+
 	pool.query(queryMsg, (error, results) => {
 		if (error) {
 			throw error
@@ -76,7 +76,7 @@ const runQuery = (query, callback) => {
 	})
 }
 
-const getUsers =  (callback) => {
+const getUsers = (callback) => {
 	pool.query('SELECT * FROM public."User"', (error, results) => {
 		if (error) {
 			throw error
@@ -85,10 +85,56 @@ const getUsers =  (callback) => {
 	})
 }
 
+const getAccounts = (callback) => {
+	pool.query('SELECT * FROM public."Account"', (error, results) => {
+		if (error) {
+			throw error
+		}
+		callback(results.rows);
+	})
+
+}
+
+const getEmails = (callback) => {
+	pool.query('SELECT "emailAddress" FROM public."User"', (error, results) => {
+		if (error) {
+			throw error
+		}
+		callback(results.rows);
+	})
+}
+
+const getAddons = (callback) => {
+	pool.query('SELECT * FROM public."Addon"', (error, results) => {
+		if (error) {
+			throw error
+		}
+		callback(results.rows);
+	})
+}
+
+const getSuperUsers = (callback) => {
+	pool.query('SELECT * FROM public."SuperUser"', (error, results) => {
+		if (error) {
+			throw error
+		}
+		callback(results.rows);
+	})
+}
+
+const getUserPreference = (callback) => {
+	pool.query('SELECT * FROM public."UserPreference"', (error, results) => {
+		if (error) {
+			throw error
+		}
+		callback(results.rows);
+	})
+}
+
 const getUserByEmail = (emailAddress, callback) => {
-	var queryMsg = 'SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\''+emailAddress+'\');';
+	var queryMsg = 'SELECT * FROM public."User" WHERE LOWER(emailAddress) = LOWER(\'' + emailAddress + '\');';
 	//console.log(queryMsg)
-	
+
 	pool.query(queryMsg, (error, results) => {
 		if (error) {
 			throw error
@@ -97,10 +143,147 @@ const getUserByEmail = (emailAddress, callback) => {
 	})
 }
 
+const getIdsByEmail = (emailAddress, callback) => {
+	var queryMsg = 'SELECT "ID"	FROM public.\"User\" WHERE \"emailAddress\" = \'' + emailAddress + '\';'
+
+	//var x = '{ "UserID" : }';
+
+	var y = [];
+
+	y = pool.query(queryMsg, (error, results) => {
+		if (error) {
+			throw error
+		}
+
+		return results.rows; // [0]['ID']
+	})
+
+
+	callback(y);
+
+	//From email get user ID
+
+	//CREATE FUNCTION FOR THIS
+	//with userID get user preferences
+
+	//CREATE FUNCTION FOR THIS
+	//with userID get user superuser user ID if SuperUser
+
+	//CREATE FUNCTION FOR THIS
+	//with userID get account the user belongs.
+
+	//with userID get user user map user ID
+
+}
+
+
+const getTable = (table, callback) => {
+
+	var queryMsg = 'SELECT * FROM public.\"' + table + '\"';
+	//console.log(queryMsg)
+
+	pool.query(queryMsg, (error, results) => {
+		if (error) {
+			throw error
+		}
+		callback(results.rows);
+	})
+}
+
+const getRowFromTable = (table, row, callback) => {
+
+	var queryMsg = 'SELECT \"' + fromSingleValueToValues(row) + '\" FROM public.\"' + table + '\"';
+	//console.log(queryMsg)
+
+	pool.query(queryMsg, (error, results) => {
+		if (error) {
+			throw error
+		}
+		callback(results.rows);
+	})
+}
+
+const getInnerJoin = (fields, firstTable, firstIdentifier, secondTable, secondIdentifier, callback) => {
+
+	var queryMsg = 'Select "' + fields + '" from public.\"' + firstTable + '\", public.\"' + secondTable + '\" Where public.\"' + firstTable + '\".' + firstIdentifier + ' = public.\"' + secondTable + '\".' + secondIdentifier + ';'
+	//console.log(queryMsg)
+
+	pool.query(queryMsg, (error, results) => {
+		if (error) {
+			throw error
+		}
+		callback(results.rows);
+	})
+}
+
+
+const updateRow = (table, column, value, identifierColumn, identifier, callback) => {
+
+	var queryMsg = 'UPDATE public.\"' + table + '\" SET ' + "\"" + column + "\" = \'" + value + "\'" + ' WHERE ' + identifierColumn + '=\'' + identifier + '\';';
+
+	pool.query(queryMsg, (error, results) => {
+		if (error) {
+			throw error
+		}
+		callback(results.rows);
+	})
+
+}
+
+const insertRow = (table, columns, values, callback) => {
+
+	var queryMsg = 'INSERT INTO public."' + table + '" (' + columns + ') VALUES (' + fromSingleValueToValues(values) + ');';
+	pool.query(queryMsg, (error, results) => {
+		if (error) {
+			throw error
+		}
+		callback(results.rows);
+	})
+
+
+}
+
+// function addSingleQuoteToFields(fieldsToAddQuote) {
+
+// 	let values = fieldsToAddQuote.split(',');
+// 	let newvalues = "";
+// 	values.forEach(function (element) {
+// 		newvalues += "'" + element + "',";
+// 	});
+
+// 	newvalues = newvalues.substring(0, newvalues.length - 1); //trim last coma
+// 	return newvalues;
+// }
+
+
 const test = function () {
 	console.log('The test works');
 	return 'It does?';
 }
+
+
+const fromSingleValueToValues = function (valuesOrValues) {
+
+	if (valuesOrValues.includes(",")) {
+		var values = valuesOrValues.split(',');
+		var result = "";
+
+		values.forEach(function (value) {
+			value = value.trim() //We remove any extra space used between values
+
+			result += '"' + value + '",';
+
+		});
+		result = result.substring(0, result.length - 1) //Remove last comma 
+		return result;
+
+	}
+	else { //Since the input has no comma, it is a single value. 
+		return '"' + valuesOrValues + '"';
+	}
+}
+
+//SELECT "firstName", "emailAddress" FROM public."User";
 
 //
 // const getUserById = (request, response) => {
@@ -152,12 +335,26 @@ const test = function () {
 //   })
 // }
 
+
+
+
 module.exports = {
 	testPG,
 	runQuery,
 	getUsers,
 	getUserByEmail,
-	test
+	test,
+	getEmails,
+	getTable,
+	getRowFromTable,
+	getInnerJoin,
+	updateRow,
+	insertRow,
+	getAccounts,
+	getAddons,
+	getSuperUsers,
+	getUserPreference,
+	getIdsByEmail,
 	// getUsers,
 	// getUserById,
 	// createUser,

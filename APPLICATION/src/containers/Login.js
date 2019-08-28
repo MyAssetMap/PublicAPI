@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 import {ReactComponent as Logo } from '../logo.svg';
 
-import LoaderButton from "../components/LoaderButton";
+import LoaderButton from "../components/Button/LoaderButton";
 import "./BoxedForm.css";
 
 export default class Login extends Component {

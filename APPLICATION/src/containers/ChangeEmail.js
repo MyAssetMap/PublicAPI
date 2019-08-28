@@ -6,7 +6,7 @@ import {
   FormControl,
   ControlLabel
 } from "react-bootstrap";
-import LoaderButton from "../components/LoaderButton";
+import LoaderButton from "../components/Button/LoaderButton";
 import "./ChangeEmail.css";
 
 export default class ChangeEmail extends Component {

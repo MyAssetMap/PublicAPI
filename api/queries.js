@@ -143,6 +143,8 @@ const getUserByEmail = (emailAddress, callback) => {
 	})
 }
 
+
+//From email get user ID
 const getIdsByEmail = (emailAddress, callback) => {
 	var queryMsg = 'SELECT "ID"	FROM public.\"User\" WHERE LOWER(\"emailAddress\") = LOWER(\'' + emailAddress + '\');'
 
@@ -153,23 +155,41 @@ const getIdsByEmail = (emailAddress, callback) => {
 
 		callback(results.rows);
 	})
-
-	//TODO:CREATE FUNCTION FOR THIS
-	//From email get user ID
-
-	//TODO:CREATE FUNCTION FOR THIS
-	//with userID get user preferences
-
-	//TODO:CREATE FUNCTION FOR THIS
-	//with userID get user superuser user ID if SuperUser
-
-	//TODO:CREATE FUNCTION FOR THIS
-	//with userID get account the user belongs.
-
-	//TODO:CREATE FUNCTION FOR THIS
-	//with userID get user user map user ID
-
 }
+
+//TODO:CREATE FUNCTION FOR THIS
+//with userID get user preferences
+
+//TODO:CREATE FUNCTION FOR THIS
+//with userID get user superuser user ID if SuperUser
+const getSuperIdByUser = (userID, callback) => {
+	var queryMsg = 'SELECT "ID"	FROM public.\"User\" WHERE LOWER(\"emailAddress\") = LOWER(\'' + userID + '\');'
+
+	pool.query(queryMsg, (error, results) => {
+		if (error) {
+			throw error
+		}
+
+		callback(results.rows);
+	})
+}
+
+//TODO:CREATE FUNCTION FOR THIS
+//with userID get account the user belongs.
+const getAccountIdByUser = (userID, callback) => {
+	var queryMsg = 'SELECT "ID"	FROM public.\"User\" WHERE LOWER(\"emailAddress\") = LOWER(\'' + userID + '\');'
+
+	pool.query(queryMsg, (error, results) => {
+		if (error) {
+			throw error
+		}
+
+		callback(results.rows);
+	})
+}
+
+//TODO:CREATE FUNCTION FOR THIS
+//with userID get user user map user ID
 
 
 const getTable = (table, callback) => {
@@ -350,6 +370,8 @@ module.exports = {
 	getSuperUsers,
 	getUserPreference,
 	getIdsByEmail,
+	getSuperIdByUser,
+	getAccountIdByUser
 	// getUsers,
 	// getUserById,
 	// createUser,

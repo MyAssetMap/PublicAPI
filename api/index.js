@@ -207,6 +207,8 @@ app.post('/users/login', function (req, res) {
 })
 
 app.post('/users/getIdsByEmail', function (req, res) {
+	
+	var userID, superID, accountID;
 
 	if (typeof req.body.emailAddress == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
 	var emailAddress = req.body.emailAddress;
@@ -216,12 +218,25 @@ app.post('/users/getIdsByEmail', function (req, res) {
 		if (data.length == 0) {
 			APIReturn(res,
 				false, 'No users matched the email address provided.'
-
+			)
+		}else if (data.length == 1) {
+			APIReturn(res,
+				false, 'No users matched the email address provided.'
 			)
 		}else{
-			APIReturn(res,
-				true, 'User information data obtained correctly from email address.', data
-			)
+			userID = data[0];
+			
+			db.getSuperIdByUser(emailAddress, function (data) {
+				superID = data[0];
+				
+				db.getAccountIdByUser(accountID, function (data) {
+					accountID = data[0];
+				
+					APIReturn(res,
+						true, 'User information data obtained correctly from email address.', {userID: userID, superID: superID, accountID: accountID}
+					)
+				})
+			})
 		}
 	});
 

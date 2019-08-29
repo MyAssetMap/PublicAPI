@@ -119,7 +119,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/MAMAP-DB/dev/1567095348153-2019-08-29T16:15:48.153Z/MAMAP-DB.zip"
+                "S3Key": "serverless/MAMAP-DB/dev/1567096972968-2019-08-29T16:42:52.968Z/MAMAP-DB.zip"
               },
               "FunctionName": "MAMAP-DB-dev-app",
               "Handler": "index.handler",
@@ -139,14 +139,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "AppLambdaVersionZj8EcJL1LHsMh8hI2tGm9qOihtECQMe1E9fcS5txASI": {
+          "AppLambdaVersionllTndccJdxvNP1iSGAVRWVMORHkamykO1UGbjUBk": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "iQW3iuEJuZJeUuZ84ZQ7yyCeUbf5pQF2pQahPJ0kmDI=",
+              "CodeSha256": "j35beIL6YCFz6pscR64tcMjNK9JaEqc3xVCBdFAd454=",
               "Description": "Handle all API Endpoints."
             }
           },
@@ -265,7 +265,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1567095345777": {
+          "ApiGatewayDeployment1567096970413": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -325,7 +325,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionZj8EcJL1LHsMh8hI2tGm9qOihtECQMe1E9fcS5txASI"
+              "Ref": "AppLambdaVersionllTndccJdxvNP1iSGAVRWVMORHkamykO1UGbjUBk"
             }
           },
           "ServiceEndpoint": {
@@ -408,7 +408,7 @@
     "artifact": "/Users/dakotah/GIT/NODE JS/myassetmapv2_apis/api/.serverless/MAMAP-DB.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/MAMAP-DB/dev/1567095348153-2019-08-29T16:15:48.153Z",
+    "artifactDirectoryName": "serverless/MAMAP-DB/dev/1567096972968-2019-08-29T16:42:52.968Z",
     "artifact": "MAMAP-DB.zip"
   }
 }

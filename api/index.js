@@ -213,11 +213,16 @@ app.post('/users/getIdsByEmail', function (req, res) {
 
 	db.getIdsByEmail(emailAddress, function (data) {
 
-		APIReturn(res,
-			true, 'User information data obtained correctly from email address.', data
+		if (data.length == 0) {
+			APIReturn(res,
+				false, 'No users matched the email address provided.'
 
-		)
-
+			)
+		}else{
+			APIReturn(res,
+				true, 'User information data obtained correctly from email address.', data
+			)
+		}
 	});
 
 })

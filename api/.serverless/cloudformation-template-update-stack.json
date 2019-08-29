@@ -105,7 +105,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/MAMAP-DB/dev/1567018119359-2019-08-28T18:48:39.359Z/MAMAP-DB.zip"
+          "S3Key": "serverless/MAMAP-DB/dev/1567095348153-2019-08-29T16:15:48.153Z/MAMAP-DB.zip"
         },
         "FunctionName": "MAMAP-DB-dev-app",
         "Handler": "index.handler",
@@ -125,14 +125,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "AppLambdaVersion1UuYcah1tFoKBNyZgkRywCB6117zwOoPYCypfm5N8": {
+    "AppLambdaVersionZj8EcJL1LHsMh8hI2tGm9qOihtECQMe1E9fcS5txASI": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "xVjjQJf62n+8YQXYUFcWocHhZB+JPGJrFPlYbqZCs9s=",
+        "CodeSha256": "iQW3iuEJuZJeUuZ84ZQ7yyCeUbf5pQF2pQahPJ0kmDI=",
         "Description": "Handle all API Endpoints."
       }
     },
@@ -251,7 +251,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1567018115746": {
+    "ApiGatewayDeployment1567095345777": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -311,7 +311,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersion1UuYcah1tFoKBNyZgkRywCB6117zwOoPYCypfm5N8"
+        "Ref": "AppLambdaVersionZj8EcJL1LHsMh8hI2tGm9qOihtECQMe1E9fcS5txASI"
       }
     },
     "ServiceEndpoint": {

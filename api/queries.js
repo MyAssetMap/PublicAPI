@@ -144,34 +144,29 @@ const getUserByEmail = (emailAddress, callback) => {
 }
 
 const getIdsByEmail = (emailAddress, callback) => {
-	var queryMsg = 'SELECT "ID"	FROM public.\"User\" WHERE \"emailAddress\" = \'' + emailAddress + '\';'
+	var queryMsg = 'SELECT "ID"	FROM public.\"User\" WHERE LOWER(\"emailAddress\") = LOWER(\'' + emailAddress + '\');'
 
-	//var x = '{ "UserID" : }';
-
-	var y = [];
-
-	y = pool.query(queryMsg, (error, results) => {
+	pool.query(queryMsg, (error, results) => {
 		if (error) {
 			throw error
 		}
 
-		return results.rows; // [0]['ID']
+		callback(results.rows);
 	})
 
-
-	callback(y);
-
+	//TODO:CREATE FUNCTION FOR THIS
 	//From email get user ID
 
-	//CREATE FUNCTION FOR THIS
+	//TODO:CREATE FUNCTION FOR THIS
 	//with userID get user preferences
 
-	//CREATE FUNCTION FOR THIS
+	//TODO:CREATE FUNCTION FOR THIS
 	//with userID get user superuser user ID if SuperUser
 
-	//CREATE FUNCTION FOR THIS
+	//TODO:CREATE FUNCTION FOR THIS
 	//with userID get account the user belongs.
 
+	//TODO:CREATE FUNCTION FOR THIS
 	//with userID get user user map user ID
 
 }

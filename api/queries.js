@@ -143,10 +143,13 @@ const getUserByEmail = (emailAddress, callback) => {
 	})
 }
 
+// ================================
+// = CONVERT EMAIL ADDRESS TO IDS =
+// ================================
 
 //From email get user ID
-const getIdsByEmail = (emailAddress, callback) => {
-	var queryMsg = 'SELECT "ID"	FROM public.\"User\" WHERE LOWER(\"emailAddress\") = LOWER(\'' + emailAddress + '\');'
+const getUsersByEmail = (emailAddress, callback) => {
+	var queryMsg = 'SELECT * FROM public."User" WHERE LOWER("emailAddress") = LOWER(\'' + emailAddress + '\');'
 
 	pool.query(queryMsg, (error, results) => {
 		if (error) {
@@ -162,8 +165,8 @@ const getIdsByEmail = (emailAddress, callback) => {
 
 //TODO:CREATE FUNCTION FOR THIS
 //with userID get user superuser user ID if SuperUser
-const getSuperIdByUser = (userID, callback) => {
-	var queryMsg = 'SELECT "ID"	FROM public.\"User\" WHERE LOWER(\"emailAddress\") = LOWER(\'' + userID + '\');'
+const getAccountsSuperByUserID = (userID, callback) => {
+	var queryMsg = 'SELECT "accountID" FROM public."SuperUser" WHERE "userID" = ' + userID + ';'
 
 	pool.query(queryMsg, (error, results) => {
 		if (error) {
@@ -176,8 +179,8 @@ const getSuperIdByUser = (userID, callback) => {
 
 //TODO:CREATE FUNCTION FOR THIS
 //with userID get account the user belongs.
-const getAccountIdByUser = (userID, callback) => {
-	var queryMsg = 'SELECT "ID"	FROM public.\"User\" WHERE LOWER(\"emailAddress\") = LOWER(\'' + userID + '\');'
+const getAccountsByUserID = (userID, callback) => {
+	var queryMsg = 'SELECT "accountID"	FROM public."AccountUser" WHERE "userID" = ' + userID + ';'
 
 	pool.query(queryMsg, (error, results) => {
 		if (error) {
@@ -194,7 +197,7 @@ const getAccountIdByUser = (userID, callback) => {
 
 const getTable = (table, callback) => {
 
-	var queryMsg = 'SELECT * FROM public.\"' + table + '\"';
+	var queryMsg = 'SELECT * FROM public."' + table + '"';
 	//console.log(queryMsg)
 
 	pool.query(queryMsg, (error, results) => {
@@ -207,7 +210,7 @@ const getTable = (table, callback) => {
 
 const getRowFromTable = (table, row, callback) => {
 
-	var queryMsg = 'SELECT \"' + fromSingleValueToValues(row) + '\" FROM public.\"' + table + '\"';
+	var queryMsg = 'SELECT "' + fromSingleValueToValues(row) + '" FROM public."' + table + '"';
 	//console.log(queryMsg)
 
 	pool.query(queryMsg, (error, results) => {
@@ -220,7 +223,7 @@ const getRowFromTable = (table, row, callback) => {
 
 const getInnerJoin = (fields, firstTable, firstIdentifier, secondTable, secondIdentifier, callback) => {
 
-	var queryMsg = 'Select "' + fields + '" from public.\"' + firstTable + '\", public.\"' + secondTable + '\" Where public.\"' + firstTable + '\".' + firstIdentifier + ' = public.\"' + secondTable + '\".' + secondIdentifier + ';'
+	var queryMsg = 'Select "' + fields + '" from public."' + firstTable + '", public."' + secondTable + '" Where public."' + firstTable + '".' + firstIdentifier + ' = public."' + secondTable + '".' + secondIdentifier + ';'
 	//console.log(queryMsg)
 
 	pool.query(queryMsg, (error, results) => {
@@ -234,7 +237,7 @@ const getInnerJoin = (fields, firstTable, firstIdentifier, secondTable, secondId
 
 const updateRow = (table, column, value, identifierColumn, identifier, callback) => {
 
-	var queryMsg = 'UPDATE public.\"' + table + '\" SET ' + "\"" + column + "\" = \'" + value + "\'" + ' WHERE ' + identifierColumn + '=\'' + identifier + '\';';
+	var queryMsg = 'UPDATE public."' + table + '" SET ' + '"' + column + '" = "' + value + '"' + ' WHERE ' + identifierColumn + '= "' + identifier + '";';
 
 	pool.query(queryMsg, (error, results) => {
 		if (error) {
@@ -357,24 +360,24 @@ module.exports = {
 	testPG,
 	runQuery,
 	getUsers,
-	getUserByEmail,
-	test,
+	getAccounts,
 	getEmails,
+	getAddons,
+	getSuperUsers,
+	getUserPreference,
+	getUserByEmail,
+	getUsersByEmail,
+	getAccountsSuperByUserID,
+	getAccountsByUserID,
 	getTable,
 	getRowFromTable,
 	getInnerJoin,
 	updateRow,
 	insertRow,
-	getAccounts,
-	getAddons,
-	getSuperUsers,
-	getUserPreference,
-	getIdsByEmail,
-	getSuperIdByUser,
-	getAccountIdByUser
-	// getUsers,
+	test,
+	fromSingleValueToValues,
 	// getUserById,
 	// createUser,
 	// updateUser,
-	// deleteUser,
+	// deleteUser
 }

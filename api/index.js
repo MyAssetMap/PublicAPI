@@ -42,7 +42,7 @@ function APIReturn(res, success, message, data) {
 
 
 // app.get('/', function (req, res) {
-// 	APIReturn(res,
+// 	return APIReturn(res,
 // 		true,'Welcome to the MY ASSET MAP endpoint v1.0'
 // 	)
 // })
@@ -60,7 +60,7 @@ function APIReturn(res, success, message, data) {
 // 	db.runQuery(
 // 		'UPDATE "User" SET "passwordHash" = \'secure!\';'
 // 		,function(data) {
-// 			APIReturn(res,
+// 			return APIReturn(res,
 // 				true,'Query has been run!',data
 // 			)
 // 		}
@@ -70,18 +70,25 @@ function APIReturn(res, success, message, data) {
 // =================
 // = GET ENDPOINTS =
 // =================
+//
+// app.get('/dbinfo', function (req, res) {
+// 	db.testPG(function (result) {
+// 		return APIReturn(res,
+// 			true, 'DatabaseInfo.', result
+// 		)
+// 	})
+// })
 
-app.get('/dbinfo', db.testPG)
 
 app.get('/', function (req, res) {
-	APIReturn(res,
+	return APIReturn(res,
 		true, 'Welcome to the MY ASSET MAP endpoint v1.0'
 	)
 })
 
 app.get('/users', function (req, res) {
 	db.getUsers(function (users) {
-		APIReturn(res,
+		return APIReturn(res,
 			true, 'User information has been returned.', users
 		)
 	});
@@ -89,7 +96,7 @@ app.get('/users', function (req, res) {
 
 app.get('/emails', function (req, res) {
 	db.getEmails(function (emails) {
-		APIReturn(res,
+		return APIReturn(res,
 			true, 'Emails information has been returned.', emails
 		)
 	});
@@ -97,7 +104,7 @@ app.get('/emails', function (req, res) {
 
 app.get('/accounts', function (req, res) {
 	db.getAccounts(function (accounts) {
-		APIReturn(res,
+		return APIReturn(res,
 			true, 'Accounts information has been returned.', accounts
 		)
 	});
@@ -105,7 +112,7 @@ app.get('/accounts', function (req, res) {
 
 app.get('/addons', function (req, res) {
 	db.getAddons(function (accounts) {
-		APIReturn(res,
+		return APIReturn(res,
 			true, 'Addon information has been returned.', accounts
 		)
 	});
@@ -113,7 +120,7 @@ app.get('/addons', function (req, res) {
 
 app.get('/superusers', function (req, res) {
 	db.getSuperUsers(function (accounts) {
-		APIReturn(res,
+		return APIReturn(res,
 			true, 'Super User preference has been returned.', accounts
 		)
 	});
@@ -121,7 +128,7 @@ app.get('/superusers', function (req, res) {
 
 app.get('/userpreference', function (req, res) {
 	db.getUserPreference(function (accounts) {
-		APIReturn(res,
+		return APIReturn(res,
 			true, 'User preference information has been returned.', accounts
 		)
 	});
@@ -133,7 +140,7 @@ app.get('/userpreference', function (req, res) {
 app.post('/users/add', function (req, res) {
 	// console.log(req.body);
 	if (typeof req.body.email == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
-	if (typeof req.body.password == 'password') return APIReturn(res, false, 'Password must be provided.')
+	if (typeof req.body.password == 'undefined') return APIReturn(res, false, 'Password must be provided.')
 
 	var emailAddress = req.body.email;
 	var password = req.body.password;
@@ -149,17 +156,17 @@ app.post('/users/add', function (req, res) {
 			console.log(password);
 
 			if (user.passwordHash == password) {
-				APIReturn(res,
+				return APIReturn(res,
 					true, 'User has been located and authenticated.', users
 				)
 			} else {
-				APIReturn(res,
+				return APIReturn(res,
 					true, 'Password is incorrect.'//,users
 				)
 			}
 
 		} else {
-			APIReturn(res,
+			return APIReturn(res,
 				false, 'Email address is not associated with an account.'
 			)
 		}
@@ -187,17 +194,17 @@ app.post('/users/login', function (req, res) {
 			console.log(password);
 
 			if (user.passwordHash == password) {
-				APIReturn(res,
+				return APIReturn(res,
 					true, 'User has been located and authenticated.', users
 				)
 			} else {
-				APIReturn(res,
+				return APIReturn(res,
 					true, 'Password is incorrect.'//,users
 				)
 			}
 
 		} else {
-			APIReturn(res,
+			return APIReturn(res,
 				false, 'Email address is not associated with an account.'
 			)
 		}
@@ -206,38 +213,45 @@ app.post('/users/login', function (req, res) {
 	});
 })
 
-app.post('/users/getIdsByEmail', function (req, res) {
+app.post('/users/lookup', function (req, res) {
 	
-	var userID, superID, accountID;
+	var userID = 0,
+		isActive,
+		superID = [], 
+		accountID = [];
 
-	if (typeof req.body.emailAddress == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
-	var emailAddress = req.body.emailAddress;
 
-	db.getIdsByEmail(emailAddress, function (data) {
-
+	if (typeof req.body.email == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
+	var email = req.body.email;
+	
+	db.getUsersByEmail(email, function (data) { console.log(data);
+		
 		if (data.length == 0) {
-			APIReturn(res,
-				false, 'No users matched the email address provided.'
-			)
+			return APIReturn(res,false, 'No users matched the email address provided.');
 		}else if (data.length == 1) {
-			APIReturn(res,
-				false, 'No users matched the email address provided.'
-			)
-		}else{
-			userID = data[0];
-			
-			db.getSuperIdByUser(emailAddress, function (data) {
-				superID = data[0];
+			userID = data[0].ID;
+			isActive = !data[0].isDisabled;
+			db.getAccountsSuperByUserID(userID, function (data) { console.log(data);
+
+				data.forEach(function (entry) {
+					superID.push(entry.userID);
+				});
 				
-				db.getAccountIdByUser(accountID, function (data) {
-					accountID = data[0];
-				
-					APIReturn(res,
-						true, 'User information data obtained correctly from email address.', {userID: userID, superID: superID, accountID: accountID}
+				db.getAccountsByUserID(userID, function (data) { console.log(data);
+					
+					data.forEach(function (entry) {
+						accountID.push(entry.accountID);
+					});
+					
+					superID.sort();
+					accountID.sort();
+					
+					return APIReturn(res,
+						true, 'User information data obtained correctly from email address.', {userID: userID, isActive: isActive, superID: superID, accountID: accountID}
 					)
 				})
 			})
-		}
+		}else return APIReturn(res,false, 'Multiple users matched the email address provided.');
 	});
 
 })
@@ -250,7 +264,7 @@ app.post('/selectTable', function (req, res) {
 
 	db.getTable(table, function (data) {
 
-		APIReturn(res,
+		return APIReturn(res,
 			true, 'Table data obtained correctly', data
 
 		)
@@ -267,7 +281,7 @@ app.post('/selectRow', function (req, res) {
 	var row = req.body.row;
 
 	db.getRowFromTable(table, row, function (data) {
-		APIReturn(res,
+		return APIReturn(res,
 			true, 'Row data obtained correctly', data
 		)
 	});
@@ -290,16 +304,16 @@ app.post('/innerJoin', function (req, res) {
 
 	//This is necessary due to PostGres syntax where integers do not requiere "" 
 	if (firstIdentifier != 'ID' || firstIdentifier != 'Id' || firstIdentifier != 'iD' || firstIdentifier != 'id') {
-		firstIdentifier = '\"' + firstIdentifier + '\"';
+		firstIdentifier = '"' + firstIdentifier + '"';
 	}
 
 	//This is necessary due to PostGres syntax where integers do not requiere "" 
 	if (secondIdentifier != 'ID' || secondIdentifier != 'Id' || secondIdentifier != 'iD' || secondIdentifier != 'id') {
-		secondIdentifier = '\"' + secondIdentifier + '\"';
+		secondIdentifier = '"' + secondIdentifier + '"';
 	}
 
 	db.getInnerJoin(fields, firstTable, firstIdentifier, secondTable, secondIdentifier, function (data) {
-		APIReturn(res,
+		return APIReturn(res,
 			true, 'Inner join obtained correctly', data
 		)
 	});
@@ -321,11 +335,11 @@ app.post('/updateRow', function (req, res) {
 
 	//This is necessary due to PostGres syntax where integers do not requiere "" 
 	if (identifierColumn != 'ID' || identifierColumn != 'Id' || identifierColumn != 'iD' || identifierColumn != 'id') {
-		identifierColumn = '\"' + identifierColumn + '\"';
+		identifierColumn = '"' + identifierColumn + '"';
 	}
 
-	db.updateRow(table, column, value, identifierColumn, identifier, function (data) {
-		APIReturn(res,
+	db.updateRow(table, column, value, identifierColumn, identifier, function () {
+		return APIReturn(res,
 			true, 'Row updated correclty correctly'
 		)
 	});
@@ -342,8 +356,8 @@ app.post('/insertRow', function (req, res) {
 	var columns = req.body.columns;
 	var values = req.body.values;
 
-	db.insertRow(table, columns, values, function (data) {
-		APIReturn(res,
+	db.insertRow(table, columns, values, function () {
+		return APIReturn(res,
 			true, 'Row inserted correctly'
 		)
 	});
@@ -361,7 +375,7 @@ app.post('/insertRow', function (req, res) {
 // 	console.log(req.body);
 // 	// if (typeof req.body.email == 'undefined')
 //
-// 	APIReturn(res,
+// 	return APIReturn(res,
 // 		true, 'Login Works Fine', req.body
 // 	)
 // })
@@ -371,7 +385,7 @@ app.post('/insertRow', function (req, res) {
 // 	console.log(req);
 //
 // 	const { userId, name } = req.body;
-// 	APIReturn(res,
+// 	return APIReturn(res,
 // 		true,'User was located successfully',
 // 		{
 // 			userID: userId,

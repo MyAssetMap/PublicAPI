@@ -96,7 +96,7 @@ const getAccounts = (callback) => {
 }
 
 const getEmails = (callback) => {
-	pool.query('SELECT "emailAddress" FROM public."User"', (error, results) => {
+	pool.query('SELECT "email" FROM public."User"', (error, results) => {
 		if (error) {
 			throw error
 		}
@@ -132,7 +132,7 @@ const getUserPreference = (callback) => {
 }
 
 const getUserByEmail = (emailAddress, callback) => {
-	var queryMsg = 'SELECT * FROM public."User" WHERE LOWER(emailAddress) = LOWER(\'' + emailAddress + '\');';
+	var queryMsg = 'SELECT * FROM public."User" WHERE email = LOWER(\'' + emailAddress + '\');';
 	//console.log(queryMsg)
 
 	pool.query(queryMsg, (error, results) => {
@@ -149,7 +149,7 @@ const getUserByEmail = (emailAddress, callback) => {
 
 //From email get user ID
 const getUsersByEmail = (emailAddress, callback) => {
-	var queryMsg = 'SELECT * FROM public."User" WHERE LOWER("emailAddress") = LOWER(\'' + emailAddress + '\');'
+	var queryMsg = 'SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\'' + emailAddress + '\');'
 
 	pool.query(queryMsg, (error, results) => {
 		if (error) {
@@ -166,7 +166,7 @@ const getUsersByEmail = (emailAddress, callback) => {
 //TODO:CREATE FUNCTION FOR THIS
 //with userID get user superuser user ID if SuperUser
 const getAccountsSuperByUserID = (userID, callback) => {
-	var queryMsg = 'SELECT "accountID" FROM public."SuperUser" WHERE "userID" = ' + userID + ';'
+	var queryMsg = 'SELECT * FROM public."SuperUser" WHERE public."SuperUser"."userID" = '+ userID +';'
 
 	pool.query(queryMsg, (error, results) => {
 		if (error) {
@@ -180,7 +180,7 @@ const getAccountsSuperByUserID = (userID, callback) => {
 //TODO:CREATE FUNCTION FOR THIS
 //with userID get account the user belongs.
 const getAccountsByUserID = (userID, callback) => {
-	var queryMsg = 'SELECT "accountID"	FROM public."AccountUser" WHERE "userID" = ' + userID + ';'
+	var queryMsg = 'SELECT "accountID" FROM public."AccountUser" WHERE "userID" = ' + userID + ';'
 
 	pool.query(queryMsg, (error, results) => {
 		if (error) {

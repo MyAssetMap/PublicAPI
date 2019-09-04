@@ -233,8 +233,9 @@ app.post('/users/lookup', function (req, res) {
 			isActive = !data[0].isDisabled;
 			db.getAccountsSuperByUserID(userID, function (data) { console.log(data);
 
+				console.log();
 				data.forEach(function (entry) {
-					superID.push(entry.userID);
+					superID.push(entry.ID);
 				});
 				
 				db.getAccountsByUserID(userID, function (data) { console.log(data);
@@ -247,7 +248,7 @@ app.post('/users/lookup', function (req, res) {
 					accountID.sort();
 					
 					return APIReturn(res,
-						true, 'User information data obtained correctly from email address.', {userID: userID, isActive: isActive, superID: superID, accountID: accountID}
+						true, 'User information data obtained correctly from email address.', {userID: userID, isActive: isActive, superUserID: superID, accountsIDownBySuperUser: accountID}
 					)
 				})
 			})

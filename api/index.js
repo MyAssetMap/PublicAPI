@@ -6,8 +6,13 @@
 const serverless = require('serverless-http');
 const express = require('express');
 const bodyParser = require("body-parser");
+
+// ==============================
+// = DATABASE ENDPOINT SETTINGS =
+// ==============================
 const app = express();
 const db = require('./queries')
+
 // ============
 // = SETTINGS =
 // ============
@@ -23,6 +28,9 @@ app.use(bodyParser.json());
 // =============
 
 function APIReturn(res, success, message, data) {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Credentials', true);
+  
 	if (typeof data == 'undefined') {
 		res.json({
 			success: success,
@@ -35,17 +43,22 @@ function APIReturn(res, success, message, data) {
 			data: data
 		})
 	}
-
 }
 
+function checkAuthentication(userID, callback) {
+  const isValidUser = db.getUsersByUUID(function(users) {
+    // console.log('USERS')
+    // console.log(users)
 
+    callback(true);
+  });
+}
 
-
-// app.get('/', function (req, res) {
-// 	return APIReturn(res,
-// 		true,'Welcome to the MY ASSET MAP endpoint v1.0'
-// 	)
-// })
+app.get('/', function (req, res) {
+	return APIReturn(res,
+		true, 'Welcome to the MY ASSET MAP endpoint v1.0'
+	)
+})
 
 //ADD COL
 //'ALTER TABLE "User" ADD COLUMN "passwordHash" VARCHAR;'
@@ -71,20 +84,14 @@ function APIReturn(res, success, message, data) {
 // = GET ENDPOINTS =
 // =================
 //
-// app.get('/dbinfo', function (req, res) {
-// 	db.testPG(function (result) {
-// 		return APIReturn(res,
-// 			true, 'DatabaseInfo.', result
-// 		)
-// 	})
-// })
-
-
-app.get('/', function (req, res) {
-	return APIReturn(res,
-		true, 'Welcome to the MY ASSET MAP endpoint v1.0'
-	)
+app.get('/dbinfo', function (req, res) {
+  db.testPG(function (result) {
+    return APIReturn(res,
+      true, 'DatabaseInfo.', result
+    )
+  })
 })
+
 
 app.get('/users', function (req, res) {
 	db.getUsers(function (users) {
@@ -219,7 +226,6 @@ app.post('/users/lookup', function (req, res) {
 		isActive,
 		superID = [], 
 		accountID = [];
-
 
 	if (typeof req.body.email == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
 	var email = req.body.email;

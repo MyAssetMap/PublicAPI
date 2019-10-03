@@ -61,8 +61,14 @@ functions:
     handler: index.handler
     description: Handle all API Endpoints.
     events:
-      - http: ANY /
-      - http: 'ANY {proxy+}'
+      - http:
+          path: / # this matches the base path
+          method: ANY
+          cors: true # <-- CORS!
+      - http:
+          path: /{proxy+} # this matches any path, the token 'any' doesn't mean anything special
+          method: ANY
+          cors: true # <-- CORS!
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details

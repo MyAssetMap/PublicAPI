@@ -12,6 +12,7 @@ const bodyParser = require("body-parser");
 // ==============================
 const app = express();
 const db = require('./queries')
+const config = require('./config');
 
 // ============
 // = SETTINGS =
@@ -45,6 +46,21 @@ function APIReturn(res, success, message, data) {
 	}
 }
 
+function checkAPIKey(req, res) {
+  // console.log(req.header('Auth-DEV'));
+  // console.log(req.header('Auth-PROD'));
+  var auth = false;
+  if (req.header('Auth-DEV') == config.auth.DEV) auth = true;
+  if (req.header('Auth-PROD') == config.auth.PROD) auth = true;
+  
+  if (!auth) {
+    APIReturn(res,
+      false, 'Unauthorized'
+    )
+  }
+  return auth;
+}
+
 function checkAuthentication(userID, callback) {
   const isValidUser = db.getUsersByUUID(function(users) {
     // console.log('USERS')
@@ -55,9 +71,11 @@ function checkAuthentication(userID, callback) {
 }
 
 app.get('/', function (req, res) {
-	return APIReturn(res,
-		true, 'Welcome to the MY ASSET MAP endpoint v1.0'
-	)
+  if (!checkAPIKey(req, res)) return;
+  
+  return APIReturn(res,
+    true, 'Welcome to the MY ASSET MAP endpoint v1.0'
+  )
 })
 
 //ADD COL
@@ -85,6 +103,8 @@ app.get('/', function (req, res) {
 // =================
 //
 app.get('/dbinfo', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
   db.testPG(function (result) {
     return APIReturn(res,
       true, 'DatabaseInfo.', result
@@ -94,6 +114,8 @@ app.get('/dbinfo', function (req, res) {
 
 
 app.get('/users', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 	db.getUsers(function (users) {
 		return APIReturn(res,
 			true, 'User information has been returned.', users
@@ -102,6 +124,8 @@ app.get('/users', function (req, res) {
 })
 
 app.get('/emails', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 	db.getEmails(function (emails) {
 		return APIReturn(res,
 			true, 'Emails information has been returned.', emails
@@ -110,6 +134,8 @@ app.get('/emails', function (req, res) {
 })
 
 app.get('/accounts', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 	db.getAccounts(function (accounts) {
 		return APIReturn(res,
 			true, 'Accounts information has been returned.', accounts
@@ -118,6 +144,8 @@ app.get('/accounts', function (req, res) {
 })
 
 app.get('/addons', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 	db.getAddons(function (accounts) {
 		return APIReturn(res,
 			true, 'Addon information has been returned.', accounts
@@ -126,6 +154,8 @@ app.get('/addons', function (req, res) {
 })
 
 app.get('/superusers', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 	db.getSuperUsers(function (accounts) {
 		return APIReturn(res,
 			true, 'Super User preference has been returned.', accounts
@@ -134,6 +164,8 @@ app.get('/superusers', function (req, res) {
 })
 
 app.get('/userpreference', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 	db.getUserPreference(function (accounts) {
 		return APIReturn(res,
 			true, 'User preference information has been returned.', accounts
@@ -145,6 +177,8 @@ app.get('/userpreference', function (req, res) {
 // ==================
 
 app.post('/users/add', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 	// console.log(req.body);
 	if (typeof req.body.email == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
 	if (typeof req.body.password == 'undefined') return APIReturn(res, false, 'Password must be provided.')
@@ -183,6 +217,8 @@ app.post('/users/add', function (req, res) {
 })
 
 app.post('/users/login', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 	if (typeof req.body.email == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
 	if (typeof req.body.password == 'undefined') return APIReturn(res, false, 'Password must be provided.')
 
@@ -221,6 +257,8 @@ app.post('/users/login', function (req, res) {
 })
 
 app.post('/users/lookup', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 	
 	var userID = 0,
 		isActive,
@@ -264,6 +302,8 @@ app.post('/users/lookup', function (req, res) {
 })
 
 app.post('/selectTable', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 
 	if (typeof req.body.table == 'undefined') return APIReturn(res, false, 'Table name must be provided.')
 
@@ -280,6 +320,8 @@ app.post('/selectTable', function (req, res) {
 })
 
 app.post('/selectRow', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 
 	if (typeof req.body.table == 'undefined') return APIReturn(res, false, 'Table name must be provided.')
 	if (typeof req.body.row == 'undefined') return APIReturn(res, false, 'Row name must be provided.')
@@ -295,6 +337,8 @@ app.post('/selectRow', function (req, res) {
 })
 
 app.post('/innerJoin', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 
 	if (typeof req.body.fields == 'undefined') return APIReturn(res, false, 'Fields name must be provided.')
 	if (typeof req.body.firstTable == 'undefined') return APIReturn(res, false, 'First Table name must be provided.')
@@ -327,6 +371,8 @@ app.post('/innerJoin', function (req, res) {
 })
 
 app.post('/updateRow', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 
 	if (typeof req.body.table == 'undefined') return APIReturn(res, false, 'Table name must be provided.')
 	if (typeof req.body.column == 'undefined') return APIReturn(res, false, 'Column Table name must be provided.')
@@ -354,6 +400,8 @@ app.post('/updateRow', function (req, res) {
 })
 
 app.post('/insertRow', function (req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
 
 	if (typeof req.body.table == 'undefined') return APIReturn(res, false, 'Table name must be provided.')
 	if (typeof req.body.columns == 'undefined') return APIReturn(res, false, 'Columns name must be provided.')

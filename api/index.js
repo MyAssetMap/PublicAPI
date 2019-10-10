@@ -118,8 +118,8 @@ app.get('/dbinfo', function(req, res) {
 app.get('/users', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  db.getUsers(function(success,users) {
-    if (success) return APIReturn(res,false, users)
+  db.getUsers(function(error,users) {
+    if (error) return APIReturn(res,false, users)
     
     return APIReturn(res,
       true, 'User information has been returned.', users
@@ -130,8 +130,8 @@ app.get('/users', function(req, res) {
 app.get('/emails', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  db.getEmails(function(success,emails) {
-    if (success) return APIReturn(res,false, emails)
+  db.getEmails(function(error,emails) {
+    if (error) return APIReturn(res,false, emails)
     
     return APIReturn(res,
       true, 'Emails information has been returned.', emails
@@ -142,8 +142,8 @@ app.get('/emails', function(req, res) {
 app.get('/accounts', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  db.getAccounts(function(success,accounts) {
-    if (success) return APIReturn(res,false, accounts)
+  db.getAccounts(function(error,accounts) {
+    if (error) return APIReturn(res,false, accounts)
     
     return APIReturn(res,
       true, 'Accounts information has been returned.', accounts
@@ -154,8 +154,8 @@ app.get('/accounts', function(req, res) {
 app.get('/addons', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  db.getAddons(function(success,accounts) {
-    if (success) return APIReturn(res,false, accounts)
+  db.getAddons(function(error,accounts) {
+    if (error) return APIReturn(res,false, accounts)
     
     return APIReturn(res,
       true, 'Addon information has been returned.', accounts
@@ -166,8 +166,8 @@ app.get('/addons', function(req, res) {
 app.get('/superusers', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  db.getSuperUsers(function(success,accounts) {
-    if (success) return APIReturn(res,false, accounts)
+  db.getSuperUsers(function(error,accounts) {
+    if (error) return APIReturn(res,false, accounts)
     
     return APIReturn(res,
       true, 'Super User preference has been returned.', accounts
@@ -178,14 +178,28 @@ app.get('/superusers', function(req, res) {
 app.get('/userpreference', function(req, res) {
     if (!checkAPIKey(req, res)) return;
 
-    db.getUserPreference(function(success,accounts) {
-    if (success) return APIReturn(res,false, accounts)
+    db.getUserPreference(function(error,accounts) {
+    if (error) return APIReturn(res,false, accounts)
     
       return APIReturn(res,
         true, 'User preference information has been returned.', accounts
       )
     });
-  })
+})
+
+app.get('/layers/public', function(req, res) {
+    if (!checkAPIKey(req, res)) return;
+
+    var mapID = 0;
+    
+    db.getGlobalLayers(mapID, function(error,layers) {
+    if (error) return APIReturn(res,false, layers)
+    
+      return APIReturn(res,
+        true, 'Public Layers have been returned', layers
+      )
+    });
+})
   // ==================
   // = POST ENDPOINTS =
   // ==================
@@ -201,8 +215,8 @@ app.post('/users/add', function(req, res) {
   var password = req.body.password;
   var passwordHash = password;
 
-  db.getUserByEmail(emailAddress, function(success,users) {
-    if (success) return APIReturn(res, false, users)
+  db.getUserByEmail(emailAddress, function(error,users) {
+    if (error) return APIReturn(res, false, users)
     
     console.log('USERS')
     console.log(users)
@@ -237,8 +251,8 @@ app.post('/users/login', function(req, res) {
 
   if (typeof req.body.UUID == 'undefined') return APIReturn(res, false, 'UUID of user must be provided.')
 
-  db.getUserIDByUUID(req.body.UUID, function(success,user) {
-    if (success) return APIReturn(res, false, user)
+  db.getUserIDByUUID(req.body.UUID, function(error,user) {
+    if (error) return APIReturn(res, false, user)
     
     console.log(user)
     if (user != 0) {
@@ -250,8 +264,8 @@ app.post('/users/login', function(req, res) {
     } else {
       if ((typeof req.body.firstName == 'undefined') || (typeof req.body.lastName == 'undefined')) return APIReturn(res, false, 'User does not exist. To create, supply firstName and lastName of user.')
         
-      db.createUser(req.body.UUID,req.body.firstName,req.body.lastName, function(success,users) {
-        if (success) return APIReturn(res, false, users)
+      db.createUser(req.body.UUID,req.body.firstName,req.body.lastName, function(error,users) {
+        if (error) return APIReturn(res, false, users)
         
         console.log(users);
         
@@ -277,8 +291,8 @@ app.post('/users/lookup', function(req, res) {
   if (typeof req.body.email == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
   var email = req.body.email;
 
-  db.getUsersByEmail(email, function(success,data) {
-    if (success) return APIReturn(res, false, data)
+  db.getUsersByEmail(email, function(error,data) {
+    if (error) return APIReturn(res, false, data)
     
     console.log(data);
 
@@ -287,7 +301,7 @@ app.post('/users/lookup', function(req, res) {
     } else if (data.length == 1) {
       userID = data[0].ID;
       isActive = !data[0].isDisabled;
-      db.getAccountsSuperByUserID(userID, function(success,data) {
+      db.getAccountsSuperByUserID(userID, function(error,data) {
         console.log(data);
 
         console.log();
@@ -295,7 +309,7 @@ app.post('/users/lookup', function(req, res) {
           superID.push(entry.ID);
         });
 
-        db.getAccountsByUserID(userID, function(success,data) {
+        db.getAccountsByUserID(userID, function(error,data) {
           console.log(data);
 
           data.forEach(function(entry) {
@@ -317,7 +331,6 @@ app.post('/users/lookup', function(req, res) {
       })
     } else return APIReturn(res, false, 'Multiple users matched the email address provided.');
   });
-
 })
 
 app.post('/selectTable', function(req, res) {
@@ -328,8 +341,8 @@ app.post('/selectTable', function(req, res) {
 
   var table = req.body.table;
 
-  db.getTable(table, function(success,data) {
-    if (success) return APIReturn(res, false, data)
+  db.getTable(table, function(error,data) {
+    if (error) return APIReturn(res, false, data)
 
     return APIReturn(res,
       true, 'Table data obtained correctly', data
@@ -349,8 +362,8 @@ app.post('/selectRow', function(req, res) {
   var table = req.body.table;
   var row = req.body.row;
 
-  db.getRowFromTable(table, row, function(success,data) {
-    if (success) return APIReturn(res,false, data)
+  db.getRowFromTable(table, row, function(error,data) {
+    if (error) return APIReturn(res,false, data)
     
     return APIReturn(res,
       true, 'Row data obtained correctly', data

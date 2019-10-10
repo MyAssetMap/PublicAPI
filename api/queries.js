@@ -17,143 +17,42 @@ const pool = new pg.Pool({
     connectionTimeoutMillis: 1000, // return an error after 1 second if connection could not be established
 })
 
-// async function query (q) {
-//   const client = await pool.connect()
-//   let res
-//   try {
-//     await client.query('BEGIN')
-//     try {
-//       res = await client.query(q)
-//       await client.query('COMMIT')
-//     } catch (err) {
-//       await client.query('ROLLBACK')
-//       throw err
-//     }
-//   } finally {
-//     client.release()
-//   }
-//   return res
-// }
-//
-// const testDB = async (event, context, callback) => {
-// 	console.log(event)
-// 	try {
-// 	      const { rows } = await query("select * from pg_tables")
-// 	      console.log(JSON.stringify(rows[0]))
-// 	      var response = {
-// 	          "statusCode": 200,
-// 	          "headers": {
-// 	              "Content-Type" : "application/json"
-// 	          },
-// 	          "body": JSON.stringify(rows),
-// 	          "isBase64Encoded": false
-// 	      };
-// 	      callback(null, response);
-// 	} catch (err) {
-// 	      console.log('Database ' + err)
-// 	      callback(null, 'Database ' + err);
-// 	}
-// };
-
-const testPG = (request, response) => {
-    pool.query('SELECT * FROM pg_tables', (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else response.status(200).json(results.rows)
-    })
-}
-
-const runQuery = (query, callback) => {
-    var queryMsg = query;
-    //console.log(queryMsg)
-
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
-}
+// ========================
+// = CUSTOM LOGIC QUERIES =
+// ========================
 
 const getUsers = (callback) => {
-    pool.query('SELECT * FROM public."User"', (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
+  runQuery('SELECT * FROM public."User"', callback);
 }
 
 const getAccounts = (callback) => {
-    pool.query('SELECT * FROM public."Account"', (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
-
+  runQuery('SELECT * FROM public."Account"', callback);
 }
 
 const getEmails = (callback) => {
-    pool.query('SELECT "email" FROM public."User"', (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
+  runQuery('SELECT "email" FROM public."User"', callback);
 }
 
 const getAddons = (callback) => {
-    pool.query('SELECT * FROM public."Addon"', (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
+  runQuery('SELECT * FROM public."Addon"', callback);
 }
 
 const getSuperUsers = (callback) => {
-    pool.query('SELECT * FROM public."SuperUser"', (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
+  runQuery('SELECT * FROM public."SuperUser"', callback);
 }
 
 const getUserPreference = (callback) => {
-    pool.query('SELECT * FROM public."UserPreference"', (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
+  runQuery('SELECT * FROM public."UserPreference"', callback);
 }
 
 const getUserByEmail = (emailAddress, callback) => {
-    var queryMsg = 'SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\'' + emailAddress + '\');';
-    //console.log(queryMsg)
-
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
+  runQuery('SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\'' + emailAddress + '\');', callback);
 }
 
-const getUserIDByUUID = (UUID, callback) => {
-    var queryMsg = 'SELECT "ID" FROM public."User" WHERE "cognitoUUID" = \'' + UUID + '\';';
-    //console.log(queryMsg)
-
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows[0]['ID']);
-    })
-}
+const getUserIDByUUID = (UUID, callback) => {getRowFromTableWhere('User','ID','cognitoUUID',UUID,callback);}
 
 const createUser = (UUID, firstName, lastName, callback) => {
-    var queryMsg = 'INSERT INTO public."User" ("cognitoUUID","firstName","lastName") VALUES  (\'' + UUID + '\',\'' + firstName + '\',\'' + lastName + '\');';
-    //console.log(queryMsg)
-
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
+  runQuery('INSERT INTO public."User" ("cognitoUUID","firstName","lastName") VALUES  (\'' + UUID + '\',\'' + firstName + '\',\'' + lastName + '\');', callback);
 }
 
 // ================================
@@ -162,15 +61,7 @@ const createUser = (UUID, firstName, lastName, callback) => {
 
 //From email get user ID
 const getUsersByEmail = (emailAddress, callback) => {
-    var queryMsg = 'SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\'' + emailAddress + '\');'
-
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else
-
-        callback(false, results.rows);
-    })
+  runQuery('SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\'' + emailAddress + '\');', callback);
 }
 
 //TODO:CREATE FUNCTION FOR THIS
@@ -178,95 +69,104 @@ const getUsersByEmail = (emailAddress, callback) => {
 
 //TODO:CREATE FUNCTION FOR THIS
 //with userID get user superuser user ID if SuperUser
-const getAccountsSuperByUserID = (userID, callback) => {
-    var queryMsg = 'SELECT * FROM public."SuperUser" WHERE public."SuperUser"."userID" = ' + userID + ';'
-
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else
-
-        callback(false, results.rows);
-    })
-}
+const getAccountsSuperByUserID = (userID, callback) => {getTableWhere('SuperUser','userID',userID,callback)}
 
 //TODO:CREATE FUNCTION FOR THIS
 //with userID get account the user belongs.
-const getAccountsByUserID = (userID, callback) => {
-    var queryMsg = 'SELECT "accountID" FROM public."AccountUser" WHERE "userID" = ' + userID + ';'
-
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else
-
-        callback(false, results.rows);
-    })
-}
+const getAccountsByUserID = (userID, callback) => {getRowFromTableWhere('AccountUser','accountID','userID',userID,callback)}
 
 //TODO:CREATE FUNCTION FOR THIS
 //with userID get user user map user ID
 
 
-const getTable = (table, callback) => {
-
-    var queryMsg = 'SELECT * FROM public."' + table + '"';
-    //console.log(queryMsg)
-
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
+const getGlobalLayers = (mapID, callback) => {
+  var finalReturn = [];
+    
+  getTableWhere('LayerGroup','mapID',0,function(error,groups) {
+    if (error) return callback(true, groups);
+    
+    // finalReturn.push(groups);
+    
+    var itemsProcessed = 0;
+    groups.forEach(function(group) {
+      // console.log(group);
+      let groupID = group['ID'];
+      
+      getTableWhere('Layer','groupID',groupID, function(error,layers) {
+        if (error) return callback(true, layers);
+        
+        var processedLayers = [];
+        
+        layers.forEach(layer => {
+          processedLayers.push(
+            { beforeLayer: null,
+              layer: layer
+            })
+        })
+        
+        getTableWhere('LayerSource','groupID',groupID, function(error,layersources) {
+          if (error) return callback(true, layersources);
+          
+          //Add the template
+          var groupPayload = {
+            toc: group,
+            sourcesArray: layersources,
+            layersArray: processedLayers
+          };
+          
+          finalReturn.push(groupPayload);
+          
+          itemsProcessed++;
+          if (itemsProcessed === groups.length) {
+            //NOW THAT EVERYTHING IS DONE, CONTINUE.
+            callback(false, finalReturn);
+          }
+        })
+      })
     })
+  });
+}
+
+// ==========
+// = GLOBAL =
+// ==========
+
+const runQuery = (queryMsg, callback) => {
+  //console.log(queryMsg)
+  
+  pool.query(queryMsg, (error, results) => {
+    if (error) {
+      callback(true, error.message)
+    }else callback(false, results.rows);
+  })
+}
+
+const getTable = (table, callback) => {
+  runQuery('SELECT * FROM public."' + table + '"', callback);
 }
 
 const getRowFromTable = (table, row, callback) => {
+  runQuery('SELECT "' + fromSingleValueToValues(row) + '" FROM public."' + table + '"', callback);
+}
 
-    var queryMsg = 'SELECT "' + fromSingleValueToValues(row) + '" FROM public."' + table + '"';
-    //console.log(queryMsg)
+const getTableWhere = (table, fieldName, value, callback) => {
+  runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" = ' + value + ';', callback);
+}
 
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
+const getRowFromTableWhere = (table, row, fieldName, value, callback) => {
+  runQuery('SELECT "' + fromSingleValueToValues(row) + '" FROM public."' + table + '" WHERE "' + fieldName + '" = ' + value + ';', callback);
 }
 
 const getInnerJoin = (fields, firstTable, firstIdentifier, secondTable, secondIdentifier, callback) => {
-
-    var queryMsg = 'Select "' + fields + '" from public."' + firstTable + '", public."' + secondTable + '" Where public."' + firstTable + '".' + firstIdentifier + ' = public."' + secondTable + '".' + secondIdentifier + ';'
-        //console.log(queryMsg)
-
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
+  runQuery('Select "' + fields + '" from public."' + firstTable + '", public."' + secondTable + '" Where public."' + firstTable + '".' + firstIdentifier + ' = public."' + secondTable + '".' + secondIdentifier + ';', callback);
 }
 
-
 const updateRow = (table, column, value, identifierColumn, identifier, callback) => {
-
-    var queryMsg = 'UPDATE public."' + table + '" SET ' + '"' + column + '" = "' + value + '"' + ' WHERE ' + identifierColumn + '= "' + identifier + '";';
-
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
-
+  runQuery('UPDATE public."' + table + '" SET ' + '"' + column + '" = "' + value + '"' + ' WHERE ' + identifierColumn + '= "' + identifier + '";', callback);
 }
 
 const insertRow = (table, columns, values, callback) => {
-
-    var queryMsg = 'INSERT INTO public."' + table + '" (' + columns + ') VALUES (' + fromSingleValueToValues(values) + ');';
-    pool.query(queryMsg, (error, results) => {
-        if (error) {
-            callback(true, error.message)
-        }else callback(false, results.rows);
-    })
-
-
+  runQuery('INSERT INTO public."' + table + '" (' + fromSingleValueToValues(columns) + ') VALUES (' + fromSingleValueToValues(values) + ');', callback);
 }
 
 // function addSingleQuoteToFields(fieldsToAddQuote) {
@@ -282,30 +182,25 @@ const insertRow = (table, columns, values, callback) => {
 // }
 
 
-const test = function() {
-    console.log('The test works');
-    return 'It does?';
-}
-
 
 const fromSingleValueToValues = function(valuesOrValues) {
 
-    if (valuesOrValues.includes(",")) {
-        var values = valuesOrValues.split(',');
-        var result = "";
+  if (valuesOrValues.includes(",")) {
+    var values = valuesOrValues.split(',');
+    var result = "";
 
-        values.forEach(function(value) {
-            value = value.trim() //We remove any extra space used between values
+    values.forEach(function(value) {
+      value = value.trim() //We remove any extra space used between values
 
-            result += '"' + value + '",';
+      result += '"' + value + '",';
 
-        });
-        result = result.substring(0, result.length - 1) //Remove last comma 
-        return result;
+    });
+    result = result.substring(0, result.length - 1) //Remove last comma 
+    return result;
 
-    } else { //Since the input has no comma, it is a single value. 
-        return '"' + valuesOrValues + '"';
-    }
+  } else { //Since the input has no comma, it is a single value. 
+    return '"' + valuesOrValues + '"';
+  }
 }
 
 //SELECT "firstName", "emailAddress" FROM public."User";
@@ -361,10 +256,7 @@ const fromSingleValueToValues = function(valuesOrValues) {
 // }
 
 
-
-
 module.exports = {
-    testPG,
     runQuery,
     getUsers,
     getAccounts,
@@ -378,12 +270,16 @@ module.exports = {
     createUser,
     getAccountsSuperByUserID,
     getAccountsByUserID,
+    getGlobalLayers,
+  
     getTable,
     getRowFromTable,
+    getTableWhere,
+    getRowFromTableWhere,
+  
     getInnerJoin,
     updateRow,
     insertRow,
-    test,
     fromSingleValueToValues,
     // getUserById,
     // createUser,

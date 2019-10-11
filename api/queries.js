@@ -49,7 +49,7 @@ const getUserByEmail = (emailAddress, callback) => {
   runQuery('SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\'' + emailAddress + '\');', callback);
 }
 
-const getUserIDByUUID = (UUID, callback) => {getRowFromTableWhere('User','ID','cognitoUUID',UUID,callback);}
+const getUserIDByUUID = (UUID, callback) => {getRowFromTableWhere('User','id','cognitoUUID',UUID,callback);}
 
 const createUser = (UUID, firstName, lastName, callback) => {
   runQuery('INSERT INTO public."User" ("cognitoUUID","firstName","lastName") VALUES  (\'' + UUID + '\',\'' + firstName + '\',\'' + lastName + '\');', callback);
@@ -90,27 +90,67 @@ const getGlobalLayers = (mapID, callback) => {
     var itemsProcessed = 0;
     groups.forEach(function(group) {
       // console.log(group);
-      let groupID = group['ID'];
+      let groupID = group['id'];
+      
+      //PreProcess
+      var processedGroup = group;
+      
+      if (processedGroup.label !== null)
+        processedGroup.id = processedGroup.label.toLowerCase() + '_' + processedGroup.id.toString();
+      
+      processedGroup.group = "dataLayer"
+      
+      delete processedGroup.ownerID;
+      delete processedGroup.mapID;
+      delete processedGroup.groupID;
       
       getTableWhere('Layer','groupID',groupID, function(error,layers) {
         if (error) return callback(true, layers);
         
-        var processedLayers = [];
+        if (layers.length <= 0) {
+          itemsProcessed++;
+          return;
+        }
         
+        var processedLayers = [];
+        var sourceList = [];
+        var sourceConversionList = {};
         layers.forEach(layer => {
-          processedLayers.push(
-            { beforeLayer: null,
-              layer: layer
-            })
+          
+          sourceList.push(layer.source);
+          
+          if (processedGroup.label !== null) {
+            layer.id = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.id.toString();
+          
+            sourceConversionList[layer.source] = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
+          
+            layer.source = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
+          }
+          
+          delete layer.ownerID;
+          delete layer.groupID;
+          
+          processedLayers.push({ 
+            beforeLayer: null,
+            layer: layer
+          })
         })
         
-        getTableWhere('LayerSource','groupID',groupID, function(error,layersources) {
+        getTableWhere('LayerSource','id',sourceList, function(error,layersources) {
           if (error) return callback(true, layersources);
+          
+          var processedSource = [];
+        
+          layersources.forEach(layerSource => {
+            layerSource.id = sourceConversionList[layerSource.id];
+            
+            processedSource.push(layerSource)
+          })
           
           //Add the template
           var groupPayload = {
-            toc: group,
-            sourcesArray: layersources,
+            toc: processedGroup,
+            sourcesArray: processedSource,
             layersArray: processedLayers
           };
           
@@ -150,7 +190,11 @@ const getRowFromTable = (table, row, callback) => {
 }
 
 const getTableWhere = (table, fieldName, value, callback) => {
-  runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" = ' + value + ';', callback);
+  if (!Array.isArray(value)) {
+    runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" = ' + value + ';', callback);
+  }else{
+    runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + value.join(', ') + ');', callback);
+  }
 }
 
 const getRowFromTableWhere = (table, row, fieldName, value, callback) => {

@@ -126,7 +126,8 @@ const getGlobalLayers = (mapID, callback) => {
           
             layer.source = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
           }
-          
+
+          delete layer.label;
           delete layer.ownerID;
           delete layer.groupID;
           

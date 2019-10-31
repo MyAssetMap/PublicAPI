@@ -12,6 +12,7 @@ const bodyParser = require("body-parser");
 // ==============================
 const app = express();
 const db = require('./queries')
+const postgis = require('./postgis')
 const config = require('./config');
 
 // ============
@@ -100,14 +101,54 @@ app.get('/', function(req, res) {
 // 	);
 // })
 
+// =========================
+// = HANDLER FOR LAYER API =
+// =========================
+app.get('/layer/mvt/:layerName/:zoom/:x/:y', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  var payload = {
+    layer: req.params.layerName,
+    z: req.params.zoom,
+    x: req.params.x,
+    y: req.params.y,
+  }
+  
+  postgis.getMVTLayer(payload, function(error, result) {
+    if (error) return APIReturn(res,false, result)
+    
+    return APIReturn(res,
+      true, 'MVT has been generated.', result
+    )
+  })
+  }
+})
+
+
+
+
 // =================
 // = GET ENDPOINTS =
 // =================
-//
-app.get('/dbinfo', function(req, res) {
+
+
+app.get('/postgis', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  db.testPG(function(result) {
+  postgis.testPG(function(error,result) {
+    if (error) return APIReturn(res,false, result)
+    
+    return APIReturn(res,
+      true, 'DatabaseInfo.', result
+    )
+  })
+})
+
+app.get('/db', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+
+  db.testPG(function(error,result) {
+    if (error) return APIReturn(res,false, result)
+    
     return APIReturn(res,
       true, 'DatabaseInfo.', result
     )
@@ -274,8 +315,6 @@ app.post('/users/login', function(req, res) {
         )
       })
     }
-
-
   });
 })
 

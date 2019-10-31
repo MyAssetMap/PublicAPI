@@ -5,7 +5,7 @@
 // =====================
 const pg = require('pg')
 const pool = new pg.Pool({
-    database: 'myassetmapv2_db',
+    database: 'myassetmapv2_layers',
     user: 'Javier_root',
     host: 'myassetmapv2.c7tqiynvcd79.us-east-1.rds.amazonaws.com',
     password: 'javierroot123',
@@ -25,59 +25,63 @@ const testPG = (callback) => {
   runQuery('SELECT * FROM pg_tables', callback);
 }
 
-const getUsers = (callback) => {
-  runQuery('SELECT * FROM public."User"', callback);
+// ============================
+// = PROCESS DATA AND SAVE IT =
+// ============================
+const getMVTLayer = (callback, payload) => {
+  
+  var table = payload['table'];
+  var z = payload['z'];
+  var x = payload['x'];
+  var x = payload['y'];
+  
+  var geom_column = 'geom';
+  var columns = '';//'column,'
+  var filter = '';
+  
+  let bounds = merc.bbox(params.x, params.y, params.z, false, '900913')
+
+  var sqlQuery = `
+  SELECT 
+    ST_AsMVT(q, '${table}', 4096, 'geom')
+  
+  FROM (
+    SELECT
+    ${columns ? `${columns},` : ''}
+      ST_AsMVTGeom(
+        ST_Transform(${geom_column}, 3857),
+        ST_MakeBox2D(ST_Point(${bounds[0]}, ${bounds[1]}), ST_Point(${
+    bounds[2]
+  }, ${bounds[3]}))
+      ) geom
+
+    FROM (
+      SELECT
+        ${columns ? `${columns},` : ''}
+        ${geom_column},
+        srid
+      FROM 
+        ${table},
+        (SELECT ST_SRID(${geom_column}) AS srid FROM ${
+    table
+  } LIMIT 1) a
+        
+      WHERE       
+        ST_transform(
+          ST_MakeEnvelope(${bounds.join()}, 3857), 
+          srid
+        ) && 
+        ${geom_column}
+
+        -- Optional Filter
+        ${filter ? `AND ${filter}` : ''}
+    ) r
+
+  ) q
+  `;
+  
+  runQuery(sqlQuery, callback);
 }
-
-const getAccounts = (callback) => {
-  runQuery('SELECT * FROM public."Account"', callback);
-}
-
-const getEmails = (callback) => {
-  runQuery('SELECT "email" FROM public."User"', callback);
-}
-
-const getAddons = (callback) => {
-  runQuery('SELECT * FROM public."Addon"', callback);
-}
-
-const getSuperUsers = (callback) => {
-  runQuery('SELECT * FROM public."SuperUser"', callback);
-}
-
-const getUserPreference = (callback) => {
-  runQuery('SELECT * FROM public."UserPreference"', callback);
-}
-
-const getUserByEmail = (emailAddress, callback) => {
-  runQuery('SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\'' + emailAddress + '\');', callback);
-}
-
-const getUserIDByUUID = (UUID, callback) => {getRowFromTableWhere('User','id','cognitoUUID',UUID,callback);}
-
-const createUser = (UUID, firstName, lastName, callback) => {
-  runQuery('INSERT INTO public."User" ("cognitoUUID","firstName","lastName") VALUES  (\'' + UUID + '\',\'' + firstName + '\',\'' + lastName + '\');', callback);
-}
-
-// ================================
-// = CONVERT EMAIL ADDRESS TO IDS =
-// ================================
-
-//From email get user ID
-const getUsersByEmail = (emailAddress, callback) => {
-  runQuery('SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\'' + emailAddress + '\');', callback);
-}
-
-//TODO:CREATE FUNCTION FOR THIS
-//with userID get user preferences
-
-//TODO:CREATE FUNCTION FOR THIS
-//with userID get user superuser user ID if SuperUser
-const getAccountsSuperByUserID = (userID, callback) => {getTableWhere('SuperUser','userID',userID,callback)}
-
-//TODO:CREATE FUNCTION FOR THIS
-//with userID get account the user belongs.
-const getAccountsByUserID = (userID, callback) => {getRowFromTableWhere('AccountUser','accountID','userID',userID,callback)}
 
 //TODO:CREATE FUNCTION FOR THIS
 //with userID get user user map user ID
@@ -308,6 +312,8 @@ const fromSingleValueToValues = function(valuesOrValues) {
 module.exports = {
     testPG,
     runQuery,
+  
+    getMVTLayer,
     getUsers,
     getAccounts,
     getEmails,

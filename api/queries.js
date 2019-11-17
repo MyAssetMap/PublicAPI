@@ -59,6 +59,44 @@ const createUser = (UUID, firstName, lastName, callback) => {
   runQuery('INSERT INTO public."User" ("cognitoUUID","firstName","lastName") VALUES  (\'' + UUID + '\',\'' + firstName + '\',\'' + lastName + '\');', callback);
 }
 
+const createGroup = (payload, callback) => {
+    // ownerID: ownerID,
+    // mapID: mapID,
+    // groupID: groupID,
+    // label: label,
+    // description: description,
+    // canExpand: canExpand,
+    // canOrgView: canOrgView,
+    // canOrgEdit: canOrgEdit,
+      insertRow(
+        'LayerGroup',
+        ["ownerID", "mapID", "groupID", "label", "description", "canExpand", "canOrgView", "canOrgEdit"],
+        [payload.ownerID, payload.mapID, payload.groupID, payload.label, payload.description, payload.canExpand, payload.canOrgView, payload.canOrgEdit],
+        callback
+      );
+      //});
+  
+}
+
+const createLayer = (payload, callback) => {
+  // insertRow(
+  //   'LayerSource',
+  //   ["type"],
+  //   ["vector"],  //
+    // function(error, sourceID) {
+    //   if (error) return callback(true, sourceID);
+    //
+      
+      insertRow(
+        'Layer',
+        ["ownerID", "groupID", "type", "source", "source-layer", "label", "interactive", "minzoom", "layout", "paint", "metadata"],
+        [payload.ownerID, payload.groupID, payload.type, 0, payload.sourceLayer, payload.label, payload.interactive, payload.minzoom, payload.layout, payload.paint, payload.metadata],
+        callback
+      );
+      //});
+  
+}
+
 // ================================
 // = CONVERT EMAIL ADDRESS TO IDS =
 // ================================
@@ -177,7 +215,7 @@ const getGlobalLayers = (mapID, callback) => {
 // ==========
 
 const runQuery = (queryMsg, callback) => {
-  //console.log(queryMsg)
+  console.log(queryMsg)
   
   pool.query(queryMsg, (error, results) => {
     if (error) {
@@ -215,7 +253,7 @@ const updateRow = (table, column, value, identifierColumn, identifier, callback)
 }
 
 const insertRow = (table, columns, values, callback) => {
-  runQuery('INSERT INTO public."' + table + '" (' + fromSingleValueToValues(columns) + ') VALUES (' + fromSingleValueToValues(values) + ');', callback);
+  runQuery('INSERT INTO public."' + table + '" (' + fromSingleValueToValues(columns,'"') + ') VALUES (' + fromSingleValueToValues(values) + ') RETURNING id;', callback);
 }
 
 // function addSingleQuoteToFields(fieldsToAddQuote) {
@@ -230,26 +268,36 @@ const insertRow = (table, columns, values, callback) => {
 // 	return newvalues;
 // }
 
+const processValue = function(value,char = `'`) {
+  if (typeof value === 'string') {
+    value = value.trim(); //We remove any extra space used between values
+  }else if (typeof value === 'object') {
+    value = JSON.stringify(value); //We remove any extra space used between values
+  }
+  if (value === null) {
+    value = "null";
+  }else if (value === '') {
+    value = char+char;
+  }else if (isNaN(value)) value = char + value + char;
+  
+  return value;
+}
 
+const fromSingleValueToValues = function(valuesOrValues,char = `'`) {
 
-const fromSingleValueToValues = function(valuesOrValues) {
-
-  if (valuesOrValues.includes(",")) {
-    var values = valuesOrValues.split(',');
-    var result = "";
+  if (typeof valuesOrValues === 'object' || (typeof valuesOrValues === 'string' && valuesOrValues.includes(","))) {
+    if (typeof valuesOrValues === 'object') {
+      var values = valuesOrValues;
+    }else var values = valuesOrValues.split(',');
+    
+    var result = [];
 
     values.forEach(function(value) {
-      value = value.trim() //We remove any extra space used between values
-
-      result += '"' + value + '",';
-
+      result.push(processValue(value,char));
     });
-    result = result.substring(0, result.length - 1) //Remove last comma 
-    return result;
-
-  } else { //Since the input has no comma, it is a single value. 
-    return '"' + valuesOrValues + '"';
-  }
+    
+    return result.join(`, `);
+  } else if (typeof valuesOrValues === 'string') return processValue(valuesOrValues);
 }
 
 //SELECT "firstName", "emailAddress" FROM public."User";
@@ -321,6 +369,9 @@ module.exports = {
     getAccountsSuperByUserID,
     getAccountsByUserID,
     getGlobalLayers,
+  
+    createGroup,
+    createLayer,
   
     getTable,
     getRowFromTable,

@@ -31,6 +31,14 @@ app.use(bodyParser.json());
 // = FUNCTIONS =
 // =============
 
+//Hello There
+
+function toSlug(str) {
+  var res = str.toLowerCase();
+  res = res.replace(/ /g, "-");
+  return res;
+}
+
 function APIReturn(res, success, message, data) {
   res.set('Access-Control-Allow-Origin', '*');
   res.set('Access-Control-Allow-Credentials', true);
@@ -120,7 +128,6 @@ app.get('/layer/mvt/:layerName/:zoom/:x/:y', function(req, res) {
       true, 'MVT has been generated.', result
     )
   })
-  }
 })
 
 
@@ -241,9 +248,148 @@ app.get('/layers/public', function(req, res) {
       )
     });
 })
+
   // ==================
   // = POST ENDPOINTS =
   // ==================
+
+//LAYERS
+app.post('/layer/import/json', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  var mapID = req.body.mapID
+  var type = req.body.type;
+  var layerID = req.body.layerID;
+  var json = req.body.json;
+  
+  if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+
+  if (type == null) return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
+  if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+
+  if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
+  
+  if (json == null || json == '') return APIReturn(res,false, 'GEOJSON (`json`) must be supplied.');
+  
+  var geoJSON = JSON.parse(json);
+  //console.log(geoJSON);
+  
+  if (geoJSON.type == 'FeatureCollection') {
+    geoJSON.features.forEach(function(feature) {
+      if (feature.type != 'Feature') return APIReturn(res,false, 'GEOJSON have invalid features: '+feature.type);
+      
+      var geometry = feature.geometry;
+      var properties = feature.properties;
+
+      var payload = {mapID: mapID, type: type, layerID: layerID, geom: geometry, prop: properties};
+
+      postgis.insertLayer(payload, function(error, result) {
+        if (error) return APIReturn(res,false, result)
+
+        return APIReturn(res,
+          true, 'MVT has been generated.', result
+        )
+      })
+
+      //console.log(type,geometry,properties);
+    })
+  }else return APIReturn(res,false, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
+});
+
+//LAYERS
+app.post('/group/add', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  var ownerID = req.body.userID;
+  var mapID = req.body.mapID;
+  var groupID = req.body.groupID;
+  var label = req.body.label;
+  var description = req.body.description;
+  var canExpand = req.body.canExpand
+  var canOrgView = req.body.canOrgView;
+  var canOrgEdit = req.body.canOrgEdit;
+  
+  if (ownerID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+  if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+  if (groupID == null) groupID = 0;
+  
+  if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
+  if (description == null) description = '';
+  if (canExpand == null) canExpand = false;
+  if (canOrgView == null) canOrgView = false;
+  if (canOrgEdit == null) canOrgEdit = false;
+
+  var payload = {
+    ownerID: ownerID,
+    mapID: mapID,
+    groupID: groupID,
+    label: label,
+    description: description,
+    canExpand: canExpand,
+    canOrgView: canOrgView,
+    canOrgEdit: canOrgEdit,
+  };
+
+  db.createGroup(payload, function(error, result) {
+    if (error) return APIReturn(res,false, result)
+
+    return APIReturn(res,
+      true, 'Group has been created.', result
+    )
+  })
+});
+
+//LAYERS
+app.post('/layer/add', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  var ownerID = req.body.userID;
+  var groupID = req.body.groupID;
+  var type = req.body.type;
+  //SOURCE
+  var label = req.body.label;
+  var sourceLayer = req.body.sourceLayer;
+  var interactive = req.body.interactive
+  var minzoom = req.body.minzoom;
+  var layout = req.body.layout;
+  var paint = req.body.layout;
+  var metadata = req.body.metadata;
+  
+  if (ownerID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+  if (groupID == null) groupID = 0;
+  if (type == null) return APIReturn(res,false, 'Type (`type`) must be supplied.');
+  if (!['point','line','polygon'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+  
+  if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
+  if (sourceLayer == null) sourceLayer = toSlug(label);
+  if (interactive == null) interactive = true;
+  if (minzoom == null) minzoom = 10;
+  if (layout == null) layout = [];
+  if (paint == null) paint = [];
+  if (metadata == null) metadata = [];
+
+  var payload = {
+    ownerID: ownerID, 
+    groupID: groupID, 
+    type: type, 
+    source: 0,
+    sourceLayer: sourceLayer, 
+    label: label, 
+    interactive: interactive,
+    minzoom: minzoom,
+    layout: layout,
+    paint: paint,
+    metadata: metadata,
+  };
+
+  db.createLayer(payload, function(error, result) {
+    if (error) return APIReturn(res,false, result)
+
+    return APIReturn(res,
+      true, 'Layer has been created.', result
+    )
+  })
+});
 
 app.post('/users/add', function(req, res) {
   if (!checkAPIKey(req, res)) return;

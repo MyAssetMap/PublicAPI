@@ -28,7 +28,7 @@ const testPG = (callback) => {
 // ============================
 // = PROCESS DATA AND SAVE IT =
 // ============================
-const getMVTLayer = (callback, payload) => {
+const getMVTLayer = (payload, callback) => {
   
   var table = payload['table'];
   var z = payload['z'];
@@ -85,6 +85,46 @@ const getMVTLayer = (callback, payload) => {
 
 //TODO:CREATE FUNCTION FOR THIS
 //with userID get user user map user ID
+
+const insertLayer = (payload, callback) => {
+  
+  var mapID = payload.mapID;
+  var type = payload.type;
+  var layerID = payload.layerID;
+  var geometry = JSON.stringify(payload.geom);
+  var properties = JSON.stringify(payload.prop);
+  
+  if (properties == null) {
+    console.log('No Properties passed');
+  }
+  
+  var layerType = `"public"."layer_`+mapID+((type != '') ? '_'+type : type)+`"`;
+  
+  var sqlCreate = `CREATE TABLE IF NOT EXISTS `+layerType+` (
+    "id" serial,
+    "layerID" integer,
+    "geom" geometry,
+    "prop" json,
+    PRIMARY KEY ("id")
+  );`;
+  
+  runQuery(sqlCreate, function(error, result) {
+    if (error) return callback(true, result)
+    
+    var sqlQuery = `INSERT INTO `+layerType+` ("layerID", geom, prop)
+    VALUES
+    (
+      '`+layerID+`',
+      ST_GeomFromGeoJSON('`+geometry+`'),
+      '`+properties+`'
+    )`;
+    return runQuery(sqlQuery, callback)
+  });
+  
+  
+  
+  //runQuery(sqlQuery, callback);
+}
 
 
 const getGlobalLayers = (mapID, callback) => {
@@ -314,19 +354,9 @@ module.exports = {
     runQuery,
   
     getMVTLayer,
-    getUsers,
-    getAccounts,
-    getEmails,
-    getAddons,
-    getSuperUsers,
-    getUserPreference,
-    getUserByEmail,
-    getUserIDByUUID,
-    getUsersByEmail,
-    createUser,
-    getAccountsSuperByUserID,
-    getAccountsByUserID,
     getGlobalLayers,
+  
+    insertLayer,
   
     getTable,
     getRowFromTable,

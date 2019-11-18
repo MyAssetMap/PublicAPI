@@ -210,6 +210,97 @@ const getGlobalLayers = (mapID, callback) => {
   });
 }
 
+const getLayers = (mapID, userID, callback) => {
+  var finalReturn = [];
+  
+  callback(false, {common: ['plss','counties']});
+    
+  // getTableWhere('LayerGroup','mapID',0,function(error,groups) {
+//     if (error) return callback(true, groups);
+//
+//     // finalReturn.push(groups);
+//
+//     var itemsProcessed = 0;
+//     groups.forEach(function(group) {
+//       // console.log(group);
+//       let groupID = group['id'];
+//
+//       //PreProcess
+//       var processedGroup = group;
+//
+//       if (processedGroup.label !== null)
+//         processedGroup.id = processedGroup.label.toLowerCase() + '_' + processedGroup.id.toString();
+//
+//       processedGroup.group = "dataLayer"
+//
+//       delete processedGroup.ownerID;
+//       delete processedGroup.mapID;
+//       delete processedGroup.groupID;
+//
+//       getTableWhere('Layer','groupID',groupID, function(error,layers) {
+//         if (error) return callback(true, layers);
+//
+//         if (layers.length <= 0) {
+//           itemsProcessed++;
+//           return;
+//         }
+//
+//         var processedLayers = [];
+//         var sourceList = [];
+//         var sourceConversionList = {};
+//         layers.forEach(layer => {
+//
+//           sourceList.push(layer.source);
+//
+//           if (processedGroup.label !== null) {
+//             layer.id = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.id.toString();
+//
+//             sourceConversionList[layer.source] = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
+//
+//             layer.source = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
+//           }
+//
+//           delete layer.label;
+//           delete layer.ownerID;
+//           delete layer.groupID;
+//
+//           processedLayers.push({
+//             beforeLayer: null,
+//             layer: layer
+//           })
+//         })
+//
+//         getTableWhere('LayerSource','id',sourceList, function(error,layersources) {
+//           if (error) return callback(true, layersources);
+//
+//           var processedSource = [];
+//
+//           layersources.forEach(layerSource => {
+//             layerSource.id = sourceConversionList[layerSource.id];
+//
+//             processedSource.push(layerSource)
+//           })
+//
+//           //Add the template
+//           var groupPayload = {
+//             toc: processedGroup,
+//             sourcesArray: processedSource,
+//             layersArray: processedLayers
+//           };
+//
+//           finalReturn.push(groupPayload);
+//
+//           itemsProcessed++;
+//           if (itemsProcessed === groups.length) {
+//             //NOW THAT EVERYTHING IS DONE, CONTINUE.
+//             callback(false, finalReturn);
+//           }
+//         })
+//       })
+//     })
+//   });
+}
+
 // ==========
 // = GLOBAL =
 // ==========
@@ -369,6 +460,7 @@ module.exports = {
     getAccountsSuperByUserID,
     getAccountsByUserID,
     getGlobalLayers,
+    getLayers,
   
     createGroup,
     createLayer,

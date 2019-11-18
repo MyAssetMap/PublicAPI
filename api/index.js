@@ -249,6 +249,21 @@ app.get('/layers/public', function(req, res) {
     });
 })
 
+app.get('/layers/user', function(req, res) {
+    if (!checkAPIKey(req, res)) return;
+
+    var mapID = 0;
+    var userID = 0;
+    
+    db.getLayers(mapID, userID, function(error,layers) {
+    if (error) return APIReturn(res,false, layers)
+    
+      return APIReturn(res,
+        true, 'Public Layers have been returned', layers
+      )
+    });
+})
+
   // ==================
   // = POST ENDPOINTS =
   // ==================

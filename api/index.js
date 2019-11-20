@@ -58,6 +58,7 @@ function APIReturn(res, success, message, data) {
 }
 
 function checkAPIKey(req, res) {
+  return true;
   // console.log(req.header('Auth-DEV'));
   // console.log(req.header('Auth-PROD'));
   var auth = false;

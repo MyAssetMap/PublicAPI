@@ -99,10 +99,11 @@ const insertLayer = (payload, callback) => {
   }
   
   var layerType = `"public"."layer_`+mapID+((type != '') ? '_'+type : type)+`"`;
+  layerType = layerType.toLowerCase();
   
   var sqlCreate = `CREATE TABLE IF NOT EXISTS `+layerType+` (
     "id" serial,
-    "layerID" integer,
+    "layer" integer,
     "geom" geometry,
     "prop" json,
     PRIMARY KEY ("id")
@@ -111,11 +112,11 @@ const insertLayer = (payload, callback) => {
   runQuery(sqlCreate, function(error, result) {
     if (error) return callback(true, result)
     
-    var sqlQuery = `INSERT INTO `+layerType+` ("layerID", geom, prop)
+    var sqlQuery = `INSERT INTO `+layerType+` (layer, geom, prop)
     VALUES
     (
       '`+layerID+`',
-      ST_GeomFromGeoJSON('`+geometry+`'),
+      ST_TRANSFORM(ST_GeomFromGeoJSON('`+geometry+`'),4326),
       '`+properties+`'
     )`;
     return runQuery(sqlQuery, callback)

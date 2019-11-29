@@ -303,7 +303,7 @@ app.post('/layer/import/json', function(req, res) {
         if (error) return APIReturn(res,false, result)
 
         return APIReturn(res,
-          true, 'MVT has been generated.', result
+          true, 'GEOJson has been imported.', result
         )
       })
 

@@ -116,7 +116,7 @@ const insertLayer = (payload, callback) => {
     VALUES
     (
       '`+layerID+`',
-      ST_TRANSFORM(ST_GeomFromGeoJSON('`+geometry+`'),4326),
+      ST_TRANSFORM(ST_SetSRID(ST_GeomFromGeoJSON('`+geometry+`'),4326),4326),
       '`+properties+`'
     )`;
     return runQuery(sqlQuery, callback)

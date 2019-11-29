@@ -253,14 +253,17 @@ app.get('/layers/public', function(req, res) {
 app.get('/layers/user', function(req, res) {
     if (!checkAPIKey(req, res)) return;
 
-    var mapID = 0;
-    var userID = 0;
+    var mapID = req.query.mapID;
+    var userID = req.query.userID;
+    
+    if (mapID == null) mapID = 0;
+    if (userID == null) userID = 0;//return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
     
     db.getLayers(mapID, userID, function(error,layers) {
     if (error) return APIReturn(res,false, layers)
     
       return APIReturn(res,
-        true, 'Public Layers have been returned', layers
+        true, 'User Layers have been returned', layers
       )
     });
 })

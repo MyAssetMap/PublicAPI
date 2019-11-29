@@ -210,95 +210,132 @@ const getGlobalLayers = (mapID, callback) => {
   });
 }
 
+const getGroupByID = (groupID, callback) => {
+  var finalReturn = [];
+    
+  getTableWhere('LayerGroup','id',groupID,function(error,groups) {
+    if (error) return callback(true, groups);
+    
+    // console.log('GROUPS',groups);
+    // finalReturn.push(groups);
+    if (!groups.length) return callback(false, finalReturn);
+    
+    var itemsProcessed = 0;
+    groups.forEach(function(group) {
+      // console.log(group);
+      let groupID = group['id'];
+      
+      //PreProcess
+      var processedGroup = group;
+      
+      if (processedGroup.label !== null)
+        processedGroup.id = processedGroup.label.toLowerCase() + '_' + processedGroup.id.toString();
+      
+      processedGroup.group = "dataLayer"
+      
+      delete processedGroup.ownerID;
+      delete processedGroup.mapID;
+      delete processedGroup.groupID;
+      
+      getTableWhere('Layer','groupID',groupID, function(error,layers) {
+        if (error) return callback(true, layers);
+        
+        if (layers.length <= 0) {
+          itemsProcessed++;
+          return;
+        }
+        
+        var processedLayers = [];
+        var sourceList = [];
+        var sourceConversionList = {};
+        layers.forEach(layer => {
+          
+          sourceList.push(layer.source);
+          
+          if (processedGroup.label !== null) {
+            layer.id = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.id.toString();
+          
+            sourceConversionList[layer.source] = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
+          
+            layer.source = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
+          }
+
+          delete layer.label;
+          delete layer.ownerID;
+          delete layer.groupID;
+          
+          processedLayers.push({ 
+            beforeLayer: null,
+            layer: layer
+          })
+        })
+        
+        getTableWhere('LayerSource','id',sourceList, function(error,layersources) {
+          if (error) return callback(true, layersources);
+          
+          var processedSource = [];
+        
+          layersources.forEach(layerSource => {
+            layerSource.id = sourceConversionList[layerSource.id];
+            
+            processedSource.push(layerSource)
+          })
+          
+          //Add the template
+          var groupPayload = {
+            toc: processedGroup,
+            sourcesArray: processedSource,
+            layersArray: processedLayers
+          };
+          
+          finalReturn.push(groupPayload);
+          
+          itemsProcessed++;
+          if (itemsProcessed === groups.length) {
+            //NOW THAT EVERYTHING IS DONE, CONTINUE.
+            callback(false, finalReturn);
+          }
+        })
+      })
+    })
+  });
+}
+
 const getLayers = (mapID, userID, callback) => {
   var finalReturn = [];
   
-  callback(false, {common: ['plss','counties']});
+  getRowFromTableWhere('User','userLayers','id',userID,function(error,users) {
+    if (error) return callback(true, users);
     
-  // getTableWhere('LayerGroup','mapID',0,function(error,groups) {
-//     if (error) return callback(true, groups);
-//
-//     // finalReturn.push(groups);
-//
-//     var itemsProcessed = 0;
-//     groups.forEach(function(group) {
-//       // console.log(group);
-//       let groupID = group['id'];
-//
-//       //PreProcess
-//       var processedGroup = group;
-//
-//       if (processedGroup.label !== null)
-//         processedGroup.id = processedGroup.label.toLowerCase() + '_' + processedGroup.id.toString();
-//
-//       processedGroup.group = "dataLayer"
-//
-//       delete processedGroup.ownerID;
-//       delete processedGroup.mapID;
-//       delete processedGroup.groupID;
-//
-//       getTableWhere('Layer','groupID',groupID, function(error,layers) {
-//         if (error) return callback(true, layers);
-//
-//         if (layers.length <= 0) {
-//           itemsProcessed++;
-//           return;
-//         }
-//
-//         var processedLayers = [];
-//         var sourceList = [];
-//         var sourceConversionList = {};
-//         layers.forEach(layer => {
-//
-//           sourceList.push(layer.source);
-//
-//           if (processedGroup.label !== null) {
-//             layer.id = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.id.toString();
-//
-//             sourceConversionList[layer.source] = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
-//
-//             layer.source = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
-//           }
-//
-//           delete layer.label;
-//           delete layer.ownerID;
-//           delete layer.groupID;
-//
-//           processedLayers.push({
-//             beforeLayer: null,
-//             layer: layer
-//           })
-//         })
-//
-//         getTableWhere('LayerSource','id',sourceList, function(error,layersources) {
-//           if (error) return callback(true, layersources);
-//
-//           var processedSource = [];
-//
-//           layersources.forEach(layerSource => {
-//             layerSource.id = sourceConversionList[layerSource.id];
-//
-//             processedSource.push(layerSource)
-//           })
-//
-//           //Add the template
-//           var groupPayload = {
-//             toc: processedGroup,
-//             sourcesArray: processedSource,
-//             layersArray: processedLayers
-//           };
-//
-//           finalReturn.push(groupPayload);
-//
-//           itemsProcessed++;
-//           if (itemsProcessed === groups.length) {
-//             //NOW THAT EVERYTHING IS DONE, CONTINUE.
-//             callback(false, finalReturn);
-//           }
-//         })
-//       })
-//     })
-//   });
+    if (!users.length) return callback(false, finalReturn);
+    users.forEach(function(user) {
+      const userLayers = user.userLayers;
+      
+      if (!userLayers.length) return callback(false, finalReturn);
+      var itemsProcessed = 0;
+      userLayers.forEach(function(layer) {
+        
+        var layerTitle = layer[0];
+        var layerCustomize = layer[1];
+    
+        getGroupByID(layerTitle, function(error,layerTOC) {
+          if (error) {
+            //console.log('TOC ERROR',layerTOC);
+            finalReturn.push(layerTitle);
+          }else{
+            //console.log('TOC',layerTOC);
+            finalReturn.push(layerTOC);
+          }
+
+          itemsProcessed++;
+          if (itemsProcessed === userLayers.length) {
+            //NOW THAT EVERYTHING IS DONE, CONTINUE.
+            callback(false, {user: finalReturn});
+          }
+        })
+      }) 
+    })
+  })
 }
 
 // ==========
@@ -320,19 +357,23 @@ const getTable = (table, callback) => {
 }
 
 const getRowFromTable = (table, row, callback) => {
-  runQuery('SELECT "' + fromSingleValueToValues(row) + '" FROM public."' + table + '"', callback);
+  runQuery('SELECT ' + fromSingleValueToValues(row,'"') + ' FROM public."' + table + '"', callback);
 }
 
 const getTableWhere = (table, fieldName, value, callback) => {
   if (!Array.isArray(value)) {
-    runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" = ' + value + ';', callback);
+    runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" = ' + processValue(value) + ';', callback);
   }else{
-    runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + value.join(', ') + ');', callback);
+    runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + fromSingleValueToValues(value) + ');', callback);
   }
 }
 
 const getRowFromTableWhere = (table, row, fieldName, value, callback) => {
-  runQuery('SELECT "' + fromSingleValueToValues(row) + '" FROM public."' + table + '" WHERE "' + fieldName + '" = ' + value + ';', callback);
+  if (!Array.isArray(value)) {
+    runQuery('SELECT ' + fromSingleValueToValues(row,'"') + ' FROM public."' + table + '" WHERE "' + fieldName + '" = ' + processValue(value) + ';', callback);
+  }else{
+    runQuery('SELECT ' + fromSingleValueToValues(row,'"') + ' FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + fromSingleValueToValues(value) + ');', callback);
+  }
 }
 
 const getInnerJoin = (fields, firstTable, firstIdentifier, secondTable, secondIdentifier, callback) => {
@@ -388,7 +429,7 @@ const fromSingleValueToValues = function(valuesOrValues,char = `'`) {
     });
     
     return result.join(`, `);
-  } else if (typeof valuesOrValues === 'string') return processValue(valuesOrValues);
+  } else if (typeof valuesOrValues === 'string') return processValue(valuesOrValues,char);
 }
 
 //SELECT "firstName", "emailAddress" FROM public."User";

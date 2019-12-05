@@ -31,8 +31,6 @@ app.use(bodyParser.json());
 // = FUNCTIONS =
 // =============
 
-//Hello There
-
 function toSlug(str) {
   var res = str.toLowerCase();
   res = res.replace(/ /g, "-");
@@ -285,34 +283,58 @@ app.post('/layer/import/json', function(req, res) {
 
   if (type == null) return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
   if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
-
-  if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
   
   if (json == null || json == '') return APIReturn(res,false, 'GEOJSON (`json`) must be supplied.');
-  
   var geoJSON = JSON.parse(json);
   //console.log(geoJSON);
   
-  if (geoJSON.type == 'FeatureCollection') {
-    geoJSON.features.forEach(function(feature) {
-      if (feature.type != 'Feature') return APIReturn(res,false, 'GEOJSON have invalid features: '+feature.type);
+  if (layerID == null) {
+    db.createLayer(payload,function(error, layerID) {
+      if (error) return APIReturn(res,false, layerID);
       
-      var geometry = feature.geometry;
-      var properties = feature.properties;
+      if (geoJSON.type == 'FeatureCollection') {
+        geoJSON.features.forEach(function(feature) {
+          if (feature.type != 'Feature') return APIReturn(res,false, 'GEOJSON have invalid features: '+feature.type);
+      
+          var geometry = feature.geometry;
+          var properties = feature.properties;
 
-      var payload = {mapID: mapID, type: type, layerID: layerID, geom: geometry, prop: properties};
+          var payload = {mapID: mapID, type: type, layerID: layerID, geom: geometry, prop: properties};
 
-      postgis.insertLayer(payload, function(error, result) {
-        if (error) return APIReturn(res,false, result)
+          postgis.insertLayer(payload, function(error, result) {
+            if (error) return APIReturn(res,false, result)
 
-        return APIReturn(res,
-          true, 'GEOJson has been imported.', result
-        )
-      })
+            return APIReturn(res,
+              true, 'GEOJson has been imported.', result
+            )
+          })
 
-      //console.log(type,geometry,properties);
+          //console.log(type,geometry,properties);
+        })
+      }else return APIReturn(res,false, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
     })
-  }else return APIReturn(res,false, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
+  }else{
+    if (geoJSON.type == 'FeatureCollection') {
+      geoJSON.features.forEach(function(feature) {
+        if (feature.type != 'Feature') return APIReturn(res,false, 'GEOJSON have invalid features: '+feature.type);
+      
+        var geometry = feature.geometry;
+        var properties = feature.properties;
+
+        var payload = {mapID: mapID, type: type, layerID: layerID, geom: geometry, prop: properties};
+
+        postgis.insertLayer(payload, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+
+          return APIReturn(res,
+            true, 'GEOJson has been imported.', result
+          )
+        })
+
+        //console.log(type,geometry,properties);
+      })
+    }else return APIReturn(res,false, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
+  }
 });
 
 //LAYERS
@@ -324,7 +346,7 @@ app.post('/group/add', function(req, res) {
   var groupID = req.body.groupID;
   var label = req.body.label;
   var description = req.body.description;
-  var canExpand = req.body.canExpand
+  var canExpand = req.body.canExpand;
   var canOrgView = req.body.canOrgView;
   var canOrgEdit = req.body.canOrgEdit;
   
@@ -362,11 +384,14 @@ app.post('/group/add', function(req, res) {
 app.post('/layer/add', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
-  var ownerID = req.body.userID;
+  var userID = req.body.userID;
+  var mapID = req.body.mapID;
   var groupID = req.body.groupID;
   var type = req.body.type;
+
   //SOURCE
   var label = req.body.label;
+  var sourceType = req.body.sourceType;
   var sourceLayer = req.body.sourceLayer;
   var interactive = req.body.interactive
   var minzoom = req.body.minzoom;
@@ -374,9 +399,13 @@ app.post('/layer/add', function(req, res) {
   var paint = req.body.layout;
   var metadata = req.body.metadata;
   
-  if (ownerID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+  if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
   if (groupID == null) groupID = 0;
   if (type == null) return APIReturn(res,false, 'Type (`type`) must be supplied.');
+  
+  if (sourceType == null) return APIReturn(res,false, 'Source Type (`sourceType`) must be supplied.');
+  if (!['global','org','user'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
+  
   if (!['point','line','polygon'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
   
   if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
@@ -388,12 +417,14 @@ app.post('/layer/add', function(req, res) {
   if (metadata == null) metadata = [];
 
   var payload = {
-    ownerID: ownerID, 
+    userID: userID, 
+    mapID: mapID,
     groupID: groupID, 
     type: type, 
-    source: 0,
-    sourceLayer: sourceLayer, 
+
     label: label, 
+    sourceType: sourceType,
+    sourceLayer: sourceLayer, 
     interactive: interactive,
     minzoom: minzoom,
     layout: layout,
@@ -536,158 +567,5 @@ app.post('/users/lookup', function(req, res) {
     } else return APIReturn(res, false, 'Multiple users matched the email address provided.');
   });
 })
-
-app.post('/selectTable', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-
-
-  if (typeof req.body.table == 'undefined') return APIReturn(res, false, 'Table name must be provided.')
-
-  var table = req.body.table;
-
-  db.getTable(table, function(error,data) {
-    if (error) return APIReturn(res, false, data)
-
-    return APIReturn(res,
-      true, 'Table data obtained correctly', data
-
-    )
-
-  });
-})
-
-app.post('/selectRow', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-
-
-  if (typeof req.body.table == 'undefined') return APIReturn(res, false, 'Table name must be provided.')
-  if (typeof req.body.row == 'undefined') return APIReturn(res, false, 'Row name must be provided.')
-
-  var table = req.body.table;
-  var row = req.body.row;
-
-  db.getRowFromTable(table, row, function(error,data) {
-    if (error) return APIReturn(res,false, data)
-    
-    return APIReturn(res,
-      true, 'Row data obtained correctly', data
-    )
-  });
-})
-
-app.post('/innerJoin', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-
-
-  if (typeof req.body.fields == 'undefined') return APIReturn(res, false, 'Fields name must be provided.')
-  if (typeof req.body.firstTable == 'undefined') return APIReturn(res, false, 'First Table name must be provided.')
-  if (typeof req.body.firstIdentifier == 'undefined') return APIReturn(res, false, 'First Identifier name must be provided.')
-  if (typeof req.body.secondTable == 'undefined') return APIReturn(res, false, 'Second Table name must be provided.')
-  if (typeof req.body.secondIdentifier == 'undefined') return APIReturn(res, false, 'Second Identifier name must be provided.')
-
-  var fields = req.body.fields;
-  var firstTable = req.body.firstTable;
-  var firstIdentifier = req.body.firstIdentifier;
-  var secondTable = req.body.secondTable;
-  var secondIdentifier = req.body.secondIdentifier;
-
-
-  //This is necessary due to PostGres syntax where integers do not requiere "" 
-  if (firstIdentifier != 'ID' || firstIdentifier != 'Id' || firstIdentifier != 'iD' || firstIdentifier != 'id') {
-    firstIdentifier = '"' + firstIdentifier + '"';
-  }
-
-  //This is necessary due to PostGres syntax where integers do not requiere "" 
-  if (secondIdentifier != 'ID' || secondIdentifier != 'Id' || secondIdentifier != 'iD' || secondIdentifier != 'id') {
-    secondIdentifier = '"' + secondIdentifier + '"';
-  }
-
-  db.getInnerJoin(fields, firstTable, firstIdentifier, secondTable, secondIdentifier, function(data) {
-    return APIReturn(res,
-      true, 'Inner join obtained correctly', data
-    )
-  });
-})
-
-app.post('/updateRow', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-
-
-  if (typeof req.body.table == 'undefined') return APIReturn(res, false, 'Table name must be provided.')
-  if (typeof req.body.column == 'undefined') return APIReturn(res, false, 'Column Table name must be provided.')
-  if (typeof req.body.value == 'undefined') return APIReturn(res, false, 'Value Identifier name must be provided.')
-  if (typeof req.body.identifierColumn == 'undefined') return APIReturn(res, false, 'Identifier Column Table name must be provided.')
-  if (typeof req.body.identifier == 'undefined') return APIReturn(res, false, 'Identifier name must be provided.')
-
-  var table = req.body.table;
-  var column = req.body.column;
-  var value = req.body.value;
-  var identifierColumn = req.body.identifierColumn;
-  var identifier = req.body.identifier;
-
-  //This is necessary due to PostGres syntax where integers do not requiere "" 
-  if (identifierColumn != 'ID' || identifierColumn != 'Id' || identifierColumn != 'iD' || identifierColumn != 'id') {
-    identifierColumn = '"' + identifierColumn + '"';
-  }
-
-  db.updateRow(table, column, value, identifierColumn, identifier, function() {
-    return APIReturn(res,
-      true, 'Row updated correctly'
-    )
-  });
-
-})
-
-app.post('/insertRow', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-
-
-  if (typeof req.body.table == 'undefined') return APIReturn(res, false, 'Table name must be provided.')
-  if (typeof req.body.columns == 'undefined') return APIReturn(res, false, 'Columns name must be provided.')
-  if (typeof req.body.values == 'undefined') return APIReturn(res, false, 'Values name must be provided.')
-
-  var table = req.body.table;
-  var columns = req.body.columns;
-  var values = req.body.values;
-
-  db.insertRow(table, columns, values, function() {
-    return APIReturn(res,
-      true, 'Row inserted correctly'
-    )
-  });
-
-
-})
-
-
-
-//POST
-
-//
-// // Get Test endpoint
-// app.post('/users/login', function (req, res) {
-// 	console.log(req.body);
-// 	// if (typeof req.body.email == 'undefined')
-//
-// 	return APIReturn(res,
-// 		true, 'Login Works Fine', req.body
-// 	)
-// })
-//
-// // Get User endpoint
-// app.get('/users/:userId', function (req, res) {
-// 	console.log(req);
-//
-// 	const { userId, name } = req.body;
-// 	return APIReturn(res,
-// 		true,'User was located successfully',
-// 		{
-// 			userID: userId,
-// 			name: name
-// 		}
-// 	)
-// })
-
-
 
 module.exports.handler = serverless(app);

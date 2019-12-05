@@ -17,6 +17,12 @@ const pool = new pg.Pool({
     connectionTimeoutMillis: 1000, // return an error after 1 second if connection could not be established
 })
 
+function toSlug(str) {
+  var res = str.toLowerCase();
+  res = res.replace(/ /g, "-");
+  return res;
+}
+
 // ========================
 // = CUSTOM LOGIC QUERIES =
 // ========================

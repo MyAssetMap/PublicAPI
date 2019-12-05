@@ -17,6 +17,12 @@ const pool = new pg.Pool({
     connectionTimeoutMillis: 1000, // return an error after 1 second if connection could not be established
 })
 
+function toSlug(str) {
+  var res = str.toLowerCase();
+  res = res.replace(/ /g, "-");
+  return res;
+}
+
 // ========================
 // = CUSTOM LOGIC QUERIES =
 // ========================
@@ -79,22 +85,77 @@ const createGroup = (payload, callback) => {
 }
 
 const createLayer = (payload, callback) => {
-  // insertRow(
-  //   'LayerSource',
-  //   ["type"],
-  //   ["vector"],  //
-    // function(error, sourceID) {
-    //   if (error) return callback(true, sourceID);
-    //
-      
-      insertRow(
-        'Layer',
-        ["ownerID", "groupID", "type", "source", "source-layer", "label", "interactive", "minzoom", "layout", "paint", "metadata"],
-        [payload.ownerID, payload.groupID, payload.type, 0, payload.sourceLayer, payload.label, payload.interactive, payload.minzoom, payload.layout, payload.paint, payload.metadata],
-        callback
-      );
-      //});
+    //Create Group First
+    var userID = payload.userID;
+    var mapID = payload.mapID;
+    var groupID = payload.groupID;
+    var type = payload.type;
+    
+    //SOURCE
+    var sourceLayer = payload.sourceLayer;
+    var sourceType = payload.sourceType;
+    var interactive = payload.interactive
+    var minzoom = payload.minzoom;
+    var layout = payload.layout;
+    var paint = payload.layout;
+    var metadata = payload.metadata;
+    
+    var label = payload.label;
+    var description = payload.description;
+    var canExpand = payload.canExpand;
+    var canOrgView = payload.canOrgView;
+    var canOrgEdit = payload.canOrgEdit;
   
+    if (userID == null) return callback(true, 'User ID (`userID`) must be supplied.');
+    if (mapID == null) return callback(true, 'Map ID (`mapID`) must be supplied.');
+    if (groupID == null) groupID = 0;
+    if (type == null) return callback(true, 'Type (`type`) must be supplied.');
+  
+    if (label == null) return callback(true, 'Label (`label`) must be supplied.');
+    if (sourceType == null) return callback(true, 'Source Type (`sourceType`) must be supplied.');
+    if (description == null) description = '';
+    if (canExpand == null) canExpand = false;
+    if (canOrgView == null) canOrgView = false;
+    if (canOrgEdit == null) canOrgEdit = false;
+
+    insertRow(
+      'LayerGroup',
+      ["ownerID", "mapID", "groupID", "label", "description", "canExpand", "canOrgView", "canOrgEdit"],
+      [userID, mapID, groupID, label, description, canExpand, canOrgView, canOrgEdit],
+      function(error, group) {
+        if (error) return APIReturn(res,true, group)
+        console.log('GroupID:',group)
+      
+        groupID = group[0].id;
+        //Create Layer Source
+        
+        if (!['global','org','user'].includes(sourceType)) sourceType = "vector";
+        
+        insertRow(
+          'LayerSource',
+          ["type"],
+          [sourceType],
+          function(error, source) {
+            if (error) return callback(true, source);
+            console.log('SourceID:',source)
+        
+            let sourceID = source[0].id;
+            //Create Layer
+            insertRow(
+              'Layer',
+              ["ownerID", "groupID", "type", "source", "source-layer", "label", "interactive", "minzoom", "layout", "paint", "metadata"],
+              [userID, groupID, type, sourceID, sourceLayer, label, interactive, minzoom, layout, paint, metadata],
+              function(error, layer) {
+                if (error) return callback(true, layer);
+                console.log('LayerID:',layer)
+                
+                callback(false, layer[0].id)
+              }
+            );
+          }
+        )
+      }
+    );
 }
 
 // ================================
@@ -120,6 +181,111 @@ const getAccountsByUserID = (userID, callback) => {getRowFromTableWhere('Account
 //TODO:CREATE FUNCTION FOR THIS
 //with userID get user user map user ID
 
+const getGroupByID = (groupID, callback) => {
+  var finalReturn = [];
+    
+  getTableWhere('LayerGroup','id',groupID,function(error,groups) {
+    if (error) return callback(true, groups);
+    
+    // finalReturn.push(groups);
+    if (!groups.length) return callback(false, finalReturn);
+    
+    groups.forEach(function(group) {
+      // console.log(group);
+      let groupID = group['id'];
+      let ownerID = group['ownerID'];
+      let mapID = group['mapID'];
+      
+      //PreProcess
+      var processedGroup = group;
+      
+      if (processedGroup.label !== null)
+        processedGroup.id = toSlug(processedGroup.label) + '_' + processedGroup.id.toString();
+      
+      processedGroup.group = "dataLayer"
+      
+      delete processedGroup.ownerID;
+      delete processedGroup.mapID;
+      delete processedGroup.groupID;
+      
+      getTableWhere('Layer','groupID',groupID, function(error,layers) {
+        if (error) return callback(true, layers);
+        
+        //If Layer group exists, but has no layers.
+        if (!layers.length) {
+          //Add the template
+          var groupPayload = {
+            toc: processedGroup,
+            sourcesArray: [],
+            layersArray: []
+          };
+          
+          finalReturn.push(groupPayload);
+          return callback(false, finalReturn);
+        }
+        
+        var processedLayers = [];
+        var sourceList = [];
+        var sourceIDList = [];
+        var sourceConversionList = {};
+        layers.forEach(layer => {
+          
+          sourceList.push(layer.source);
+          sourceIDList.push(layer.id);
+          
+          if (processedGroup.label !== null) {
+            layer.id = toSlug(processedGroup.label) + '_' + toSlug(layer['source-layer']) + '_' + layer.id.toString();
+          
+            sourceConversionList[layer.source] = toSlug(processedGroup.label) + '_' + toSlug(layer['source-layer']) + '_' + layer.source.toString();
+          
+            layer.source = toSlug(processedGroup.label) + '_' + toSlug(layer['source-layer']) + '_' + layer.source.toString();
+          }
+
+          delete layer.label;
+          delete layer.ownerID;
+          delete layer.groupID;
+          
+          processedLayers.push({ 
+            beforeLayer: null,
+            layer: layer
+          })
+        })
+        
+        getTableWhere('LayerSource','id',sourceList, function(error,layersources) {
+          if (error) return callback(true, layersources);
+          
+          var processedSource = [];
+          
+          var num = 0;
+          layersources.forEach(layerSource => {
+            layerSource.id = sourceConversionList[layerSource.id];
+            var layerID = sourceIDList[num];
+            
+            if (['global','org','user'].includes(layerSource.type)) {
+              var layerName = 'layer_'+mapID+'_'+layerSource.type;
+              layerSource.type = 'vector';
+              layerSource.tiles = ['https://tiles.myassetmap.com/v1/mvt/'+layerName+'/{z}/{x}/{y}?filter=layer%20%3D%20'+layerID];
+            }
+            
+            processedSource.push(layerSource)
+            num++;
+          })
+          
+          //Add the template
+          var groupPayload = {
+            toc: processedGroup,
+            sourcesArray: processedSource,
+            layersArray: processedLayers
+          };
+          
+          finalReturn.push(groupPayload);
+          
+          return callback(false, finalReturn);
+        })
+      })
+    })
+  });
+}
 
 const getGlobalLayers = (mapID, callback) => {
   var finalReturn = [];
@@ -129,173 +295,21 @@ const getGlobalLayers = (mapID, callback) => {
     
     // finalReturn.push(groups);
     
-    var itemsProcessed = 0;
-    groups.forEach(function(group) {
-      // console.log(group);
-      let groupID = group['id'];
-      
-      //PreProcess
-      var processedGroup = group;
-      
-      if (processedGroup.label !== null)
-        processedGroup.id = processedGroup.label.toLowerCase() + '_' + processedGroup.id.toString();
-      
-      processedGroup.group = "dataLayer"
-      
-      delete processedGroup.ownerID;
-      delete processedGroup.mapID;
-      delete processedGroup.groupID;
-      
-      getTableWhere('Layer','groupID',groupID, function(error,layers) {
-        if (error) return callback(true, layers);
-        
-        if (layers.length <= 0) {
-          itemsProcessed++;
-          return;
-        }
-        
-        var processedLayers = [];
-        var sourceList = [];
-        var sourceConversionList = {};
-        layers.forEach(layer => {
-          
-          sourceList.push(layer.source);
-          
-          if (processedGroup.label !== null) {
-            layer.id = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.id.toString();
-          
-            sourceConversionList[layer.source] = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
-          
-            layer.source = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
-          }
-
-          delete layer.label;
-          delete layer.ownerID;
-          delete layer.groupID;
-          
-          processedLayers.push({ 
-            beforeLayer: null,
-            layer: layer
-          })
-        })
-        
-        getTableWhere('LayerSource','id',sourceList, function(error,layersources) {
-          if (error) return callback(true, layersources);
-          
-          var processedSource = [];
-        
-          layersources.forEach(layerSource => {
-            layerSource.id = sourceConversionList[layerSource.id];
-            
-            processedSource.push(layerSource)
-          })
-          
-          //Add the template
-          var groupPayload = {
-            toc: processedGroup,
-            sourcesArray: processedSource,
-            layersArray: processedLayers
-          };
-          
-          finalReturn.push(groupPayload);
-          
-          itemsProcessed++;
-          if (itemsProcessed === groups.length) {
-            //NOW THAT EVERYTHING IS DONE, CONTINUE.
-            callback(false, finalReturn);
-          }
-        })
-      })
-    })
-  });
-}
-
-const getGroupByID = (groupID, callback) => {
-  var finalReturn = [];
-    
-  getTableWhere('LayerGroup','id',groupID,function(error,groups) {
-    if (error) return callback(true, groups);
-    
-    // console.log('GROUPS',groups);
-    // finalReturn.push(groups);
     if (!groups.length) return callback(false, finalReturn);
     
     var itemsProcessed = 0;
     groups.forEach(function(group) {
-      // console.log(group);
-      let groupID = group['id'];
       
-      //PreProcess
-      var processedGroup = group;
-      
-      if (processedGroup.label !== null)
-        processedGroup.id = processedGroup.label.toLowerCase() + '_' + processedGroup.id.toString();
-      
-      processedGroup.group = "dataLayer"
-      
-      delete processedGroup.ownerID;
-      delete processedGroup.mapID;
-      delete processedGroup.groupID;
-      
-      getTableWhere('Layer','groupID',groupID, function(error,layers) {
-        if (error) return callback(true, layers);
+      getGroupByID(group.id, function(error, layerTOC) {
+        if (error) return callback(true,layerTOC);
         
-        if (layers.length <= 0) {
-          itemsProcessed++;
-          return;
-        }
-        
-        var processedLayers = [];
-        var sourceList = [];
-        var sourceConversionList = {};
-        layers.forEach(layer => {
-          
-          sourceList.push(layer.source);
-          
-          if (processedGroup.label !== null) {
-            layer.id = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.id.toString();
-          
-            sourceConversionList[layer.source] = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
-          
-            layer.source = processedGroup.label.toLowerCase() + '_' + layer['source-layer'].toLowerCase() + '_' + layer.source.toString();
-          }
+        finalReturn.push(layerTOC);
 
-          delete layer.label;
-          delete layer.ownerID;
-          delete layer.groupID;
-          
-          processedLayers.push({ 
-            beforeLayer: null,
-            layer: layer
-          })
-        })
-        
-        getTableWhere('LayerSource','id',sourceList, function(error,layersources) {
-          if (error) return callback(true, layersources);
-          
-          var processedSource = [];
-        
-          layersources.forEach(layerSource => {
-            layerSource.id = sourceConversionList[layerSource.id];
-            
-            processedSource.push(layerSource)
-          })
-          
-          //Add the template
-          var groupPayload = {
-            toc: processedGroup,
-            sourcesArray: processedSource,
-            layersArray: processedLayers
-          };
-          
-          finalReturn.push(groupPayload);
-          
-          itemsProcessed++;
-          if (itemsProcessed === groups.length) {
-            //NOW THAT EVERYTHING IS DONE, CONTINUE.
-            callback(false, finalReturn);
-          }
-        })
+        itemsProcessed++;
+        if (itemsProcessed === groups.length) {
+          //NOW THAT EVERYTHING IS DONE, CONTINUE.
+          callback(false, finalReturn);
+        }
       })
     })
   });
@@ -304,7 +318,7 @@ const getGroupByID = (groupID, callback) => {
 const getLayers = (mapID, userID, callback) => {
   var finalReturn = [];
   
-  getRowFromTableWhere('User','userLayers','id',userID,function(error,users) {
+  getRowFromTableWhere('User',['userLayers'],'id',userID,function(error,users) {
     if (error) return callback(true, users);
     
     if (!users.length) return callback(false, finalReturn);
@@ -329,6 +343,7 @@ const getLayers = (mapID, userID, callback) => {
 
           itemsProcessed++;
           if (itemsProcessed === userLayers.length) {
+            
             //NOW THAT EVERYTHING IS DONE, CONTINUE.
             callback(false, {user: finalReturn});
           }
@@ -343,7 +358,7 @@ const getLayers = (mapID, userID, callback) => {
 // ==========
 
 const runQuery = (queryMsg, callback) => {
-  console.log(queryMsg)
+  //console.log(queryMsg)
   
   pool.query(queryMsg, (error, results) => {
     if (error) {

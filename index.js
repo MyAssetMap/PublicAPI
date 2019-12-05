@@ -55,28 +55,33 @@ function APIReturn(res, success, message, data) {
   }
 }
 
+function authRequired(res, reason) {
+  APIReturn(res, 
+    false, 'You are not authenticated to use this endpoint.', reason
+  )
+}
+
 function checkAPIKey(req, res) {
   return true;
   // console.log(req.header('Auth-DEV'));
   // console.log(req.header('Auth-PROD'));
-  var auth = false;
-  if (req.header('Auth-DEV') == config.auth.DEV) auth = true;
-  if (req.header('Auth-PROD') == config.auth.PROD) auth = true;
-
-  if (!auth) {
-    APIReturn(res,
-      false, 'Unauthorized'
-    )
-  }
+  // var auth = false;
+//   if (req.header('Auth-DEV') == config.auth.DEV) auth = true;
+//   if (req.header('Auth-PROD') == config.auth.PROD) auth = true;
+//
+//   if (!auth) {
+//     APIReturn(res,
+//       false, 'Unauthorized'
+//     )
+//   }
   return auth;
 }
 
-function checkAuthentication(userID, callback) {
-  const isValidUser = db.getUsersByUUID(function(users) {
-    // console.log('USERS')
-    // console.log(users)
-
-    callback(true);
+function checkAuthentication(req, res, callback) {
+  var userUUID = req.query.userID;
+  const isValidUser = db.getUserIDByUUID(userUUID, function(error, userID) {
+    // console.log('userID',userUUID,userID);
+    return callback(!error, userID);
   });
 }
 
@@ -111,23 +116,23 @@ app.get('/', function(req, res) {
 // =========================
 // = HANDLER FOR LAYER API =
 // =========================
-app.get('/layer/mvt/:layerName/:zoom/:x/:y', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-  var payload = {
-    layer: req.params.layerName,
-    z: req.params.zoom,
-    x: req.params.x,
-    y: req.params.y,
-  }
-  
-  postgis.getMVTLayer(payload, function(error, result) {
-    if (error) return APIReturn(res,false, result)
-    
-    return APIReturn(res,
-      true, 'MVT has been generated.', result
-    )
-  })
-})
+// app.get('/layer/mvt/:layerName/:zoom/:x/:y', function(req, res) {
+//   if (!checkAPIKey(req, res)) return;
+//   var payload = {
+//     layer: req.params.layerName,
+//     z: req.params.zoom,
+//     x: req.params.x,
+//     y: req.params.y,
+//   }
+//
+//   postgis.getMVTLayer(payload, function(error, result) {
+//     if (error) return APIReturn(res,false, result)
+//
+//     return APIReturn(res,
+//       true, 'MVT has been generated.', result
+//     )
+//   })
+// })
 
 
 
@@ -174,17 +179,17 @@ app.get('/users', function(req, res) {
   });
 })
 
-app.get('/emails', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-
-  db.getEmails(function(error,emails) {
-    if (error) return APIReturn(res,false, emails)
-    
-    return APIReturn(res,
-      true, 'Emails information has been returned.', emails
-    )
-  });
-})
+// app.get('/emails', function(req, res) {
+//   if (!checkAPIKey(req, res)) return;
+//
+//   db.getEmails(function(error,emails) {
+//     if (error) return APIReturn(res,false, emails)
+//
+//     return APIReturn(res,
+//       true, 'Emails information has been returned.', emails
+//     )
+//   });
+// })
 
 app.get('/accounts', function(req, res) {
   if (!checkAPIKey(req, res)) return;
@@ -201,12 +206,16 @@ app.get('/accounts', function(req, res) {
 app.get('/addons', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  db.getAddons(function(error,accounts) {
-    if (error) return APIReturn(res,false, accounts)
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    //if (!isLoggedIn) return authRequired(res, userID);
+  
+    db.getAddons(function(error,accounts) {
+      if (error) return APIReturn(res,false, accounts)
     
-    return APIReturn(res,
-      true, 'Addon information has been returned.', accounts
-    )
+      return APIReturn(res,
+        true, 'Addon information has been returned.', accounts
+      )
+    });
   });
 })
 
@@ -224,46 +233,58 @@ app.get('/superusers', function(req, res) {
 
 app.get('/userpreference', function(req, res) {
     if (!checkAPIKey(req, res)) return;
-
-    db.getUserPreference(function(error,accounts) {
-    if (error) return APIReturn(res,false, accounts)
     
-      return APIReturn(res,
-        true, 'User preference information has been returned.', accounts
-      )
-    });
+    checkAuthentication(req, res, function(isLoggedIn, userID) {
+      if (!isLoggedIn) return authRequired(res, userID);
+
+      db.getUserPreference(function(error,accounts) {
+      if (error) return APIReturn(res,false, accounts)
+    
+        return APIReturn(res,
+          true, 'User preference information has been returned.', accounts
+        )
+      });
+    })
 })
 
 app.get('/layers/public', function(req, res) {
     if (!checkAPIKey(req, res)) return;
 
-    var mapID = 0;
+    checkAuthentication(req, res, function(isLoggedIn, userID) {
+      if (!isLoggedIn) return authRequired(res, userID);
+      
+      var mapID = 0;
     
-    db.getGlobalLayers(mapID, function(error,layers) {
-    if (error) return APIReturn(res,false, layers)
+      db.getGlobalLayers(mapID, function(error,layers) {
+      if (error) return APIReturn(res,false, layers)
     
-      return APIReturn(res,
-        true, 'Public Layers have been returned', layers
-      )
+        return APIReturn(res,
+          true, 'Public Layers have been returned', layers
+        )
+      });
     });
 })
 
 app.get('/layers/user', function(req, res) {
     if (!checkAPIKey(req, res)) return;
-
-    var mapID = req.query.mapID;
-    var userID = req.query.userID;
     
-    if (mapID == null) mapID = 0;
-    if (userID == null) userID = 0;//return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+    checkAuthentication(req, res, function(isLoggedIn, userID) {
+      if (!isLoggedIn) return authRequired(res, userID);
+      
+      var mapID = req.query.mapID;
     
-    db.getLayers(mapID, userID, function(error,layers) {
-    if (error) return APIReturn(res,false, layers)
+      if (mapID == null) mapID = 0;
+      if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
     
-      return APIReturn(res,
-        true, 'User Layers have been returned', layers
-      )
-    });
+      db.getLayers(mapID, userID, function(error,layers) {
+      if (error) return APIReturn(res,false, layers)
+    
+        return APIReturn(res,
+          true, 'User Layers have been returned', layers
+        )
+      });
+      
+    })
 })
 
   // ==================
@@ -274,24 +295,49 @@ app.get('/layers/user', function(req, res) {
 app.post('/layer/import/json', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
-  var mapID = req.body.mapID
-  var type = req.body.type;
-  var layerID = req.body.layerID;
-  var json = req.body.json;
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
   
-  if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+    var mapID = req.body.mapID
+    var type = req.body.type;
+    var layerID = req.body.layerID;
+    var json = req.body.json;
+  
+    if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
 
-  if (type == null) return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
-  if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+    if (type == null) return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
+    if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
   
-  if (json == null || json == '') return APIReturn(res,false, 'GEOJSON (`json`) must be supplied.');
-  var geoJSON = JSON.parse(json);
-  //console.log(geoJSON);
+    if (json == null || json == '') return APIReturn(res,false, 'GEOJSON (`json`) must be supplied.');
+    var geoJSON = JSON.parse(json);
+    //console.log(geoJSON);
   
-  if (layerID == null) {
-    db.createLayer(payload,function(error, layerID) {
-      if (error) return APIReturn(res,false, layerID);
+    if (layerID == null) {
+      db.createLayer(payload,function(error, layerID) {
+        if (error) return APIReturn(res,false, layerID);
       
+        if (geoJSON.type == 'FeatureCollection') {
+          geoJSON.features.forEach(function(feature) {
+            if (feature.type != 'Feature') return APIReturn(res,false, 'GEOJSON have invalid features: '+feature.type);
+      
+            var geometry = feature.geometry;
+            var properties = feature.properties;
+
+            var payload = {mapID: mapID, type: type, layerID: layerID, geom: geometry, prop: properties};
+
+            postgis.insertLayer(payload, function(error, result) {
+              if (error) return APIReturn(res,false, result)
+
+              return APIReturn(res,
+                true, 'GEOJson has been imported.', result
+              )
+            })
+
+            //console.log(type,geometry,properties);
+          })
+        }else return APIReturn(res,false, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
+      })
+    }else{
       if (geoJSON.type == 'FeatureCollection') {
         geoJSON.features.forEach(function(feature) {
           if (feature.type != 'Feature') return APIReturn(res,false, 'GEOJSON have invalid features: '+feature.type);
@@ -312,71 +358,55 @@ app.post('/layer/import/json', function(req, res) {
           //console.log(type,geometry,properties);
         })
       }else return APIReturn(res,false, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
-    })
-  }else{
-    if (geoJSON.type == 'FeatureCollection') {
-      geoJSON.features.forEach(function(feature) {
-        if (feature.type != 'Feature') return APIReturn(res,false, 'GEOJSON have invalid features: '+feature.type);
-      
-        var geometry = feature.geometry;
-        var properties = feature.properties;
-
-        var payload = {mapID: mapID, type: type, layerID: layerID, geom: geometry, prop: properties};
-
-        postgis.insertLayer(payload, function(error, result) {
-          if (error) return APIReturn(res,false, result)
-
-          return APIReturn(res,
-            true, 'GEOJson has been imported.', result
-          )
-        })
-
-        //console.log(type,geometry,properties);
-      })
-    }else return APIReturn(res,false, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
-  }
+    }
+  });
 });
 
 //LAYERS
 app.post('/group/add', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
-  var ownerID = req.body.userID;
-  var mapID = req.body.mapID;
-  var groupID = req.body.groupID;
-  var label = req.body.label;
-  var description = req.body.description;
-  var canExpand = req.body.canExpand;
-  var canOrgView = req.body.canOrgView;
-  var canOrgEdit = req.body.canOrgEdit;
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
   
-  if (ownerID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
-  if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
-  if (groupID == null) groupID = 0;
   
-  if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
-  if (description == null) description = '';
-  if (canExpand == null) canExpand = false;
-  if (canOrgView == null) canOrgView = false;
-  if (canOrgEdit == null) canOrgEdit = false;
+    var ownerID = req.body.userID;
+    var mapID = req.body.mapID;
+    var groupID = req.body.groupID;
+    var label = req.body.label;
+    var description = req.body.description;
+    var canExpand = req.body.canExpand;
+    var canOrgView = req.body.canOrgView;
+    var canOrgEdit = req.body.canOrgEdit;
+  
+    if (ownerID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+    if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+    if (groupID == null) groupID = 0;
+  
+    if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
+    if (description == null) description = '';
+    if (canExpand == null) canExpand = false;
+    if (canOrgView == null) canOrgView = false;
+    if (canOrgEdit == null) canOrgEdit = false;
 
-  var payload = {
-    ownerID: ownerID,
-    mapID: mapID,
-    groupID: groupID,
-    label: label,
-    description: description,
-    canExpand: canExpand,
-    canOrgView: canOrgView,
-    canOrgEdit: canOrgEdit,
-  };
+    var payload = {
+      ownerID: ownerID,
+      mapID: mapID,
+      groupID: groupID,
+      label: label,
+      description: description,
+      canExpand: canExpand,
+      canOrgView: canOrgView,
+      canOrgEdit: canOrgEdit,
+    };
 
-  db.createGroup(payload, function(error, result) {
-    if (error) return APIReturn(res,false, result)
+    db.createGroup(payload, function(error, result) {
+      if (error) return APIReturn(res,false, result)
 
-    return APIReturn(res,
-      true, 'Group has been created.', result
-    )
+      return APIReturn(res,
+        true, 'Group has been created.', result
+      )
+    })
   })
 });
 
@@ -384,127 +414,148 @@ app.post('/group/add', function(req, res) {
 app.post('/layer/add', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
-  var userID = req.body.userID;
-  var mapID = req.body.mapID;
-  var groupID = req.body.groupID;
-  var type = req.body.type;
-
-  //SOURCE
-  var label = req.body.label;
-  var sourceType = req.body.sourceType;
-  var sourceLayer = req.body.sourceLayer;
-  var interactive = req.body.interactive
-  var minzoom = req.body.minzoom;
-  var layout = req.body.layout;
-  var paint = req.body.layout;
-  var metadata = req.body.metadata;
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
   
-  if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
-  if (groupID == null) groupID = 0;
-  if (type == null) return APIReturn(res,false, 'Type (`type`) must be supplied.');
+    var userID = req.body.userID;
+    var mapID = req.body.mapID;
+    var groupID = req.body.groupID;
+    var type = req.body.type;
+
+    //SOURCE
+    var label = req.body.label;
+    var sourceType = req.body.sourceType;
+    var sourceLayer = req.body.sourceLayer;
+    var interactive = req.body.interactive
+    var minzoom = req.body.minzoom;
+    var layout = req.body.layout;
+    var paint = req.body.layout;
+    var metadata = req.body.metadata;
   
-  if (sourceType == null) return APIReturn(res,false, 'Source Type (`sourceType`) must be supplied.');
-  if (!['global','org','user'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
+    if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+    if (groupID == null) groupID = 0;
+    if (type == null) return APIReturn(res,false, 'Type (`type`) must be supplied.');
   
-  if (!['point','line','polygon'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+    if (sourceType == null) return APIReturn(res,false, 'Source Type (`sourceType`) must be supplied.');
+    if (!['global','org','user'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
   
-  if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
-  if (sourceLayer == null) sourceLayer = toSlug(label);
-  if (interactive == null) interactive = true;
-  if (minzoom == null) minzoom = 10;
-  if (layout == null) layout = [];
-  if (paint == null) paint = [];
-  if (metadata == null) metadata = [];
+    if (!['point','line','polygon'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+  
+    if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
+    if (sourceLayer == null) sourceLayer = toSlug(label);
+    if (interactive == null) interactive = true;
+    if (minzoom == null) minzoom = 10;
+    if (layout == null) layout = [];
+    if (paint == null) paint = [];
+    if (metadata == null) metadata = [];
 
-  var payload = {
-    userID: userID, 
-    mapID: mapID,
-    groupID: groupID, 
-    type: type, 
+    var payload = {
+      userID: userID, 
+      mapID: mapID,
+      groupID: groupID, 
+      type: type, 
 
-    label: label, 
-    sourceType: sourceType,
-    sourceLayer: sourceLayer, 
-    interactive: interactive,
-    minzoom: minzoom,
-    layout: layout,
-    paint: paint,
-    metadata: metadata,
-  };
+      label: label, 
+      sourceType: sourceType,
+      sourceLayer: sourceLayer, 
+      interactive: interactive,
+      minzoom: minzoom,
+      layout: layout,
+      paint: paint,
+      metadata: metadata,
+    };
 
-  db.createLayer(payload, function(error, result) {
-    if (error) return APIReturn(res,false, result)
+    db.createLayer(payload, function(error, result) {
+      if (error) return APIReturn(res,false, result)
 
-    return APIReturn(res,
-      true, 'Layer has been created.', result
-    )
+      return APIReturn(res,
+        true, 'Layer has been created.', result
+      )
+    })
   })
 });
 
 app.post('/layer/order', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
-  return APIReturn(res,
-    true, 'Layer ordering is not yet built.', result
-  )
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+  
+  
+    return APIReturn(res,
+      true, 'Layer ordering is not yet built.', result
+    )
+  })
 });
 
 app.post('/layer/update', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
-  return APIReturn(res,
-    true, 'Layer saving is not yet built.', result
-  )
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+  
+  
+    return APIReturn(res,
+      true, 'Layer saving is not yet built.', result
+    )
+  })
 });
 
 app.delete('/layer/delete', function(req, res) {
   if (!checkAPIKey(req, res)) return;
+
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
   
-  return APIReturn(res,
-    true, 'Layer deletion is not yet built.', result
-  )
+    return APIReturn(res,
+      true, 'Layer deletion is not yet built.', result
+    )
+  })
 });
 
 app.post('/users/add', function(req, res) {
   if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+  
 
-  // console.log(req.body);
-  if (typeof req.body.email == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
-  if (typeof req.body.password == 'undefined') return APIReturn(res, false, 'Password must be provided.')
+    // console.log(req.body);
+    if (typeof req.body.email == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
+    if (typeof req.body.password == 'undefined') return APIReturn(res, false, 'Password must be provided.')
 
-  var emailAddress = req.body.email;
-  var password = req.body.password;
-  var passwordHash = password;
+    var emailAddress = req.body.email;
+    var password = req.body.password;
+    var passwordHash = password;
 
-  db.getUserByEmail(emailAddress, function(error,users) {
-    if (error) return APIReturn(res, false, users)
+    db.getUserByEmail(emailAddress, function(error,users) {
+      if (error) return APIReturn(res, false, users)
     
-    console.log('USERS')
-    console.log(users)
-    if (users.length !== 0) {
-      var user = users[0];
+      console.log('USERS')
+      console.log(users)
+      if (users.length !== 0) {
+        var user = users[0];
 
-      console.log(user.passwordHash);
-      console.log(password);
+        console.log(user.passwordHash);
+        console.log(password);
 
-      if (user.passwordHash == password) {
-        return APIReturn(res,
-          true, 'User has been located and authenticated.', users
-        )
+        if (user.passwordHash == password) {
+          return APIReturn(res,
+            true, 'User has been located and authenticated.', users
+          )
+        } else {
+          return APIReturn(res,
+            true, 'Password is incorrect.' //,users
+          )
+        }
+
       } else {
         return APIReturn(res,
-          true, 'Password is incorrect.' //,users
+          false, 'Email address is not associated with an account.'
         )
       }
-
-    } else {
-      return APIReturn(res,
-        false, 'Email address is not associated with an account.'
-      )
-    }
-
-
-  });
+    });
+  })
 })
 
 app.post('/users/login', function(req, res) {
@@ -538,27 +589,20 @@ app.post('/users/login', function(req, res) {
   });
 })
 
-app.post('/users/lookup', function(req, res) {
+app.get('/users/lookup', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+  
+    var isActive,
+      superID = [],
+      accountID = [];
 
-  var userID = 0,
-    isActive,
-    superID = [],
-    accountID = [];
-
-  if (typeof req.body.email == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
-  var email = req.body.email;
-
-  db.getUsersByEmail(email, function(error,data) {
-    if (error) return APIReturn(res, false, data)
+    db.getUserByID(userID, function(error,data) {
+      if (error) return APIReturn(res, false, data)
     
-    console.log(data);
-
-    if (data.length == 0) {
-      return APIReturn(res, false, 'No users matched the email address provided.');
-    } else if (data.length == 1) {
-      userID = data[0].ID;
+      console.log(data);
       isActive = !data[0].isDisabled;
       db.getAccountsSuperByUserID(userID, function(error,data) {
         console.log(data);
@@ -588,8 +632,8 @@ app.post('/users/lookup', function(req, res) {
           )
         })
       })
-    } else return APIReturn(res, false, 'Multiple users matched the email address provided.');
-  });
+    });
+  })
 })
 
 module.exports.handler = serverless(app);

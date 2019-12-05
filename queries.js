@@ -59,7 +59,23 @@ const getUserByEmail = (emailAddress, callback) => {
   runQuery('SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\'' + emailAddress + '\');', callback);
 }
 
-const getUserIDByUUID = (UUID, callback) => {getRowFromTableWhere('User','id','cognitoUUID',UUID,callback);}
+const getUserByID = (userID, callback) => {getTableWhere('User','id',userID,callback)}
+
+const getUserIDByUUID = (UUID, callback) => {
+  if (UUID == '' || UUID == 0) return callback(true, 'User authentication information was not sent.');
+  
+  getRowFromTableWhere('User','id','cognitoUUID',UUID,function(error, userID) {
+    if (userID == '' || userID == 0 || userID == []) return callback(true, 'No user found for this UUID.');
+    
+    if (Array.isArray(userID)) {
+      if (userID.length == 0) return callback(true, 'No user found for this UUID.');
+      if (userID.length == 1) return callback(false, userID[0].id);
+      if (userID.length >= 2) return callback(true, 'More than one user found for this UUID.');
+    }
+    callback(error, userID)
+  });
+  
+}
 
 const createUser = (UUID, firstName, lastName, callback) => {
   runQuery('INSERT INTO public."User" ("cognitoUUID","firstName","lastName") VALUES  (\'' + UUID + '\',\'' + firstName + '\',\'' + lastName + '\');', callback);
@@ -162,10 +178,7 @@ const createLayer = (payload, callback) => {
 // = CONVERT EMAIL ADDRESS TO IDS =
 // ================================
 
-//From email get user ID
-const getUsersByEmail = (emailAddress, callback) => {
-  runQuery('SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\'' + emailAddress + '\');', callback);
-}
+
 
 //TODO:CREATE FUNCTION FOR THIS
 //with userID get user preferences
@@ -358,7 +371,7 @@ const getLayers = (mapID, userID, callback) => {
 // ==========
 
 const runQuery = (queryMsg, callback) => {
-  //console.log(queryMsg)
+  console.log('QUERY:',queryMsg)
   
   pool.query(queryMsg, (error, results) => {
     if (error) {
@@ -450,17 +463,6 @@ const fromSingleValueToValues = function(valuesOrValues,char = `'`) {
 //SELECT "firstName", "emailAddress" FROM public."User";
 
 //
-// const getUserById = (request, response) => {
-//   const id = parseInt(request.params.id)
-//
-//   pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
-//     if (error) {
-//       throw error
-//     }
-//     response.status(200).json(results.rows)
-//   })
-// }
-//
 // const createUser = (request, response) => {
 //   const { name, email } = request.body
 //
@@ -511,7 +513,7 @@ module.exports = {
     getUserPreference,
     getUserByEmail,
     getUserIDByUUID,
-    getUsersByEmail,
+    getUserByID,
     createUser,
     getAccountsSuperByUserID,
     getAccountsByUserID,

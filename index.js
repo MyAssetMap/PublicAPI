@@ -441,6 +441,30 @@ app.post('/layer/add', function(req, res) {
   })
 });
 
+app.post('/layer/order', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  return APIReturn(res,
+    true, 'Layer ordering is not yet built.', result
+  )
+});
+
+app.post('/layer/update', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  return APIReturn(res,
+    true, 'Layer saving is not yet built.', result
+  )
+});
+
+app.delete('/layer/delete', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  return APIReturn(res,
+    true, 'Layer deletion is not yet built.', result
+  )
+});
+
 app.post('/users/add', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 

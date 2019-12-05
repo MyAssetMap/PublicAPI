@@ -1,7 +1,7 @@
 # Import GEOJSON to GEOMETRY
 ## `POST` /dev/layer/import/json
 
-*Post the JSON you want to upload using this api, and it will convert that to geometry and properties pawfor use with the PG database.
+*Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
 
 - **mapID (Required):** The Map ID you wish to import to.
 - **type (Required):** The type of layer you are importing to (user, org, public)
@@ -295,7 +295,11 @@ json — {
 # Get User Layers
 ## `GET` /dev/layers/user
 
-*Returns the user layers & groups for a given userID.*
+*Returns the user layers & groups for a given userID.
+
+- **userID (Required):** The User ID you wish to gather information for
+
+_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._*
 
 ### Request:
 
@@ -379,10 +383,19 @@ json — {
 ***
 
 
-# Create Layer Group
+# Create Group for Layer
 ## `POST` /dev/group/add
 
-*Create a new Empty layer group with the name specified.*
+*Create a new Empty layer stack (mainly for stacked layers) with the name specified. Layer Groups are done on a per user level.
+
+- **userID (Required):** The User ID you wish to gather information for
+- **label (Required):** The name of the group you wish to create.
+- **mapID (Required):** The Map ID in which the group will be stored.
+
+_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._
+
+_**DEPRECATED:** Create Layer is to be used instead as creating a new layer also creates the layer source, and layer group as needed._
+*
 
 ### Request:
 
@@ -424,7 +437,19 @@ mapID — 0
 # Create Layer
 ## `POST` /dev/layer/add
 
-*Create a new Empty layer with the name specified. Once created, you can then import geojson as normal.*
+*Create a new Empty layer with the name specified. Once created, you can then import geojson as normal.
+
+
+- **userID (Required):** The User ID you wish to gather information for
+- **label (Required):** The name of the group you wish to create.
+- **sourceType (Required):** The source type of the layer we are creating (user, org, or public).
+- **type (Required):** The mapbox spec type of layer you are creating (point, line, polygon.
+- **mapID (Required):** The Map ID in which the group will be stored.
+
+_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._
+
+_**DEPRECATED:** Create Layer is to be used instead as creating a new layer also creates the layer source, and layer group as needed._
+*
 
 ### Request:
 
@@ -457,6 +482,163 @@ mapID — 1
     "message": "Layer has been created.",
     "data": 14
 }
+```
+***
+
+
+# Order Layers & Groups
+## `POST` /dev/layer/order
+
+*`WIP` Takes the existing layer information and pushes it to save to the server. Saves the order, groups, and layer properties such as paint properties and tags.
+
+- **userID (Required):** The User ID you wish to gather information for
+- **payload (Required):** The payload of group Ids and group entries to push to the database.
+
+_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._
+*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    –
+
++ Body:
+```
+userID — 4
+label — UNCO Test
+sourceType — user
+type — line
+mapID — 1
+```
+
+***
+
+
+### Response:
+
++ Status: **404**
+
++ Body:
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /dev/layer/order</pre>
+</body>
+</html>
+
+```
+***
+
+
+# Save Layer Properties
+## `POST` /dev/layer/update
+
+*`WIP` Takes the client layer information and pushes it to save to the server. Maintains the order, but updates layer properties such as paint properties and tags.
+
+- **userID (Required):** The User ID you wish to gather information for
+- **payload (Required):** The payload of group Ids and group entries to push to the database.
+
+_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._
+*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    –
+
++ Body:
+```
+userID — 4
+label — UNCO Test
+sourceType — user
+type — line
+mapID — 1
+```
+
+***
+
+
+### Response:
+
++ Status: **404**
+
++ Body:
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /dev/layer/update</pre>
+</body>
+</html>
+
+```
+***
+
+
+# Delete Layer
+## `DELETE` /dev/layer/delete
+
+*`WIP` Delete an existing layer and optionally delete the data associated permanently.
+
+- **userID (Required):** The User ID you wish to gather information for
+- **layerGroupID (Required):** The mapbox group you wish to create.
+- **keepData (Option):** Should the data be kept, or should it be deleted permanently?
+
+_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._
+*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    –
+
++ Body:
+```
+userID — 4
+label — UNCO Test
+sourceType — user
+type — line
+mapID — 1
+```
+
+***
+
+
+### Response:
+
++ Status: **404**
+
++ Body:
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot DELETE /dev/layer/delete</pre>
+</body>
+</html>
+
 ```
 ***
 

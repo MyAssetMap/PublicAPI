@@ -81,7 +81,8 @@ const loginUpdate = (userID, callback) => {
 const getUserPayload = (userID, callback) => {
   var isActive,
     superID = [],
-    accountID = [];
+    accountID = [],
+    mapID = [];
 
   getUserByID(userID, function(error,user) {
     if (error) return callback(true, user);
@@ -100,26 +101,38 @@ const getUserPayload = (userID, callback) => {
         });
 
         getAccountsByUserID(userID, function(error,data) {
+          if (error) return callback(true, data);
           console.log(data);
 
           data.forEach(function(entry) {
             accountID.push(entry.accountID);
           });
 
-          superID.sort();
-          accountID.sort();
+          getMapsByAccountID(accountID, function(error,data) {
+            if (error) return callback(true, data);
+            console.log(data);
 
-          callback(false, {
-            profile: {
-              userID: userID,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              displayName: user.firstName+' '+user.lastName
-            },
+            data.forEach(function(entry) {
+              mapID.push(entry.id);
+            });
+
+            superID.sort();
+            accountID.sort();
+            mapID.sort();
+
+            callback(false, {
+              profile: {
+                userID: userID,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                displayName: user.firstName+' '+user.lastName
+              },
       
-            isActive: isActive,
-            superUserID: superID,
-            accountsIDownBySuperUser: accountID
+              isActive: isActive,
+              superUserID: superID,
+              accountID: accountID,
+              mapID: mapID
+            })
           })
         })
       })
@@ -251,8 +264,7 @@ const getAccountsSuperByUserID = (userID, callback) => {getTableWhere('SuperUser
 //with userID get account the user belongs.
 const getAccountsByUserID = (userID, callback) => {getRowFromTableWhere('AccountUser','accountID','userID',userID,callback)}
 
-//TODO:CREATE FUNCTION FOR THIS
-//with userID get user user map user ID
+const getMapsByAccountID = (accountID, callback) => {getRowFromTableWhere('Map','id','accountID',accountID,callback)}
 
 const getGroupByID = (groupID, callback) => {
   var finalReturn = [];
@@ -452,6 +464,7 @@ const getTableWhere = (table, fieldName, value, callback) => {
   if (!Array.isArray(value)) {
     runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" = ' + processValue(value) + ';', callback);
   }else{
+    if (value.length == 0) callback(false, [])
     runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + fromSingleValueToValues(value) + ');', callback);
   }
 }
@@ -460,6 +473,7 @@ const getRowFromTableWhere = (table, row, fieldName, value, callback) => {
   if (!Array.isArray(value)) {
     runQuery('SELECT ' + fromSingleValueToValues(row,'"') + ' FROM public."' + table + '" WHERE "' + fieldName + '" = ' + processValue(value) + ';', callback);
   }else{
+    if (value.length == 0) callback(false, [])
     runQuery('SELECT ' + fromSingleValueToValues(row,'"') + ' FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + fromSingleValueToValues(value) + ');', callback);
   }
 }

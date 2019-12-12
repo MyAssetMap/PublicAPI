@@ -31,6 +31,42 @@
 ***
 ### Response:
 
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Welcome to the MY ASSET MAP endpoint v1.0"
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Welcome to the MY ASSET MAP endpoint v1.0"
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Welcome to the MY ASSET MAP endpoint v1.0"
+}
+```
+***
+### Response:
+
 + Status: **403**
 
 + Body:

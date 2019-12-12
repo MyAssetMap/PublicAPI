@@ -4,7 +4,10 @@
 *`WIP` Returns all possible addons and their information
 
 **userID Authentication (`OPTIONAL`):**
-This endpoint does not require the user to authenticate themselves with their UUID.*
+This endpoint does not require the user to authenticate themselves with their UUID.
+
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
+*
 
 ### Request:
 
@@ -86,7 +89,10 @@ This endpoint does not require the user to authenticate themselves with their UU
 *`WIP` Returns the super user information. 
 
 **userID Authentication (`REQUIRED`):**
-This endpoint does not require the user to authenticate themselves with their UUID.*
+This endpoint does not require the user to authenticate themselves with their UUID.
+
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
+*
 
 ### Request:
 
@@ -145,6 +151,9 @@ This endpoint does not require the user to authenticate themselves with their UU
 
 **userID Authentication (`OPTIONAL`):**
 This endpoint does not require the user to authenticate themselves with their UUID.
+
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
+
 *
 
 ### Request:
@@ -224,6 +233,9 @@ This endpoint does not require the user to authenticate themselves with their UU
 
 **userID Authentication (`Required`):**
 This endpoint requires the user to authenticate themselves with their UUID.
+
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
+
 *
 
 ### Request:
@@ -400,44 +412,6 @@ This endpoint requires the user to authenticate themselves with their UUID.
 }
 ```
 ***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": true,
-    "message": "Emails information has been returned.",
-    "data": [
-        {
-            "email": "TMurillo@GPipelines.com"
-        },
-        {
-            "email": "JWood@Greeleyelectrical.com"
-        },
-        {
-            "email": "RolandEd1@GPipelines.com"
-        },
-        {
-            "email": "CarolH@denverLLC.com"
-        },
-        {
-            "email": "DDDV@denverLLC.com"
-        },
-        {
-            "email": "MalakWeb@FoCoIndustries.com"
-        },
-        {
-            "email": "support@myassetmap.com"
-        },
-        {
-            "email": "\"\""
-        }
-    ]
-}
-```
-***
 
 
 # Get Users Preferences
@@ -447,6 +421,9 @@ This endpoint requires the user to authenticate themselves with their UUID.
 
 **userID Authentication (`Required`):**
 This endpoint requires the user to authenticate themselves with their UUID.
+
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
+
 *
 
 ### Request:
@@ -503,14 +480,15 @@ This endpoint requires the user to authenticate themselves with their UUID.
 ***
 
 
-# Get Users Lookup
-## `GET` /dev/users/lookup
+# Get User Initialization
+## `GET` /dev/users/init
 
-*`WIP` Returns a list of all users and their properties
+*`WIP` Returns all necessary information about the user upon first login to the application. Occurs on login automatically; userID is automatically passed in UUID form.
 
 **userID Authentication (`Required`):**
 This endpoint requires the user to authenticate themselves with their UUID.
-*
+
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._*
 
 ### Request:
 
@@ -534,12 +512,47 @@ This endpoint requires the user to authenticate themselves with their UUID.
 ```
 {
     "success": true,
-    "message": "User information data obtained correctly from email address.",
+    "message": "User did not exist. User has been created.",
     "data": {
-        "userID": 8,
+        "profile": {
+            "userID": 15,
+            "firstName": "–",
+            "lastName": "–",
+            "displayName": "– –"
+        },
         "isActive": true,
         "superUserID": [],
-        "accountsIDownBySuperUser": []
+        "accountID": [],
+        "mapID": []
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User information obtained successfully.",
+    "data": {
+        "profile": {
+            "userID": 8,
+            "firstName": "Dakotah",
+            "lastName": "Intriglia",
+            "displayName": "Dakotah Intriglia"
+        },
+        "isActive": true,
+        "superUserID": [],
+        "accountID": [
+            1
+        ],
+        "mapID": [
+            1,
+            2
+        ]
     }
 }
 ```

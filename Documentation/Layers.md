@@ -297,9 +297,10 @@ json — {
 
 *Returns the user layers & groups for a given userID.
 
-- **userID (Required):** The User ID you wish to gather information for
+- **userID (Required):** The User Cognito UUID you wish to gather information for. This information is auto passed via the application.
 
-_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._*
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
+*
 
 ### Request:
 
@@ -307,7 +308,7 @@ _**Note:** Instead of passing a userID, I hope to auto authenticate every reques
     –
 
 + Url Params:
-    + `userID`: 8
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -315,6 +316,399 @@ _**Note:** Instead of passing a userID, I hope to auto authenticate every reques
 ***
 
 
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned",
+    "data": {
+        "user": [
+            "plss",
+            {
+                "label": "Common Layers",
+                "groupId": "1",
+                "parent": null,
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            "counties",
+            [
+                {
+                    "toc": {
+                        "id": "unco-area-around-house_13",
+                        "label": "UNCO Area around House",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "unco-area-around-house_unco-area-around-house_10",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2013"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "unco-area-around-house_unco-area-around-house_13",
+                                "type": "line",
+                                "source": "unco-area-around-house_unco-area-around-house_10",
+                                "source-layer": "unco-area-around-house",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {},
+                                "paint": {},
+                                "metadata": {}
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "You are not authenticated to use this endpoint.",
+    "data": "No user found for this UUID."
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "You are not authenticated to use this endpoint.",
+    "data": "No user found."
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "You are not authenticated to use this endpoint.",
+    "data": "invalid input syntax for type uuid: \"6872305e-65e3-48f1-a785-08ce114c8e9\""
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned",
+    "data": {
+        "user": [
+            "plss",
+            "counties",
+            {
+                "label": "Common Layers",
+                "groupId": "1",
+                "parent": null,
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            [
+                {
+                    "toc": {
+                        "id": "unco-area-around-house_13",
+                        "label": "UNCO Area around House",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "unco-area-around-house_unco-area-around-house_10",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2013"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "unco-area-around-house_unco-area-around-house_13",
+                                "type": "line",
+                                "source": "unco-area-around-house_unco-area-around-house_10",
+                                "source-layer": "unco-area-around-house",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {},
+                                "paint": {},
+                                "metadata": {}
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "invalid input syntax for integer: \"{\"id\":8}\""
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "syntax error at or near \")\""
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "syntax error at or near \")\""
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "syntax error at or near \")\""
+}
+```
+***
+### Response:
+
++ Status: **500**
+
++ Body:
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>TypeError: db.getUsersByUUID is not a function<br> &nbsp; &nbsp;at checkAuthentication (/var/task/index.js:76:26)<br> &nbsp; &nbsp;at /var/task/index.js:258:5<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/task/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at next (/var/task/node_modules/express/lib/router/route.js:137:13)<br> &nbsp; &nbsp;at Route.dispatch (/var/task/node_modules/express/lib/router/route.js:112:3)<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/task/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at /var/task/node_modules/express/lib/router/index.js:281:22<br> &nbsp; &nbsp;at Function.process_params (/var/task/node_modules/express/lib/router/index.js:335:12)<br> &nbsp; &nbsp;at next (/var/task/node_modules/express/lib/router/index.js:275:10)<br> &nbsp; &nbsp;at jsonParser (/var/task/node_modules/body-parser/lib/types/json.js:119:7)</pre>
+</body>
+</html>
+
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "invalid input syntax for integer: \"6872305e-65e3-48f1-a785-08ce114c8e49\""
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned",
+    "data": {
+        "user": [
+            "plss",
+            {
+                "label": "Common Layers",
+                "groupId": "1",
+                "parent": null,
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            "counties",
+            [
+                {
+                    "toc": {
+                        "id": "unco-area-around-house_13",
+                        "label": "UNCO Area around House",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "unco-area-around-house_unco-area-around-house_10",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2013"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "unco-area-around-house_unco-area-around-house_13",
+                                "type": "line",
+                                "source": "unco-area-around-house_unco-area-around-house_10",
+                                "source-layer": "unco-area-around-house",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {},
+                                "paint": {},
+                                "metadata": {}
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
 ### Response:
 
 + Status: **200**
@@ -392,9 +786,9 @@ _**Note:** Instead of passing a userID, I hope to auto authenticate every reques
 - **label (Required):** The name of the group you wish to create.
 - **mapID (Required):** The Map ID in which the group will be stored.
 
-_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
 
-_**DEPRECATED:** Create Layer is to be used instead as creating a new layer also creates the layer source, and layer group as needed._
+_**DEPRECATED:** Create Layer (layer/add) is to be used instead as that endpoint also creates the layer source, and layer group as needed._
 *
 
 ### Request:
@@ -446,9 +840,7 @@ mapID — 0
 - **type (Required):** The mapbox spec type of layer you are creating (point, line, polygon.
 - **mapID (Required):** The Map ID in which the group will be stored.
 
-_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._
-
-_**DEPRECATED:** Create Layer is to be used instead as creating a new layer also creates the layer source, and layer group as needed._
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
 *
 
 ### Request:
@@ -494,7 +886,7 @@ mapID — 1
 - **userID (Required):** The User ID you wish to gather information for
 - **payload (Required):** The payload of group Ids and group entries to push to the database.
 
-_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
 *
 
 ### Request:
@@ -546,7 +938,7 @@ mapID — 1
 - **userID (Required):** The User ID you wish to gather information for
 - **payload (Required):** The payload of group Ids and group entries to push to the database.
 
-_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
 *
 
 ### Request:
@@ -599,7 +991,7 @@ mapID — 1
 - **layerGroupID (Required):** The mapbox group you wish to create.
 - **keepData (Option):** Should the data be kept, or should it be deleted permanently?
 
-_**Note:** Instead of passing a userID, I hope to auto authenticate every request with cognito, so the userID can be inferred._
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
 *
 
 ### Request:

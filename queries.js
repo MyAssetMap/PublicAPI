@@ -59,12 +59,79 @@ const getUserByEmail = (emailAddress, callback) => {
   runQuery('SELECT * FROM public."User" WHERE LOWER(email) = LOWER(\'' + emailAddress + '\');', callback);
 }
 
-const getUserByID = (userID, callback) => {getTableWhere('User','id',userID,callback)}
+const getUserByID = (userID, callback) => {
+  getTableWhere('User','id',userID,function(error, userID) {
+    if (error) return callback(true, userID);
+    
+    if (userID == '' || userID == 0 || userID == []) return callback(true, 'No user found for this ID.');
+    
+    if (Array.isArray(userID)) {
+      if (userID.length == 0) return callback(true, 'No user found for this ID.');
+      if (userID.length == 1) return callback(false, userID[0]);
+      if (userID.length >= 2) return callback(true, 'More than one user found for this ID.');
+    }
+    callback(error, userID)
+  })
+}
+
+const loginUpdate = (userID, callback) => {
+  updateRow("User", "lastLogin", 'TODAY()', "id", userID, callback)
+}
+
+const getUserPayload = (userID, callback) => {
+  var isActive,
+    superID = [],
+    accountID = [];
+
+  getUserByID(userID, function(error,user) {
+    if (error) return callback(true, user);
+
+    console.log('User',user);
+    isActive = !user.isDisabled;
+
+    //LastLogin Update
+    loginUpdate(userID, function(error, data) {
+      getAccountsSuperByUserID(userID, function(error,data) {
+        if (error) return callback(true, data);
+        console.log(data);
+
+        data.forEach(function(entry) {
+          superID.push(entry.ID);
+        });
+
+        getAccountsByUserID(userID, function(error,data) {
+          console.log(data);
+
+          data.forEach(function(entry) {
+            accountID.push(entry.accountID);
+          });
+
+          superID.sort();
+          accountID.sort();
+
+          callback(false, {
+            profile: {
+              userID: userID,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              displayName: user.firstName+' '+user.lastName
+            },
+      
+            isActive: isActive,
+            superUserID: superID,
+            accountsIDownBySuperUser: accountID
+          })
+        })
+      })
+    })
+  });
+}
 
 const getUserIDByUUID = (UUID, callback) => {
   if (UUID == '' || UUID == 0) return callback(true, 'User authentication information was not sent.');
   
   getRowFromTableWhere('User','id','cognitoUUID',UUID,function(error, userID) {
+    if (error) return callback(true, layers);
     if (userID == '' || userID == 0 || userID == []) return callback(true, 'No user found for this UUID.');
     
     if (Array.isArray(userID)) {
@@ -78,7 +145,8 @@ const getUserIDByUUID = (UUID, callback) => {
 }
 
 const createUser = (UUID, firstName, lastName, callback) => {
-  runQuery('INSERT INTO public."User" ("cognitoUUID","firstName","lastName") VALUES  (\'' + UUID + '\',\'' + firstName + '\',\'' + lastName + '\');', callback);
+  insertRow('User',["cognitoUUID","firstName","lastName","lastLogin","dateCreated"],[UUID,firstName,lastName,"TODAY()","TODAY()"], callback);
+  // runQuery('INSERT INTO public."User" ("cognitoUUID","firstName","lastName") VALUES  (\'' + UUID + '\',\'' + firstName + '\',\'' + lastName + '\');', callback);
 }
 
 const createGroup = (payload, callback) => {
@@ -138,35 +206,27 @@ const createLayer = (payload, callback) => {
       'LayerGroup',
       ["ownerID", "mapID", "groupID", "label", "description", "canExpand", "canOrgView", "canOrgEdit"],
       [userID, mapID, groupID, label, description, canExpand, canOrgView, canOrgEdit],
-      function(error, group) {
-        if (error) return APIReturn(res,true, group)
-        console.log('GroupID:',group)
-      
-        groupID = group[0].id;
-        //Create Layer Source
+      function(error, groupID) {
+        if (error) return callback(true, groupID);
+        console.log('GroupID:',groupID)
         
+        //Create Layer Source
         if (!['global','org','user'].includes(sourceType)) sourceType = "vector";
         
         insertRow(
           'LayerSource',
           ["type"],
           [sourceType],
-          function(error, source) {
-            if (error) return callback(true, source);
-            console.log('SourceID:',source)
+          function(error, sourceID) {
+            if (error) return callback(true, sourceID);
+            console.log('SourceID:',sourceID)
         
-            let sourceID = source[0].id;
             //Create Layer
             insertRow(
               'Layer',
               ["ownerID", "groupID", "type", "source", "source-layer", "label", "interactive", "minzoom", "layout", "paint", "metadata"],
               [userID, groupID, type, sourceID, sourceLayer, label, interactive, minzoom, layout, paint, metadata],
-              function(error, layer) {
-                if (error) return callback(true, layer);
-                console.log('LayerID:',layer)
-                
-                callback(false, layer[0].id)
-              }
+              callback
             );
           }
         )
@@ -405,15 +465,18 @@ const getRowFromTableWhere = (table, row, fieldName, value, callback) => {
 }
 
 const getInnerJoin = (fields, firstTable, firstIdentifier, secondTable, secondIdentifier, callback) => {
-  runQuery('Select "' + fields + '" from public."' + firstTable + '", public."' + secondTable + '" Where public."' + firstTable + '".' + firstIdentifier + ' = public."' + secondTable + '".' + secondIdentifier + ';', callback);
+  runQuery('SELECT "' + fields + '" from public."' + firstTable + '", public."' + secondTable + '" Where public."' + firstTable + '".' + firstIdentifier + ' = public."' + secondTable + '".' + secondIdentifier + ';', callback);
 }
 
 const updateRow = (table, column, value, identifierColumn, identifier, callback) => {
-  runQuery('UPDATE public."' + table + '" SET ' + '"' + column + '" = "' + value + '"' + ' WHERE ' + identifierColumn + '= "' + identifier + '";', callback);
+  runQuery('UPDATE public."' + table + '" SET "' + column + '" = \'' + value + '\'' + ' WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
 }
 
 const insertRow = (table, columns, values, callback) => {
-  runQuery('INSERT INTO public."' + table + '" (' + fromSingleValueToValues(columns,'"') + ') VALUES (' + fromSingleValueToValues(values) + ') RETURNING id;', callback);
+  runQuery('INSERT INTO public."' + table + '" (' + fromSingleValueToValues(columns,'"') + ') VALUES (' + fromSingleValueToValues(values) + ') RETURNING id;', function(error, row) {
+    if (error) return callback(true, row);
+    callback(false, row[0].id)
+  });
 }
 
 // function addSingleQuoteToFields(fieldsToAddQuote) {
@@ -514,6 +577,8 @@ module.exports = {
     getUserByEmail,
     getUserIDByUUID,
     getUserByID,
+    getUserPayload,
+    loginUpdate,
     createUser,
     getAccountsSuperByUserID,
     getAccountsByUserID,

@@ -593,46 +593,28 @@ app.get('/users/init', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
   checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (!isLoggedIn) return authRequired(res, userID);
-  
-    var isActive,
-      superID = [],
-      accountID = [];
-
-    db.getUserByID(userID, function(error,data) {
-      if (error) return APIReturn(res, false, data)
-    
-      console.log(data);
-      isActive = !data[0].isDisabled;
-      db.getAccountsSuperByUserID(userID, function(error,data) {
-        console.log(data);
-
-        console.log();
-        data.forEach(function(entry) {
-          superID.push(entry.ID);
-        });
-
-        db.getAccountsByUserID(userID, function(error,data) {
-          console.log(data);
-
-          data.forEach(function(entry) {
-            accountID.push(entry.accountID);
-          });
-
-          superID.sort();
-          accountID.sort();
-
+    if (isLoggedIn) {
+        // return authRequired(res, userID);
+      db.getUserPayload(userID, function(error, userPayload) {
+        if (error) return APIReturn(res, false, userPayload)
+        
+        return APIReturn(res,
+          true, 'User information obtained successfully.', userPayload
+        )
+      })
+    }else{
+      db.createUser(req.query.userID,"–","–", function(error,userID) {
+        if (error) return APIReturn(res, false, userID)
+          
+        db.getUserPayload(userID, function(error, userPayload) {
+          if (error) return APIReturn(res, false, userPayload)
+        
           return APIReturn(res,
-            true, 'User information data obtained correctly from email address.', {
-              userID: userID,
-              isActive: isActive,
-              superUserID: superID,
-              accountsIDownBySuperUser: accountID
-            }
+            true, 'User did not exist. User has been created.', userPayload
           )
         })
       })
-    });
+    }
   })
 })
 

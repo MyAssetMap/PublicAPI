@@ -589,7 +589,7 @@ app.post('/users/login', function(req, res) {
   });
 })
 
-app.get('/users/lookup', function(req, res) {
+app.get('/users/init', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
   checkAuthentication(req, res, function(isLoggedIn, userID) {

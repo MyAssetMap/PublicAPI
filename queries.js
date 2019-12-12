@@ -121,14 +121,15 @@ const getUserPayload = (userID, callback) => {
             mapID.sort();
 
             callback(false, {
+              isActive: isActive,
+              
               profile: {
                 userID: userID,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 displayName: user.firstName+' '+user.lastName
               },
-      
-              isActive: isActive,
+
               superUserID: superID,
               accountID: accountID,
               mapID: mapID

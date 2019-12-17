@@ -79,7 +79,11 @@ function checkAPIKey(req, res) {
 
 function checkAuthentication(req, res, callback) {
   var userUUID = req.query.userID;
-  const isValidUser = db.getUserIDByUUID(userUUID, function(error, userID) {
+  if (typeof userUUID === 'undefined') userUUID = req.body.userID;
+  
+  if (typeof userUUID === 'undefined') return callback(true, 'Unable to Autenticate User: information was not passed.');
+  
+  db.getUserIDByUUID(userUUID, function(error, userID) {
     // console.log('userID',userUUID,userID);
     return callback(!error, userID);
   });
@@ -417,7 +421,7 @@ app.post('/layer/add', function(req, res) {
   checkAuthentication(req, res, function(isLoggedIn, userID) {
     if (!isLoggedIn) return authRequired(res, userID);
   
-    var userID = req.body.userID;
+    // var userID = req.body.userID;
     var mapID = req.body.mapID;
     var groupID = req.body.groupID;
     var type = req.body.type;
@@ -429,7 +433,7 @@ app.post('/layer/add', function(req, res) {
     var interactive = req.body.interactive
     var minzoom = req.body.minzoom;
     var layout = req.body.layout;
-    var paint = req.body.layout;
+    var paint = req.body.paint;
     var metadata = req.body.metadata;
   
     if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
@@ -445,9 +449,9 @@ app.post('/layer/add', function(req, res) {
     if (sourceLayer == null) sourceLayer = toSlug(label);
     if (interactive == null) interactive = true;
     if (minzoom == null) minzoom = 10;
-    if (layout == null) layout = [];
-    if (paint == null) paint = [];
-    if (metadata == null) metadata = [];
+    if (layout == null) layout = {};
+    if (paint == null) paint = {};
+    if (metadata == null) metadata = {};
 
     var payload = {
       userID: userID, 

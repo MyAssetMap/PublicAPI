@@ -145,7 +145,7 @@ const getUserIDByUUID = (UUID, callback) => {
   if (UUID == '' || UUID == 0) return callback(true, 'User authentication information was not sent.');
   
   getRowFromTableWhere('User','id','cognitoUUID',UUID,function(error, userID) {
-    if (error) return callback(true, layers);
+    if (error) return callback(true, userID);
     if (userID == '' || userID == 0 || userID == []) return callback(true, 'No user found for this UUID.');
     
     if (Array.isArray(userID)) {
@@ -240,7 +240,25 @@ const createLayer = (payload, callback) => {
               'Layer',
               ["ownerID", "groupID", "type", "source", "source-layer", "label", "interactive", "minzoom", "layout", "paint", "metadata"],
               [userID, groupID, type, sourceID, sourceLayer, label, interactive, minzoom, layout, paint, metadata],
-              callback
+              function(error, layerID) {
+                if (error) return callback(true, layerID);
+                console.log('LayerID:',layerID)
+        
+                //Add to User List Data
+                //table, column, value, identifierColumn, identifier, callback
+                appendToJSONRow(
+                  'User',
+                  'userLayers',
+                  '[['+groupID+',{}]]',
+                  'id',
+                  userID,
+                  function(error, userRowID) {
+                    if (error) return callback(true, userRowID);
+                    console.log('UserRowID:',userRowID)
+                    callback(false, groupID)
+                  }
+                );
+              }
             );
           }
         )
@@ -485,6 +503,10 @@ const getInnerJoin = (fields, firstTable, firstIdentifier, secondTable, secondId
 
 const updateRow = (table, column, value, identifierColumn, identifier, callback) => {
   runQuery('UPDATE public."' + table + '" SET "' + column + '" = \'' + value + '\'' + ' WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
+}
+
+const appendToJSONRow = (table, column, value, identifierColumn, identifier, callback) => {
+  runQuery('UPDATE public."' + table + '" SET "' + column + '" = "' + column + '"::jsonb || \''+value+'\'::jsonb WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
 }
 
 const insertRow = (table, columns, values, callback) => {

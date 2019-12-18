@@ -328,16 +328,9 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     "data": {
         "user": [
             "plss",
-            {
-                "label": "Common Layers",
-                "groupId": "1",
-                "parent": null,
-                "layerIds": [
-                    "plss",
-                    "counties"
-                ]
-            },
+            [],
             "counties",
+            [],
             [
                 {
                     "toc": {
@@ -351,12 +344,13 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                     },
                     "sourcesArray": [
                         {
-                            "id": "unco-area-around-house_unco-area-around-house_10",
+                            "id": "unco-area-around-house_unco-area-around-house_source",
                             "type": "vector",
                             "tiles": [
                                 "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2013"
                             ],
-                            "maxzoom": 10
+                            "maxzoom": 10,
+                            "layerID": 13
                         }
                     ],
                     "layersArray": [
@@ -365,89 +359,25 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                             "layer": {
                                 "id": "unco-area-around-house_unco-area-around-house_13",
                                 "type": "line",
-                                "source": "unco-area-around-house_unco-area-around-house_10",
                                 "source-layer": "unco-area-around-house",
                                 "interactive": true,
                                 "minzoom": 10,
-                                "layout": {},
+                                "layout": {
+                                    "visibility": "none"
+                                },
                                 "paint": {},
-                                "metadata": {}
+                                "metadata": {},
+                                "source": "unco-area-around-house_unco-area-around-house_source"
                             }
                         }
                     ]
                 }
-            ]
-        ]
-    }
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": false,
-    "message": "You are not authenticated to use this endpoint.",
-    "data": "No user found for this UUID."
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": false,
-    "message": "You are not authenticated to use this endpoint.",
-    "data": "No user found."
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": false,
-    "message": "You are not authenticated to use this endpoint.",
-    "data": "invalid input syntax for type uuid: \"6872305e-65e3-48f1-a785-08ce114c8e9\""
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": true,
-    "message": "User Layers have been returned",
-    "data": {
-        "user": [
-            "plss",
-            "counties",
-            {
-                "label": "Common Layers",
-                "groupId": "1",
-                "parent": null,
-                "layerIds": [
-                    "plss",
-                    "counties"
-                ]
-            },
+            ],
             [
                 {
                     "toc": {
-                        "id": "unco-area-around-house_13",
-                        "label": "UNCO Area around House",
+                        "id": "test-2_18",
+                        "label": "TEST 2",
                         "description": "",
                         "canExpand": false,
                         "canOrgView": false,
@@ -456,320 +386,44 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                     },
                     "sourcesArray": [
                         {
-                            "id": "unco-area-around-house_unco-area-around-house_10",
+                            "id": "test-2_test-2_source",
                             "type": "vector",
                             "tiles": [
-                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2013"
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2017"
                             ],
-                            "maxzoom": 10
+                            "maxzoom": 10,
+                            "layerID": 17
                         }
                     ],
                     "layersArray": [
                         {
                             "beforeLayer": null,
                             "layer": {
-                                "id": "unco-area-around-house_unco-area-around-house_13",
+                                "id": "test-2_test-2_17",
                                 "type": "line",
-                                "source": "unco-area-around-house_unco-area-around-house_10",
-                                "source-layer": "unco-area-around-house",
+                                "source-layer": "test-2",
                                 "interactive": true,
                                 "minzoom": 10,
-                                "layout": {},
+                                "layout": {
+                                    "visibility": "none"
+                                },
                                 "paint": {},
-                                "metadata": {}
+                                "metadata": {},
+                                "source": "test-2_test-2_source"
                             }
                         }
                     ]
                 }
-            ]
-        ]
-    }
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": false,
-    "message": "invalid input syntax for integer: \"{\"id\":8}\""
-}
-```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": false,
-    "message": "syntax error at or near \")\""
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": false,
-    "message": "syntax error at or near \")\""
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": false,
-    "message": "syntax error at or near \")\""
-}
-```
-***
-### Response:
-
-+ Status: **500**
-
-+ Body:
-```
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Error</title>
-</head>
-<body>
-<pre>TypeError: db.getUsersByUUID is not a function<br> &nbsp; &nbsp;at checkAuthentication (/var/task/index.js:76:26)<br> &nbsp; &nbsp;at /var/task/index.js:258:5<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/task/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at next (/var/task/node_modules/express/lib/router/route.js:137:13)<br> &nbsp; &nbsp;at Route.dispatch (/var/task/node_modules/express/lib/router/route.js:112:3)<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/task/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at /var/task/node_modules/express/lib/router/index.js:281:22<br> &nbsp; &nbsp;at Function.process_params (/var/task/node_modules/express/lib/router/index.js:335:12)<br> &nbsp; &nbsp;at next (/var/task/node_modules/express/lib/router/index.js:275:10)<br> &nbsp; &nbsp;at jsonParser (/var/task/node_modules/body-parser/lib/types/json.js:119:7)</pre>
-</body>
-</html>
-
-```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": false,
-    "message": "invalid input syntax for integer: \"6872305e-65e3-48f1-a785-08ce114c8e49\""
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": true,
-    "message": "User Layers have been returned",
-    "data": {
-        "user": [
-            "plss",
+            ],
             {
                 "label": "Common Layers",
-                "groupId": "1",
                 "parent": null,
+                "groupId": "1",
                 "layerIds": [
                     "plss",
                     "counties"
                 ]
-            },
-            "counties",
-            [
-                {
-                    "toc": {
-                        "id": "unco-area-around-house_13",
-                        "label": "UNCO Area around House",
-                        "description": "",
-                        "canExpand": false,
-                        "canOrgView": false,
-                        "canOrgEdit": false,
-                        "group": "dataLayer"
-                    },
-                    "sourcesArray": [
-                        {
-                            "id": "unco-area-around-house_unco-area-around-house_10",
-                            "type": "vector",
-                            "tiles": [
-                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2013"
-                            ],
-                            "maxzoom": 10
-                        }
-                    ],
-                    "layersArray": [
-                        {
-                            "beforeLayer": null,
-                            "layer": {
-                                "id": "unco-area-around-house_unco-area-around-house_13",
-                                "type": "line",
-                                "source": "unco-area-around-house_unco-area-around-house_10",
-                                "source-layer": "unco-area-around-house",
-                                "interactive": true,
-                                "minzoom": 10,
-                                "layout": {},
-                                "paint": {},
-                                "metadata": {}
-                            }
-                        }
-                    ]
-                }
-            ]
-        ]
-    }
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": true,
-    "message": "User Layers have been returned",
-    "data": {
-        "user": [
-            "plss",
-            "counties",
-            {
-                "label": "Common Layers",
-                "groupId": "1",
-                "parent": null,
-                "layerIds": [
-                    "plss",
-                    "counties"
-                ]
-            },
-            [
-                {
-                    "toc": {
-                        "id": "unco-area-around-house_13",
-                        "label": "UNCO Area around House",
-                        "description": "",
-                        "canExpand": false,
-                        "canOrgView": false,
-                        "canOrgEdit": false,
-                        "group": "dataLayer"
-                    },
-                    "sourcesArray": [
-                        {
-                            "id": "unco-area-around-house_unco-area-around-house_10",
-                            "type": "vector",
-                            "tiles": [
-                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2013"
-                            ],
-                            "maxzoom": 10
-                        }
-                    ],
-                    "layersArray": [
-                        {
-                            "beforeLayer": null,
-                            "layer": {
-                                "id": "unco-area-around-house_unco-area-around-house_13",
-                                "type": "line",
-                                "source": "unco-area-around-house_unco-area-around-house_10",
-                                "source-layer": "unco-area-around-house",
-                                "interactive": true,
-                                "minzoom": 10,
-                                "layout": {},
-                                "paint": {},
-                                "metadata": {}
-                            }
-                        }
-                    ]
-                }
-            ]
+            }
         ]
     }
 }
@@ -853,8 +507,8 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 
 + Body:
 ```
-userID — 4
-label — UNCO Test
+userID — 6872305e-65e3-48f1-a785-08ce114c8e49
+label — Layer Test #2
 sourceType — user
 type — line
 mapID — 1
@@ -863,6 +517,106 @@ mapID — 1
 ***
 
 
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Layer has been created.",
+    "data": 21
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Layer has been created.",
+    "data": 20
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Layer has been created.",
+    "data": 18
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "You are not authenticated to use this endpoint.",
+    "data": "invalid input syntax for type uuid: \"undefined\""
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "You are not authenticated to use this endpoint.",
+    "data": "invalid input syntax for type uuid: \"undefined\""
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "You are not authenticated to use this endpoint.",
+    "data": "invalid input syntax for type uuid: \"undefined\""
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
 ### Response:
 
 + Status: **200**
@@ -983,15 +737,15 @@ mapID — 1
 
 
 # Delete Layer
-## `DELETE` /dev/layer/delete
+## `POST` /dev/layer/delete
 
-*`WIP` Delete an existing layer and optionally delete the data associated permanently.
+* Delete an existing layer and optionally delete the data associated permanently.
 
 - **userID (Required):** The User ID you wish to gather information for
-- **layerGroupID (Required):** The mapbox group you wish to create.
-- **keepData (Option):** Should the data be kept, or should it be deleted permanently?
+- **layerID (Required):** The layerGroupID you wish to delete.
 
 _**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
+_**Note:** The layerGroupID can be passed as a integer, or as the mapbox layerID (layerName_INT)_
 *
 
 ### Request:
@@ -1004,11 +758,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 
 + Body:
 ```
-userID — 4
-label — UNCO Test
-sourceType — user
-type — line
-mapID — 1
+layerID — layer_20
 ```
 
 ***
@@ -1016,21 +766,39 @@ mapID — 1
 
 ### Response:
 
-+ Status: **404**
++ Status: **200**
 
 + Body:
 ```
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Error</title>
-</head>
-<body>
-<pre>Cannot DELETE /dev/layer/delete</pre>
-</body>
-</html>
+{
+    "success": true,
+    "message": "Layer has been deleted.",
+    "data": []
+}
+```
+***
+### Response:
 
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "Layer Group ID (`layerID`) is being passed in the incorrect format."
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "Layer Group ID (`199`) does not exist!"
+}
 ```
 ***
 

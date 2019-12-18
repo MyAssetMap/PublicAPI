@@ -37,6 +37,12 @@ function toSlug(str) {
   return res;
 }
 
+if (!Array.prototype.end){
+    Array.prototype.end = function(){
+        return this[this.length - 1];
+    };
+};
+
 function APIReturn(res, success, message, data) {
   res.set('Access-Control-Allow-Origin', '*');
   res.set('Access-Control-Allow-Credentials', true);
@@ -449,7 +455,7 @@ app.post('/layer/add', function(req, res) {
     if (sourceLayer == null) sourceLayer = toSlug(label);
     if (interactive == null) interactive = true;
     if (minzoom == null) minzoom = 10;
-    if (layout == null) layout = {};
+    if (layout == null) layout = {"visibility": "none"};
     if (paint == null) paint = {};
     if (metadata == null) metadata = {};
 
@@ -505,15 +511,31 @@ app.post('/layer/update', function(req, res) {
   })
 });
 
-app.delete('/layer/delete', function(req, res) {
+app.post('/layer/delete', function(req, res) {
   if (!checkAPIKey(req, res)) return;
-
+  
   checkAuthentication(req, res, function(isLoggedIn, userID) {
     if (!isLoggedIn) return authRequired(res, userID);
   
-    return APIReturn(res,
-      true, 'Layer deletion is not yet built.', result
-    )
+    // var userID = req.body.userID;
+    var layerID = req.body.layerID;
+    
+    if (isNaN(layerID)) {
+      var layerIDArr = layerID.split("_");
+      if (layerIDArr.length > 1) layerID = layerIDArr.end();
+      console.log('Layer ID is being parsed: '+layerID);
+    }
+
+    if (layerID == null) return APIReturn(res,false, 'Layer Group ID (`layerID`) must be supplied.');
+    if (isNaN(layerID)) return APIReturn(res,false, 'Layer Group ID (`layerID`) is being passed in the incorrect format.');
+
+    db.deleteLayer(layerID, function(error, result) {
+      if (error) return APIReturn(res,false, result)
+
+      return APIReturn(res,
+        true, 'Layer has been deleted.', result
+      )
+    })
   })
 });
 

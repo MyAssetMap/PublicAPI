@@ -195,7 +195,7 @@ const createLayer = (payload, callback) => {
     var interactive = payload.interactive
     var minzoom = payload.minzoom;
     var layout = payload.layout;
-    var paint = payload.layout;
+    var paint = payload.paint;
     var metadata = payload.metadata;
     
     var label = payload.label;
@@ -227,23 +227,23 @@ const createLayer = (payload, callback) => {
         //Create Layer Source
         if (!['global','org','user'].includes(sourceType)) sourceType = "vector";
         
+        //Create Layer
         insertRow(
-          'LayerSource',
-          ["type"],
-          [sourceType],
-          function(error, sourceID) {
-            if (error) return callback(true, sourceID);
-            console.log('SourceID:',sourceID)
-        
-            //Create Layer
+          'Layer',
+          ["ownerID", "groupID", "type", "source-layer", "label", "interactive", "minzoom", "layout", "paint", "metadata"],
+          [userID, groupID, type, sourceLayer, label, interactive, minzoom, layout, paint, metadata],
+          function(error, layerID) {
+            if (error) return callback(true, layerID);
+            console.log('LayerID:',layerID)
+            
             insertRow(
-              'Layer',
-              ["ownerID", "groupID", "type", "source", "source-layer", "label", "interactive", "minzoom", "layout", "paint", "metadata"],
-              [userID, groupID, type, sourceID, sourceLayer, label, interactive, minzoom, layout, paint, metadata],
-              function(error, layerID) {
-                if (error) return callback(true, layerID);
-                console.log('LayerID:',layerID)
-        
+              'LayerSource',
+              ["type","layerID"],
+              [sourceType,layerID],
+              function(error, sourceID) {
+                if (error) return callback(true, sourceID);
+                console.log('SourceID:',sourceID)
+                
                 //Add to User List Data
                 //table, column, value, identifierColumn, identifier, callback
                 appendToJSONRow(
@@ -264,6 +264,72 @@ const createLayer = (payload, callback) => {
         )
       }
     );
+}
+
+const deleteLayer = (groupID, callback) => {
+  var finalReturn = [];
+
+    //Get Layer Group from ID
+  getTableWhere('LayerGroup','id',groupID,function(error,groups) {
+    if (error) return callback(true, groups);
+    
+    // finalReturn.push(groups);
+    if (!groups.length) return callback(true, 'Layer Group ID (`'+groupID+'`) does not exist!');
+    
+    deleteTableWhere('LayerGroup','id',groupID, function(error,del_layerGroup) {
+      if (error) return callback(true, del_layerGroup);
+
+      callback(false, del_layerGroup);
+    })
+    
+    // groups.forEach(function(group) {
+//       // console.log(group);
+//       let groupID = group['id'];
+//       let ownerID = group['ownerID'];
+//       let mapID = group['mapID'];
+//
+//       getTableWhere('Layer','groupID',groupID, function(error,layers) {
+//         if (error) return callback(true, layers);
+//
+//         //If Layer group exists, but has no layers.
+//         if (!layers.length) {
+//           deleteTableWhere('LayerGroup','id',groupID, function(error,layerGroups) {
+//             if (error) return callback(true, layerGroups);
+//
+//             return callback(false, "Layer Group was deleted. No layers/sources found.");
+//           })
+//
+//         }
+//         var layersProcessed = 0;
+//         var sourcesProcessed = 0;
+//
+//         layers.forEach(layer => {
+//           var layerID = layer['id'];
+//
+//           // deleteTableWhere('LayerSource','id',sourceID, function(error,del_layerSource) {
+//           //   if (error) return callback(true, del_layerSource);
+//           //
+//           //   sourcesProcessed++;
+//
+//           deleteTableWhere('Layer','id',layerID, function(error,del_layer) {
+//             if (error) return callback(true, del_layer);
+//
+//             deleteTableWhere('LayerGroup','id',groupID, function(error,del_layerGroup) {
+//               if (error) return callback(true, del_layerGroup);
+//
+//               layersProcessed++;
+//               if (layersProcessed === layers.length) {
+//
+//                 //NOW THAT EVERYTHING IS DONE, CONTINUE.
+//                 callback(false, {"Layers": layersProcessed,"LayerGroups": 1});
+//               }
+//             })
+//           })
+//           // })
+//         })
+//       })
+    // })
+  })
 }
 
 // ================================
@@ -328,21 +394,19 @@ const getGroupByID = (groupID, callback) => {
           return callback(false, finalReturn);
         }
         
+        var layersProcessed = 0;
+        
         var processedLayers = [];
-        var sourceList = [];
-        var sourceIDList = [];
-        var sourceConversionList = {};
+        
         layers.forEach(layer => {
+          var layerID = layer.id;
           
-          sourceList.push(layer.source);
-          sourceIDList.push(layer.id);
-          
+          var layerLabel = '';
           if (processedGroup.label !== null) {
-            layer.id = toSlug(processedGroup.label) + '_' + toSlug(layer['source-layer']) + '_' + layer.id.toString();
-          
-            sourceConversionList[layer.source] = toSlug(processedGroup.label) + '_' + toSlug(layer['source-layer']) + '_' + layer.source.toString();
-          
-            layer.source = toSlug(processedGroup.label) + '_' + toSlug(layer['source-layer']) + '_' + layer.source.toString();
+            layerLabel = toSlug(processedGroup.label) + '_' + toSlug(layer['source-layer']) + '_';
+            
+            layer.id = layerLabel + layer.id.toString();
+            layer.source = layerLabel + 'source';
           }
 
           delete layer.label;
@@ -353,38 +417,45 @@ const getGroupByID = (groupID, callback) => {
             beforeLayer: null,
             layer: layer
           })
-        })
-        
-        getTableWhere('LayerSource','id',sourceList, function(error,layersources) {
-          if (error) return callback(true, layersources);
           
-          var processedSource = [];
           
-          var num = 0;
-          layersources.forEach(layerSource => {
-            layerSource.id = sourceConversionList[layerSource.id];
-            var layerID = sourceIDList[num];
+          getTableWhere('LayerSource','layerID',layerID, function(error,layersources) {
+            if (error) return callback(true, layersources);
+          
+            var processedSource = [];
+          
+            layersources.forEach(layerSource => {
+              var layerID = layerSource.layerID;
             
-            if (['global','org','user'].includes(layerSource.type)) {
-              var layerName = 'layer_'+mapID+'_'+layerSource.type;
-              layerSource.type = 'vector';
-              layerSource.tiles = ['https://tiles.myassetmap.com/v1/mvt/'+layerName+'/{z}/{x}/{y}?filter=layer%20%3D%20'+layerID];
+              layerSource.id = layerLabel + 'source';
+              
+              delete layer.layerID;
+            
+              if (['global','org','user'].includes(layerSource.type)) {
+                var layerName = 'layer_'+mapID+'_'+layerSource.type;
+                layerSource.type = 'vector';
+                layerSource.tiles = ['https://tiles.myassetmap.com/v1/mvt/'+layerName+'/{z}/{x}/{y}?filter=layer%20%3D%20'+layerID];
+              }
+            
+              processedSource.push(layerSource)
+            })
+          
+            layersProcessed++;
+            if (layersProcessed === layers.length) {
+              
+              //format the payload
+              var groupPayload = {
+                toc: processedGroup,
+                sourcesArray: processedSource,
+                layersArray: processedLayers
+              };
+              
+              finalReturn.push(groupPayload);
+              
+              //NOW THAT EVERYTHING IS DONE, CONTINUE.
+              callback(false, finalReturn);
             }
-            
-            processedSource.push(layerSource)
-            num++;
           })
-          
-          //Add the template
-          var groupPayload = {
-            toc: processedGroup,
-            sourcesArray: processedSource,
-            layersArray: processedLayers
-          };
-          
-          finalReturn.push(groupPayload);
-          
-          return callback(false, finalReturn);
         })
       })
     })
@@ -438,11 +509,11 @@ const getLayers = (mapID, userID, callback) => {
     
         getGroupByID(layerTitle, function(error,layerTOC) {
           if (error) {
-            //console.log('TOC ERROR',layerTOC);
+            console.error('TOC ERROR',layerTOC);
             finalReturn.push(layerTitle);
           }else{
             //console.log('TOC',layerTOC);
-            finalReturn.push(layerTOC);
+            if (layerTOC !== []) finalReturn.push(layerTOC);
           }
 
           itemsProcessed++;
@@ -516,6 +587,15 @@ const insertRow = (table, columns, values, callback) => {
   });
 }
 
+const deleteTableWhere = (table, fieldName, value, callback) => {
+  if (!Array.isArray(value)) {
+    runQuery('DELETE FROM public."' + table + '" WHERE "' + fieldName + '" = ' + processValue(value) + ';', callback);
+  }else{
+    if (value.length == 0) callback(false, [])
+    runQuery('DELETE FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + fromSingleValueToValues(value) + ');', callback);
+  }
+}
+
 // function addSingleQuoteToFields(fieldsToAddQuote) {
 
 // 	let values = fieldsToAddQuote.split(',');
@@ -536,9 +616,13 @@ const processValue = function(value,char = `'`) {
   }
   if (value === null) {
     value = "null";
-  }else if (value === '') {
-    value = char+char;
-  }else if (isNaN(value)) value = char + value + char;
+  }else{
+    if (value === '') {
+      value = char+char;
+    }else{
+      if (isNaN(value)) value = char + value + char;
+    }
+  }
   
   return value;
 }
@@ -624,6 +708,8 @@ module.exports = {
   
     createGroup,
     createLayer,
+  
+    deleteLayer,
   
     getTable,
     getRowFromTable,

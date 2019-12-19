@@ -281,54 +281,6 @@ const deleteLayer = (groupID, callback) => {
 
       callback(false, del_layerGroup);
     })
-    
-    // groups.forEach(function(group) {
-//       // console.log(group);
-//       let groupID = group['id'];
-//       let ownerID = group['ownerID'];
-//       let mapID = group['mapID'];
-//
-//       getTableWhere('Layer','groupID',groupID, function(error,layers) {
-//         if (error) return callback(true, layers);
-//
-//         //If Layer group exists, but has no layers.
-//         if (!layers.length) {
-//           deleteTableWhere('LayerGroup','id',groupID, function(error,layerGroups) {
-//             if (error) return callback(true, layerGroups);
-//
-//             return callback(false, "Layer Group was deleted. No layers/sources found.");
-//           })
-//
-//         }
-//         var layersProcessed = 0;
-//         var sourcesProcessed = 0;
-//
-//         layers.forEach(layer => {
-//           var layerID = layer['id'];
-//
-//           // deleteTableWhere('LayerSource','id',sourceID, function(error,del_layerSource) {
-//           //   if (error) return callback(true, del_layerSource);
-//           //
-//           //   sourcesProcessed++;
-//
-//           deleteTableWhere('Layer','id',layerID, function(error,del_layer) {
-//             if (error) return callback(true, del_layer);
-//
-//             deleteTableWhere('LayerGroup','id',groupID, function(error,del_layerGroup) {
-//               if (error) return callback(true, del_layerGroup);
-//
-//               layersProcessed++;
-//               if (layersProcessed === layers.length) {
-//
-//                 //NOW THAT EVERYTHING IS DONE, CONTINUE.
-//                 callback(false, {"Layers": layersProcessed,"LayerGroups": 1});
-//               }
-//             })
-//           })
-//           // })
-//         })
-//       })
-    // })
   })
 }
 
@@ -512,8 +464,10 @@ const getLayers = (mapID, userID, callback) => {
             console.error('TOC ERROR',layerTOC);
             finalReturn.push(layerTitle);
           }else{
-            //console.log('TOC',layerTOC);
-            if (layerTOC !== []) finalReturn.push(layerTOC);
+            if (layerTOC.length !== 0) {
+              console.log('TOC',layerTOC);
+              finalReturn.push(layerTOC);
+            }
           }
 
           itemsProcessed++;

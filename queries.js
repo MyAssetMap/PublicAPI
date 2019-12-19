@@ -184,86 +184,112 @@ const createGroup = (payload, callback) => {
 
 const createLayer = (payload, callback) => {
     //Create Group First
-    var userID = payload.userID;
-    var mapID = payload.mapID;
-    var groupID = payload.groupID;
-    var type = payload.type;
-    
-    //SOURCE
-    var sourceLayer = payload.sourceLayer;
-    var sourceType = payload.sourceType;
-    var interactive = payload.interactive
-    var minzoom = payload.minzoom;
-    var layout = payload.layout;
-    var paint = payload.paint;
-    var metadata = payload.metadata;
-    
-    var label = payload.label;
-    var description = payload.description;
-    var canExpand = payload.canExpand;
-    var canOrgView = payload.canOrgView;
-    var canOrgEdit = payload.canOrgEdit;
+  var label = payload.label;
+  var description = payload.description;
+  var canExpand = payload.canExpand;
+  var canOrgView = payload.canOrgView;
+  var canOrgEdit = payload.canOrgEdit;
   
-    if (userID == null) return callback(true, 'User ID (`userID`) must be supplied.');
-    if (mapID == null) return callback(true, 'Map ID (`mapID`) must be supplied.');
-    if (groupID == null) groupID = 0;
-    if (type == null) return callback(true, 'Type (`type`) must be supplied.');
-  
-    if (label == null) return callback(true, 'Label (`label`) must be supplied.');
-    if (sourceType == null) return callback(true, 'Source Type (`sourceType`) must be supplied.');
-    if (description == null) description = '';
-    if (canExpand == null) canExpand = false;
-    if (canOrgView == null) canOrgView = false;
-    if (canOrgEdit == null) canOrgEdit = false;
+  if (label == null) return callback(true, 'Label (`label`) must be supplied.');
+  if (description == null) description = '';
+  if (canExpand == null) canExpand = false;
+  if (canOrgView == null) canOrgView = false;
+  if (canOrgEdit == null) canOrgEdit = false;
 
-    insertRow(
-      'LayerGroup',
-      ["ownerID", "mapID", "groupID", "label", "description", "canExpand", "canOrgView", "canOrgEdit"],
-      [userID, mapID, groupID, label, description, canExpand, canOrgView, canOrgEdit],
-      function(error, groupID) {
-        if (error) return callback(true, groupID);
-        console.log('GroupID:',groupID)
+  var userID = payload.userID;
+  var mapID = payload.mapID;
+  var groupID = payload.groupID;
+  var type = payload.type;
+  
+  if (userID == null) return callback(true, 'User ID (`userID`) must be supplied.');
+  if (mapID == null) return callback(true, 'Map ID (`mapID`) must be supplied.');
+  if (groupID == null) groupID = 0;
+  if (type == null) return callback(true, 'Type (`type`) must be supplied.');
+  
+  insertRow(
+    'LayerGroup',
+    ["ownerID", "mapID", "groupID", "label", "description", "canExpand", "canOrgView", "canOrgEdit"],
+    [userID, mapID, groupID, label, description, canExpand, canOrgView, canOrgEdit],
+    function(error, groupID) {
+      if (error) return callback(true, groupID);
+      console.log('GroupID:',groupID)
+      
+      setupLayer(payload, groupID, function(error, setupLayer) {
+        if (error) callback(error, setupLayer);
         
-        //Create Layer Source
-        if (!['global','org','user'].includes(sourceType)) sourceType = "vector";
-        
-        //Create Layer
-        insertRow(
-          'Layer',
-          ["ownerID", "groupID", "type", "source-layer", "label", "interactive", "minzoom", "layout", "paint", "metadata"],
-          [userID, groupID, type, sourceLayer, label, interactive, minzoom, layout, paint, metadata],
-          function(error, layerID) {
-            if (error) return callback(true, layerID);
-            console.log('LayerID:',layerID)
-            
-            insertRow(
-              'LayerSource',
-              ["type","layerID"],
-              [sourceType,layerID],
-              function(error, sourceID) {
-                if (error) return callback(true, sourceID);
-                console.log('SourceID:',sourceID)
-                
-                //Add to User List Data
-                //table, column, value, identifierColumn, identifier, callback
-                appendToJSONRow(
-                  'User',
-                  'userLayers',
-                  '[['+groupID+',{}]]',
-                  'id',
-                  userID,
-                  function(error, userRowID) {
-                    if (error) return callback(true, userRowID);
-                    console.log('UserRowID:',userRowID)
-                    callback(false, groupID)
-                  }
-                );
-              }
-            );
-          }
-        )
-      }
-    );
+        callback(false, groupID)
+      })
+    }
+  );
+}
+
+const setupLayer = (payload, groupID, callback) => {
+
+  //Group
+  var userID = payload.userID;
+  if (userID == null) return callback(true, 'User ID (`userID`) must be supplied.');
+
+  //Layer
+  var sourceLayer = payload.sourceLayer;
+  var sourceType = payload.sourceType;
+  var interactive = payload.interactive
+  var minzoom = payload.minzoom;
+  var layout = payload.layout;
+  var paint = payload.paint;
+  var metadata = payload.metadata;
+  
+  var label = payload.label;
+  var type = payload.type;
+  var description = payload.description;
+  var canExpand = payload.canExpand;
+  var canOrgView = payload.canOrgView;
+  var canOrgEdit = payload.canOrgEdit;
+
+  if (sourceType == null) return callback(true, 'Source Type (`sourceType`) must be supplied.');
+  if (!['global','org','user'].includes(sourceType)) sourceType = "vector";
+  
+  if (label == null) return callback(true, 'Label (`label`) must be supplied.');
+  if (type == null) return callback(true, 'Type (`type`) must be supplied.');
+  if (description == null) description = '';
+  if (canExpand == null) canExpand = false;
+  if (canOrgView == null) canOrgView = false;
+  if (canOrgEdit == null) canOrgEdit = false;
+
+  //Create Layer
+  insertRow(
+    'Layer',
+    ["ownerID", "groupID", "type", "source-layer", "label", "interactive", "minzoom", "layout", "paint", "metadata"],
+    [userID, groupID, type, sourceLayer, label, interactive, minzoom, layout, paint, metadata],
+    function(error, layerID) {
+      if (error) return callback(true, layerID);
+      console.log('LayerID:',layerID)
+      
+      //Create Layer Source
+      insertRow(
+        'LayerSource',
+        ["type","layerID"],
+        [sourceType,layerID],
+        function(error, sourceID) {
+          if (error) return callback(true, sourceID);
+          console.log('SourceID:',sourceID)
+          
+          //Add to User List Data
+          appendToJSONRow(
+            'User',
+            'userLayers',
+            '[['+groupID+',{}]]',
+            'id',
+            userID,
+            function(error, userRowID) {
+              if (error) return callback(true, userRowID);
+              console.log('UserRowID:',userRowID)
+              callback(false, groupID)
+            }
+          );
+        }
+      );
+    }
+  )
 }
 
 const deleteLayer = (groupID, callback) => {

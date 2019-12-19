@@ -290,7 +290,7 @@ app.get('/layers/user', function(req, res) {
       if (error) return APIReturn(res,false, layers)
     
         return APIReturn(res,
-          true, 'User Layers have been returned', layers
+          true, 'User Layers have been returned for user #'+userID, layers
         )
       });
       

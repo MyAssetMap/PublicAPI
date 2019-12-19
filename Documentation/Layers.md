@@ -493,6 +493,13 @@ mapID — 0
 - **sourceType (Required):** The source type of the layer we are creating (user, org, or public).
 - **type (Required):** The mapbox spec type of layer you are creating (point, line, polygon.
 - **mapID (Required):** The Map ID in which the group will be stored.
+- **——OPTIONAL——**
+- **interactive (Optional):** The Interactive Value (Defaults to true)
+- **minzoom (Optional):** The MinZoom Value (Defaults to 10)
+- **layout (Optional):** The Layout Value (Defaults to {visibility: none})
+- **paint (Optional):** The Paint Value (Defaults to {})
+- **metadata (Optional):** The Metadata Value (Defaults to {})
+
 
 _**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
 *

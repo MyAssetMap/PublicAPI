@@ -217,7 +217,8 @@ const createLayer = (payload, callback) => {
       setupLayer(payload, groupID, function(error, setupLayer) {
         if (error) callback(error, setupLayer);
         
-        callback(false, groupID)
+        var newLayerName = toSlug(label) + '_' + groupID.toString();
+        callback(false, newLayerName)
       })
     }
   );
@@ -503,7 +504,7 @@ const getLayers = (mapID, userID, callback) => {
             callback(false, {user: finalReturn});
           }
         })
-      }) 
+      })
     })
   })
 }

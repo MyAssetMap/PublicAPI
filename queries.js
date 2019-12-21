@@ -202,7 +202,7 @@ const createUserGroup = (payload, callback) => {
   appendToJSONRow(
     'User',
     'userLayers',
-    [
+    [[
       {
         label: label,
         color: color,
@@ -211,7 +211,7 @@ const createUserGroup = (payload, callback) => {
         layerIds: []
       },
       {}
-    ],
+    ]],
     'id',
     userID,
     function(error, userRowID) {
@@ -370,18 +370,17 @@ const getAccountsByUserID = (userID, callback) => {getRowFromTableWhere('Account
 
 const getMapsByAccountID = (accountID, callback) => {getRowFromTableWhere('Map','id','accountID',accountID,callback)}
 
-const getGroupByID = (groupID, callback) => {
+const getGroupByID = (currentKey, groupID, callback) => {
   var finalReturn = [];
     
   getTableWhere('LayerGroup','id',groupID,function(error,groups) {
-    if (error) return callback(true, groups);
+    if (error) return callback(true, currentKey, groupID, groups);
     
     // finalReturn.push(groups);
-    if (!groups.length) return callback(false, finalReturn);
+    if (!groups.length) return callback(false, currentKey, groupID, finalReturn);
     
     groups.forEach(function(group) {
       // console.log(group);
-      let groupID = group['id'];
       let ownerID = group['ownerID'];
       let mapID = group['mapID'];
       
@@ -398,7 +397,7 @@ const getGroupByID = (groupID, callback) => {
       delete processedGroup.groupID;
       
       getTableWhere('Layer','groupID',groupID, function(error,layers) {
-        if (error) return callback(true, layers);
+        if (error) return callback(true, currentKey, groupID, layers);
         
         //If Layer group exists, but has no layers.
         if (!layers.length) {
@@ -410,7 +409,7 @@ const getGroupByID = (groupID, callback) => {
           };
           
           finalReturn.push(groupPayload);
-          return callback(false, finalReturn);
+          return callback(false, currentKey, groupID, finalReturn);
         }
         
         var layersProcessed = 0;
@@ -439,7 +438,7 @@ const getGroupByID = (groupID, callback) => {
           
           
           getTableWhere('LayerSource','layerID',layerID, function(error,layersources) {
-            if (error) return callback(true, layersources);
+            if (error) return callback(true, currentKey, groupID, layersources);
           
             var processedSource = [];
           
@@ -472,7 +471,7 @@ const getGroupByID = (groupID, callback) => {
               finalReturn.push(groupPayload);
               
               //NOW THAT EVERYTHING IS DONE, CONTINUE.
-              callback(false, finalReturn);
+              callback(false, currentKey, groupID, finalReturn);
             }
           })
         })
@@ -494,7 +493,7 @@ const getGlobalLayers = (mapID, callback) => {
     var itemsProcessed = 0;
     groups.forEach(function(group) {
       
-      getGroupByID(group.id, function(error, layerTOC) {
+      getGroupByID(0, group.id, function(error, currentKey, layerTitle, layerTOC) {
         if (error) return callback(true,layerTOC);
         
         finalReturn.push(layerTOC);
@@ -510,7 +509,7 @@ const getGlobalLayers = (mapID, callback) => {
 }
 
 const getLayers = (mapID, userID, callback) => {
-  var finalReturn = [];
+  var finalReturn = {};
   
   getRowFromTableWhere('User',['userLayers'],'id',userID,function(error,users) {
     if (error) return callback(true, users);
@@ -521,19 +520,20 @@ const getLayers = (mapID, userID, callback) => {
       
       if (!userLayers.length) return callback(false, finalReturn);
       var itemsProcessed = 0;
+      var currentKey = 0;
       userLayers.forEach(function(layer) {
         
         var layerTitle = layer[0];
         var layerCustomize = layer[1];
     
-        getGroupByID(layerTitle, function(error,layerTOC) {
+        getGroupByID(currentKey, layerTitle, function(error,currentKey,layerTitle,layerTOC) {
           if (error) {
-            console.error('TOC ERROR',layerTOC);
-            finalReturn.push(layerTitle);
+            console.error('TOC ERROR',layerTitle,layerTOC);
+            finalReturn[currentKey] = layerTitle;
           }else{
             if (layerTOC.length !== 0) {
-              console.log('TOC',layerTOC);
-              finalReturn.push(layerTOC);
+              console.log('TOC',layerTitle,layerTOC);
+              finalReturn[currentKey] = layerTOC;
             }
           }
 
@@ -544,6 +544,7 @@ const getLayers = (mapID, userID, callback) => {
             callback(false, {user: finalReturn});
           }
         })
+        currentKey++;
       })
     })
   })

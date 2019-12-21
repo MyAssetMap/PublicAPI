@@ -23,6 +23,20 @@ function toSlug(str) {
   return res;
 }
 
+function generateRandomString(length, numOnly) {
+  const allCapsAlpha = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"]; 
+  const allLowerAlpha = [..."abcdefghijklmnopqrstuvwxyz"]; 
+  const allNumbers = [..."0123456789"];
+
+  var base = [...allNumbers];
+  if (!numOnly) {
+    base = [...base,...allCapsAlpha,...allLowerAlpha]
+  }
+  return [...Array(length)]
+   .map(i => base[Math.random()*base.length|0])
+   .join('');
+}
+
 // ========================
 // = CUSTOM LOGIC QUERIES =
 // ========================
@@ -164,22 +178,48 @@ const createUser = (UUID, firstName, lastName, callback) => {
 }
 
 const createGroup = (payload, callback) => {
-    // ownerID: ownerID,
-    // mapID: mapID,
-    // groupID: groupID,
-    // label: label,
-    // description: description,
-    // canExpand: canExpand,
-    // canOrgView: canOrgView,
-    // canOrgEdit: canOrgEdit,
       insertRow(
         'LayerGroup',
         ["ownerID", "mapID", "groupID", "label", "description", "canExpand", "canOrgView", "canOrgEdit"],
         [payload.ownerID, payload.mapID, payload.groupID, payload.label, payload.description, payload.canExpand, payload.canOrgView, payload.canOrgEdit],
         callback
       );
-      //});
+}
+
+const createUserGroup = (payload, callback) => {
+  var userID = payload.userID;
   
+  var label = payload.label;
+  var color = payload.color;
+  var parentID = payload.parentID;
+  
+  if (label == null) return callback(true, 'Label (`label`) must be supplied.');
+  if (color == null) color = '#f2f2f2';
+  
+  var groupID = generateRandomString(10);
+  
+  //Add to User List Data
+  appendToJSONRow(
+    'User',
+    'userLayers',
+    [
+      {
+        label: label,
+        color: color,
+        parent: parentID,
+        groupId: groupID,
+        layerIds: []
+      },
+      {}
+    ],
+    'id',
+    userID,
+    function(error, userRowID) {
+      if (error) return callback(true, userRowID);
+      console.log('UserGroupID:',groupID)
+      callback(false, groupID)
+    }
+  );
 }
 
 const createLayer = (payload, callback) => {
@@ -554,11 +594,11 @@ const getInnerJoin = (fields, firstTable, firstIdentifier, secondTable, secondId
 }
 
 const updateRow = (table, column, value, identifierColumn, identifier, callback) => {
-  runQuery('UPDATE public."' + table + '" SET "' + column + '" = \'' + value + '\'' + ' WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
+  runQuery('UPDATE public."' + table + '" SET "' + column + '" = ' + processValue(value) + ' WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
 }
 
 const appendToJSONRow = (table, column, value, identifierColumn, identifier, callback) => {
-  runQuery('UPDATE public."' + table + '" SET "' + column + '" = "' + column + '"::jsonb || \''+value+'\'::jsonb WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
+  runQuery('UPDATE public."' + table + '" SET "' + column + '" = "' + column + '"::jsonb || '+processValue(value)+'::jsonb WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
 }
 
 const insertRow = (table, columns, values, callback) => {
@@ -593,7 +633,7 @@ const processValue = function(value,char = `'`) {
   if (typeof value === 'string') {
     value = value.trim(); //We remove any extra space used between values
   }else if (typeof value === 'object') {
-    value = JSON.stringify(value); //We remove any extra space used between values
+    value = JSON.stringify(value);
   }
   if (value === null) {
     value = "null";
@@ -688,6 +728,7 @@ module.exports = {
     getLayers,
   
     createGroup,
+    createUserGroup,
     createLayer,
   
     deleteLayer,

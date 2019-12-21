@@ -1,5 +1,5 @@
 # Import GEOJSON to GEOMETRY
-## `POST` /dev/layer/import/json
+## `POST` /alpha/layer/import/json
 
 *Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
 
@@ -13,7 +13,7 @@
     –
 
 + Url Params:
-    –
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
@@ -90,7 +90,7 @@ json — {
 
 
 # Get Common Layers
-## `GET` /dev/layers/public
+## `GET` /alpha/layers/public
 
 **DEPRECATED* Returns all of the Public Common layers in the Mapbox Spec. Used purely for reference at this point as public common layers are now stored directly in the client.*
 
@@ -293,7 +293,7 @@ json — {
 
 
 # Get User Layers
-## `GET` /dev/layers/user
+## `GET` /alpha/layers/user
 
 *Returns the user layers & groups for a given userID.
 
@@ -324,97 +324,10 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ```
 {
     "success": true,
-    "message": "User Layers have been returned",
+    "message": "User Layers have been returned for user #8",
     "data": {
         "user": [
             "plss",
-            [],
-            "counties",
-            [],
-            [
-                {
-                    "toc": {
-                        "id": "unco-area-around-house_13",
-                        "label": "UNCO Area around House",
-                        "description": "",
-                        "canExpand": false,
-                        "canOrgView": false,
-                        "canOrgEdit": false,
-                        "group": "dataLayer"
-                    },
-                    "sourcesArray": [
-                        {
-                            "id": "unco-area-around-house_unco-area-around-house_source",
-                            "type": "vector",
-                            "tiles": [
-                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2013"
-                            ],
-                            "maxzoom": 10,
-                            "layerID": 13
-                        }
-                    ],
-                    "layersArray": [
-                        {
-                            "beforeLayer": null,
-                            "layer": {
-                                "id": "unco-area-around-house_unco-area-around-house_13",
-                                "type": "line",
-                                "source-layer": "unco-area-around-house",
-                                "interactive": true,
-                                "minzoom": 10,
-                                "layout": {
-                                    "visibility": "none"
-                                },
-                                "paint": {},
-                                "metadata": {},
-                                "source": "unco-area-around-house_unco-area-around-house_source"
-                            }
-                        }
-                    ]
-                }
-            ],
-            [
-                {
-                    "toc": {
-                        "id": "test-2_18",
-                        "label": "TEST 2",
-                        "description": "",
-                        "canExpand": false,
-                        "canOrgView": false,
-                        "canOrgEdit": false,
-                        "group": "dataLayer"
-                    },
-                    "sourcesArray": [
-                        {
-                            "id": "test-2_test-2_source",
-                            "type": "vector",
-                            "tiles": [
-                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2017"
-                            ],
-                            "maxzoom": 10,
-                            "layerID": 17
-                        }
-                    ],
-                    "layersArray": [
-                        {
-                            "beforeLayer": null,
-                            "layer": {
-                                "id": "test-2_test-2_17",
-                                "type": "line",
-                                "source-layer": "test-2",
-                                "interactive": true,
-                                "minzoom": 10,
-                                "layout": {
-                                    "visibility": "none"
-                                },
-                                "paint": {},
-                                "metadata": {},
-                                "source": "test-2_test-2_source"
-                            }
-                        }
-                    ]
-                }
-            ],
             {
                 "label": "Common Layers",
                 "parent": null,
@@ -423,7 +336,414 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                     "plss",
                     "counties"
                 ]
-            }
+            },
+            "counties",
+            [
+                {
+                    "toc": {
+                        "id": "new-group-name_13",
+                        "label": "New Group Name",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "new-group-name_unco-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_0_user/{z}/{x}/{y}?filter=layer%20%3D%2014"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 14
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "new-group-name_unco-test_14",
+                                "type": "line",
+                                "source-layer": "unco-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "source": "new-group-name_unco-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            "plss",
+            "counties",
+            {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            [
+                {
+                    "toc": {
+                        "id": "new-group-name_13",
+                        "label": "New Group Name",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "new-group-name_unco-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_0_user/{z}/{x}/{y}?filter=layer%20%3D%2014"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 14
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "new-group-name_unco-test_14",
+                                "type": "line",
+                                "source-layer": "unco-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "source": "new-group-name_unco-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #16",
+    "data": {
+        "user": [
+            "plss",
+            "counties",
+            {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            [
+                {
+                    "toc": {
+                        "id": "new-group-name_13",
+                        "label": "New Group Name",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "new-group-name_unco-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_0_user/{z}/{x}/{y}?filter=layer%20%3D%2014"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 14
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "new-group-name_unco-test_14",
+                                "type": "line",
+                                "source-layer": "unco-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "source": "new-group-name_unco-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **301**
+
++ Body:
+```
+<a href="/egd4avkav9.execute-api.us-east-1.amazonaws.com/prod/layers/user?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c">Moved Permanently</a>.
+
+
+```
+***
+### Response:
+
++ Status: **301**
+
++ Body:
+```
+<a href="/rg91b1juf3.execute-api.us-east-1.amazonaws.com/dev/layers/user?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c">Moved Permanently</a>.
+
+
+```
+***
+### Response:
+
++ Status: **301**
+
++ Body:
+```
+<a href="/rg91b1juf3.execute-api.us-east-1.amazonaws.com/dev/layers/user?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c6872305e-65e3-48f1-a785-08ce114c8e49">Moved Permanently</a>.
+
+
+```
+***
+### Response:
+
++ Status: **301**
+
++ Body:
+```
+<a href="/egd4avkav9.execute-api.us-east-1.amazonaws.com/prod/layers/user?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c6872305e-65e3-48f1-a785-08ce114c8e49">Moved Permanently</a>.
+
+
+```
+***
+### Response:
+
++ Status: **301**
+
++ Body:
+```
+<a href="/egd4avkav9.execute-api.us-east-1.amazonaws.com/prod/layers/user?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c6872305e-65e3-48f1-a785-08ce114c8e49">Moved Permanently</a>.
+
+
+```
+***
+### Response:
+
++ Status: **301**
+
++ Body:
+```
+<a href="/rg91b1juf3.execute-api.us-east-1.amazonaws.com/dev/layers/user?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c6872305e-65e3-48f1-a785-08ce114c8e49">Moved Permanently</a>.
+
+
+```
+***
+### Response:
+
++ Status: **301**
+
++ Body:
+```
+<a href="/rg91b1juf3.execute-api.us-east-1.amazonaws.com/dev/layers/user?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c6872305e-65e3-48f1-a785-08ce114c8e49">Moved Permanently</a>.
+
+
+```
+***
+### Response:
+
++ Status: **301**
+
++ Body:
+```
+<a href="/egd4avkav9.execute-api.us-east-1.amazonaws.com/dev/layers/user?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c6872305e-65e3-48f1-a785-08ce114c8e49">Moved Permanently</a>.
+
+
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned",
+    "data": {
+        "user": [
+            "plss",
+            {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            "counties",
+            [
+                {
+                    "toc": {
+                        "id": "new-group-name_13",
+                        "label": "New Group Name",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "new-group-name_unco-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_0_user/{z}/{x}/{y}?filter=layer%20%3D%2014"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 14
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "new-group-name_unco-test_14",
+                                "type": "line",
+                                "source-layer": "unco-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "source": "new-group-name_unco-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned",
+    "data": {
+        "user": [
+            "plss",
+            {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            "counties",
+            [
+                {
+                    "toc": {
+                        "id": "new-group-name_13",
+                        "label": "New Group Name",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "new-group-name_unco-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_0_user/{z}/{x}/{y}?filter=layer%20%3D%2014"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 14
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "new-group-name_unco-test_14",
+                                "type": "line",
+                                "source-layer": "unco-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "source": "new-group-name_unco-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
         ]
     }
 }
@@ -431,18 +751,17 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
-# Create Group for Layer
-## `POST` /dev/group/add
+# Create User Group
+## `POST` /alpha/group/add
 
-*Create a new Empty layer stack (mainly for stacked layers) with the name specified. Layer Groups are done on a per user level.
+*Create a new Empty user group with the name specified. Layer Groups are done on a per user level.
 
-- **userID (Required):** The User ID you wish to gather information for
+- **userID (Required):** The User ID you wish to create the group for
 - **label (Required):** The name of the group you wish to create.
-- **mapID (Required):** The Map ID in which the group will be stored.
+- **color (Optional):** The color of the group you wish to create (Defaults to #f2f2f2).
+- **parentID (Option):** The Parent ID of the group you wish to place this group inside.
 
 _**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
-
-_**DEPRECATED:** Create Layer (layer/add) is to be used instead as that endpoint also creates the layer source, and layer group as needed._
 *
 
 ### Request:
@@ -451,12 +770,11 @@ _**DEPRECATED:** Create Layer (layer/add) is to be used instead as that endpoint
     –
 
 + Url Params:
-    –
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
-userID — 4
-label — New Group Name
+label — This is a good group 2
 mapID — 0
 ```
 
@@ -471,19 +789,15 @@ mapID — 0
 ```
 {
     "success": true,
-    "message": "Group has been created.",
-    "data": [
-        {
-            "id": 14
-        }
-    ]
+    "message": "User Group has been created.",
+    "data": "xoOHNl4ypX"
 }
 ```
 ***
 
 
 # Create Layer
-## `POST` /dev/layer/add
+## `POST` /alpha/layer/add
 
 *Create a new Empty layer with the name specified. Once created, you can then import geojson as normal.
 
@@ -510,12 +824,11 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    –
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
-userID — 6872305e-65e3-48f1-a785-08ce114c8e49
-label — Layer Test #2
+label — Prod Test
 sourceType — user
 type — line
 mapID — 1
@@ -524,6 +837,138 @@ mapID — 1
 ***
 
 
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Layer has been created.",
+    "data": "prod-test_46"
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Layer has been created.",
+    "data": 45
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Layer has been created.",
+    "data": 44
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Layer has been created.",
+    "data": 43
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Layer has been created.",
+    "data": 33
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "invalid input syntax for type boolean: \"undefined\""
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
 ### Response:
 
 + Status: **200**
@@ -640,7 +1085,7 @@ mapID — 1
 
 
 # Order Layers & Groups
-## `POST` /dev/layer/order
+## `POST` /alpha/layer/order
 
 *`WIP` Takes the existing layer information and pushes it to save to the server. Saves the order, groups, and layer properties such as paint properties and tags.
 
@@ -656,7 +1101,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    –
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
@@ -692,7 +1137,7 @@ mapID — 1
 
 
 # Save Layer Properties
-## `POST` /dev/layer/update
+## `POST` /alpha/layer/update
 
 *`WIP` Takes the client layer information and pushes it to save to the server. Maintains the order, but updates layer properties such as paint properties and tags.
 
@@ -708,11 +1153,10 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    –
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
-userID — 4
 label — UNCO Test
 sourceType — user
 type — line
@@ -744,7 +1188,7 @@ mapID — 1
 
 
 # Delete Layer
-## `POST` /dev/layer/delete
+## `POST` /alpha/layer/delete
 
 * Delete an existing layer and optionally delete the data associated permanently.
 
@@ -761,7 +1205,7 @@ _**Note:** The layerGroupID can be passed as a integer, or as the mapbox layerID
     –
 
 + Url Params:
-    –
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```

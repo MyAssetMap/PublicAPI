@@ -372,49 +372,72 @@ app.post('/layer/import/json', function(req, res) {
   });
 });
 
-//LAYERS
+// //LAYERS
+// app.post('/group/add', function(req, res) {
+//   if (!checkAPIKey(req, res)) return;
+//
+//   checkAuthentication(req, res, function(isLoggedIn, userID) {
+//     if (!isLoggedIn) return authRequired(res, userID);
+//
+//     var ownerID = req.body.userID;
+//     var mapID = req.body.mapID;
+//     var groupID = req.body.groupID;
+//     var label = req.body.label;
+//     var description = req.body.description;
+//     var canExpand = req.body.canExpand;
+//     var canOrgView = req.body.canOrgView;
+//     var canOrgEdit = req.body.canOrgEdit;
+//
+//     if (ownerID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+//     if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+//     if (groupID == null) groupID = 0;
+//
+//     if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
+//     if (description == null) description = '';
+//     if (canExpand == null) canExpand = false;
+//     if (canOrgView == null) canOrgView = false;
+//     if (canOrgEdit == null) canOrgEdit = false;
+//
+//     var payload = {
+//       ownerID: ownerID,
+//       mapID: mapID,
+//       groupID: groupID,
+//       label: label,
+//       description: description,
+//       canExpand: canExpand,
+//       canOrgView: canOrgView,
+//       canOrgEdit: canOrgEdit,
+//     };
+//
+//     db.createGroup(payload, function(error, result) {
+//       if (error) return APIReturn(res,false, result)
+//
+//       return APIReturn(res,
+//         true, 'Group has been created.', result
+//       )
+//     })
+//   })
+// });
+
+//USER Groups
 app.post('/group/add', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
   checkAuthentication(req, res, function(isLoggedIn, userID) {
     if (!isLoggedIn) return authRequired(res, userID);
-  
-  
-    var ownerID = req.body.userID;
-    var mapID = req.body.mapID;
-    var groupID = req.body.groupID;
-    var label = req.body.label;
-    var description = req.body.description;
-    var canExpand = req.body.canExpand;
-    var canOrgView = req.body.canOrgView;
-    var canOrgEdit = req.body.canOrgEdit;
-  
-    if (ownerID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
-    if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
-    if (groupID == null) groupID = 0;
-  
-    if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
-    if (description == null) description = '';
-    if (canExpand == null) canExpand = false;
-    if (canOrgView == null) canOrgView = false;
-    if (canOrgEdit == null) canOrgEdit = false;
 
     var payload = {
-      ownerID: ownerID,
-      mapID: mapID,
-      groupID: groupID,
-      label: label,
-      description: description,
-      canExpand: canExpand,
-      canOrgView: canOrgView,
-      canOrgEdit: canOrgEdit,
+      userID: userID,
+      label: req.body.label,
+      color: req.body.color,
+      parentID: req.body.parentID,
     };
 
-    db.createGroup(payload, function(error, result) {
+    db.createUserGroup(payload, function(error, result) {
       if (error) return APIReturn(res,false, result)
 
       return APIReturn(res,
-        true, 'Group has been created.', result
+        true, 'User Group has been created.', result
       )
     })
   })

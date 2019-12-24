@@ -55,6 +55,8 @@ provider:
 #  exclude:
 #    - exclude-me.js
 #    - exclude-me-dir/**
+plugins:
+  - serverless-offline
 
 functions:
   app:

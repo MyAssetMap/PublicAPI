@@ -314,6 +314,7 @@ app.post('/layer/import/json', function(req, res) {
     var json = req.body.json;
   
     if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+    if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
 
     if (type == null) return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
     if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
@@ -472,7 +473,9 @@ app.post('/layer/add', function(req, res) {
     if (sourceType == null) return APIReturn(res,false, 'Source Type (`sourceType`) must be supplied.');
     if (!['global','org','user'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
   
-    if (!['point','line','polygon'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+    if (!['line','fill','circle','polygon','point'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+    if (type == 'point') type = 'circle';
+    if (type == 'polygon') type = 'fill';
   
     if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
     if (sourceLayer == null) sourceLayer = toSlug(label);
@@ -513,7 +516,6 @@ app.post('/layer/order', function(req, res) {
   
   checkAuthentication(req, res, function(isLoggedIn, userID) {
     if (!isLoggedIn) return authRequired(res, userID);
-  
   
     return APIReturn(res,
       true, 'Layer ordering is not yet built.', result

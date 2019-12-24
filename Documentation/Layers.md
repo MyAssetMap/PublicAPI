@@ -4,6 +4,7 @@
 *Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
 
 - **mapID (Required):** The Map ID you wish to import to.
+- **layerID (Required):** The Layer ID you wish to import to.
 - **type (Required):** The type of layer you are importing to (user, org, public)
 - **json (Required):** The json you are importing.*
 
@@ -58,21 +59,27 @@ json — {
 
 ### Response:
 
-+ Status: **500**
++ Status: **200**
 
 + Body:
 ```
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Error</title>
-</head>
-<body>
-<pre>ReferenceError: payload is not defined<br> &nbsp; &nbsp;at /var/task/index.js:292:20<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/task/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at next (/var/task/node_modules/express/lib/router/route.js:137:13)<br> &nbsp; &nbsp;at Route.dispatch (/var/task/node_modules/express/lib/router/route.js:112:3)<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/task/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at /var/task/node_modules/express/lib/router/index.js:281:22<br> &nbsp; &nbsp;at Function.process_params (/var/task/node_modules/express/lib/router/index.js:335:12)<br> &nbsp; &nbsp;at next (/var/task/node_modules/express/lib/router/index.js:275:10)<br> &nbsp; &nbsp;at jsonParser (/var/task/node_modules/body-parser/lib/types/json.js:101:7)<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/task/node_modules/express/lib/router/layer.js:95:5)</pre>
-</body>
-</html>
+{
+    "success": false,
+    "message": "Layer ID (`layerID`) must be supplied."
+}
+```
+***
+### Response:
 
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "GEOJson has been imported.",
+    "data": []
+}
 ```
 ***
 ### Response:
@@ -316,6 +323,3088 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": {
+            "0": "plss",
+            "2": {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            "3": "counties",
+            "4": [
+                {
+                    "toc": {
+                        "id": "prod-test_33",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2031"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 31
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_31",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "5": [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "6": [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 42
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "7": [
+                {
+                    "toc": {
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 43
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "8": [
+                {
+                    "toc": {
+                        "id": "prod-test_46",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2044"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 44
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_44",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "9": {
+                "color": "#f2f2f2",
+                "label": "This is a good group 2",
+                "groupId": "tRe6hnfiPy",
+                "layerIds": []
+            },
+            "10": [
+                {
+                    "toc": {
+                        "id": "prod-test_85",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2081"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 81
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_81",
+                                "type": "circle",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "11": [
+                {
+                    "toc": {
+                        "id": "prod-test_86",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2082"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 82
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_82",
+                                "type": "circle",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": {
+            "0": "plss",
+            "2": {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            "3": "counties",
+            "4": [
+                {
+                    "toc": {
+                        "id": "prod-test_33",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2031"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 31
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_31",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "5": [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "6": [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 42
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "7": [
+                {
+                    "toc": {
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 43
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "8": [
+                {
+                    "toc": {
+                        "id": "prod-test_46",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2044"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 44
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_44",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "9": {
+                "color": "#f2f2f2",
+                "label": "This is a good group 2",
+                "groupId": "tRe6hnfiPy",
+                "layerIds": []
+            }
+        }
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": {
+            "0": "plss",
+            "2": {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            "3": "counties",
+            "4": [
+                {
+                    "toc": {
+                        "id": "prod-test_33",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2031"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 31
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_31",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "5": [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "6": [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 42
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "7": [
+                {
+                    "toc": {
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 43
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "8": [
+                {
+                    "toc": {
+                        "id": "prod-test_46",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2044"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 44
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_44",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": {
+            "1": "plss",
+            "3": {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            "4": "counties",
+            "5": [
+                {
+                    "toc": {
+                        "id": "prod-test_33",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2031"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 31
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_31",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "6": [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "7": [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 42
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "8": [
+                {
+                    "toc": {
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 43
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "9": [
+                {
+                    "toc": {
+                        "id": "prod-test_46",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2044"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 44
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_44",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": {
+            "1": "plss",
+            "3": {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            "4": "counties",
+            "5": [
+                {
+                    "toc": {
+                        "id": "prod-test_33",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2031"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 31
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_31",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "6": [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "7": [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 42
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "8": [
+                {
+                    "toc": {
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 43
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "9": [
+                {
+                    "toc": {
+                        "id": "prod-test_46",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2044"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 44
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_44",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": {
+            "1": "plss",
+            "3": {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            "4": "counties",
+            "5": [
+                {
+                    "toc": {
+                        "id": "prod-test_33",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2031"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 31
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_31",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "6": [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "7": [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 42
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "8": [
+                {
+                    "toc": {
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 43
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "9": [
+                {
+                    "toc": {
+                        "id": "prod-test_46",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2044"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 44
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_44",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": {
+            "1": "plss",
+            "3": {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            "4": "counties",
+            "5": [
+                {
+                    "toc": {
+                        "id": "prod-test_33",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2031"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 31
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_31",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "6": [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "7": [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 42
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "8": [
+                {
+                    "toc": {
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 43
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "9": [
+                {
+                    "toc": {
+                        "id": "prod-test_46",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2044"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 44
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_44",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": {
+            "15": [
+                {
+                    "toc": {
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 43
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": {
+            "15": [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": {}
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": {
+            "currentKey": [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 42
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_33",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2031"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 31
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_31",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            }
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 42
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "counties"
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 43
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            "plss",
+            "counties",
+            {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            null,
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            null,
+            null,
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_33",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2031"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 31
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_31",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            null,
+            null,
+            null,
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 42
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_46",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2044"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 44
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_44",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 43
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #8",
+    "data": {
+        "user": [
+            "plss",
+            null,
+            {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "1",
+                "layerIds": [
+                    "plss",
+                    "counties"
+                ]
+            },
+            null,
+            null,
+            null,
+            null,
+            "counties",
+            null,
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 43
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_33",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2031"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 31
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_31",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_46",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2044"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 44
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_44",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 41
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10,
+                            "layerID": 42
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "prod-test",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {},
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}
+```
+***
 ### Response:
 
 + Status: **200**
@@ -790,6 +3879,19 @@ mapID — 0
 {
     "success": true,
     "message": "User Group has been created.",
+    "data": "tRe6hnfiPy"
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "User Group has been created.",
     "data": "xoOHNl4ypX"
 }
 ```
@@ -830,13 +3932,39 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ```
 label — Prod Test
 sourceType — user
-type — line
+type — circle
 mapID — 1
 ```
 
 ***
 
 
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Layer has been created.",
+    "data": "prod-test_86"
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "Layer has been created.",
+    "data": "prod-test_85"
+}
+```
+***
 ### Response:
 
 + Status: **200**

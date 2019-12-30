@@ -11,9 +11,12 @@ const bodyParser = require("body-parser");
 // = DATABASE ENDPOINT SETTINGS =
 // ==============================
 const app = express();
+const config = require('./config');
+const util = require('./util');
+
 const db = require('./queries')
 const postgis = require('./postgis')
-const config = require('./config');
+const tiles = require('./tiles')
 
 // ============
 // = SETTINGS =
@@ -25,23 +28,12 @@ app.set('json spaces', 4); // number of spaces for indentation
 app.use(bodyParser.urlencoded({
   extended: true
 })); // Switched from false to true by javier 8/17/2019
+
 app.use(bodyParser.json());
 
 // =============
 // = FUNCTIONS =
 // =============
-
-function toSlug(str) {
-  var res = str.toLowerCase();
-  res = res.replace(/ /g, "-");
-  return res;
-}
-
-if (!Array.prototype.end){
-    Array.prototype.end = function(){
-        return this[this.length - 1];
-    };
-};
 
 function APIReturn(res, success, message, data) {
   res.set('Access-Control-Allow-Origin', '*');
@@ -302,7 +294,7 @@ app.get('/layers/user', function(req, res) {
   // ==================
 
 //LAYERS
-app.post('/layer/import/json', function(req, res) {
+app.post('/layer/geojson/create', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
   checkAuthentication(req, res, function(isLoggedIn, userID) {
@@ -316,59 +308,149 @@ app.post('/layer/import/json', function(req, res) {
     if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
     if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
 
-    if (type == null) return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
+    if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
+    if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+  
+    if (json == null || json == '') return APIReturn(res,false, 'GEOJSON (`json`) must be supplied.');
+    var geoJSON = JSON.parse(json);
+    //console.log(geoJSON);
+    
+    if (geoJSON.type == 'FeatureCollection') {
+      geoJSON.features.forEach(function(feature) {
+        if (feature.type != 'Feature') return APIReturn(res,false, 'GEOJSON have invalid features: '+feature.type);
+    
+        var geometry = feature.geometry;
+        var properties = feature.properties;
+
+        var payload = {mapID: mapID, type: type, layerID: layerID, geom: geometry, prop: properties};
+
+        postgis.insertLayer(payload, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+
+          return APIReturn(res,
+            true, 'GEOJson has been imported.', result
+          )
+        })
+
+        //console.log(type,geometry,properties);
+      })
+    }else return APIReturn(res,false, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
+  });
+});
+
+//LAYERS
+app.post('/layer/geojson/update', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+  
+    var mapID = req.body.mapID
+    var type = req.body.type;
+    var featureID = req.body.featureID;
+    var json = req.body.json;
+  
+    if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+    if (featureID == null) return APIReturn(res,false, 'Feature ID (`featureID`) must be supplied.');
+
+    if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
     if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
   
     if (json == null || json == '') return APIReturn(res,false, 'GEOJSON (`json`) must be supplied.');
     var geoJSON = JSON.parse(json);
     //console.log(geoJSON);
   
-    if (layerID == null) {
-      db.createLayer(payload,function(error, layerID) {
-        if (error) return APIReturn(res,false, layerID);
-      
-        if (geoJSON.type == 'FeatureCollection') {
-          geoJSON.features.forEach(function(feature) {
-            if (feature.type != 'Feature') return APIReturn(res,false, 'GEOJSON have invalid features: '+feature.type);
-      
-            var geometry = feature.geometry;
-            var properties = feature.properties;
+    if (geoJSON.type != 'Feature') return APIReturn(res,false, 'Please only pass one GEOJSON feature to endpoint for updating.');
 
-            var payload = {mapID: mapID, type: type, layerID: layerID, geom: geometry, prop: properties};
+    var geometry = geoJSON.geometry;
+    var properties = geoJSON.properties;
 
-            postgis.insertLayer(payload, function(error, result) {
-              if (error) return APIReturn(res,false, result)
+    postgis.updateFeature(mapID, type, featureID, geometry, properties, function(error, result) {
+      if (error) return APIReturn(res,false, result)
 
-              return APIReturn(res,
-                true, 'GEOJson has been imported.', result
-              )
-            })
+      return APIReturn(res,
+        true, 'Feature has been updated.', result
+      )
+    })
+  });
+});
 
-            //console.log(type,geometry,properties);
-          })
-        }else return APIReturn(res,false, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
+//LAYERS
+app.post('/layer/geojson/get', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+    
+    var mapID = req.body.mapID
+    var type = req.body.type;
+    var layerID = req.body.layerID;
+    var featureID = req.body.featureID;
+  
+    if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+    if (layerID == null && featureID == null) return APIReturn(res,false, 'Layer ID (`layerID`) or Feature ID (`featureID`) must be supplied.');
+
+    if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
+    if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+
+    if (layerID != null) {
+      //console.log(geoJSON);
+      tiles.getJSONByLayerID(mapID, type, layerID, function(error, result) {
+        if (error) return APIReturn(res,false, result)
+
+        return APIReturn(res,
+          true, 'GEOJson for this layer has been returned.', result
+        )
       })
-    }else{
-      if (geoJSON.type == 'FeatureCollection') {
-        geoJSON.features.forEach(function(feature) {
-          if (feature.type != 'Feature') return APIReturn(res,false, 'GEOJSON have invalid features: '+feature.type);
-      
-          var geometry = feature.geometry;
-          var properties = feature.properties;
+    }else if (featureID != null) {
+      //console.log(geoJSON);
+      tiles.getJSONByFeatureID(mapID, type, featureID, function(error, result) {
+        if (error) return APIReturn(res,false, result)
 
-          var payload = {mapID: mapID, type: type, layerID: layerID, geom: geometry, prop: properties};
+        return APIReturn(res,
+          true, 'GEOJson for this feature has been returned.', result
+        )
+      })
+    }
+  });
+});
 
-          postgis.insertLayer(payload, function(error, result) {
-            if (error) return APIReturn(res,false, result)
+//LAYERS
+app.post('/layer/geojson/delete', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+    
+    var mapID = req.body.mapID
+    var type = req.body.type;
+    var layerID = req.body.layerID;
+    var featureID = req.body.featureID;
+  
+    if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+    if (layerID == null && featureID == null) return APIReturn(res,false, 'Layer ID (`layerID`) or Feature ID (`featureID`) must be supplied.');
 
-            return APIReturn(res,
-              true, 'GEOJson has been imported.', result
-            )
-          })
+    if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
+    if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
 
-          //console.log(type,geometry,properties);
-        })
-      }else return APIReturn(res,false, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
+    if (layerID != null) {
+      //console.log(geoJSON);
+      postgis.deleteLayer(mapID, type, layerID, function(error, result) {
+        if (error) return APIReturn(res,false, result)
+
+        return APIReturn(res,
+          true, 'Data for this layer has been deleted.', result
+        )
+      })
+    }else if (featureID != null) {
+      //console.log(geoJSON);
+      postgis.deleteFeature(mapID, type, featureID, function(error, result) {
+        if (error) return APIReturn(res,false, result)
+
+        return APIReturn(res,
+          true, 'Data for this feature has been deleted.', result
+        )
+      })
     }
   });
 });
@@ -478,7 +560,7 @@ app.post('/layer/add', function(req, res) {
     if (type == 'polygon') type = 'fill';
   
     if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
-    if (sourceLayer == null) sourceLayer = toSlug(label);
+    if (sourceLayer == null) sourceLayer = util.toSlug(label);
     if (interactive == null) interactive = true;
     if (minzoom == null) minzoom = 10;
     if (layout == null) layout = {"visibility": "none"};

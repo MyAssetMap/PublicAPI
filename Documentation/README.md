@@ -13,7 +13,9 @@ The current url for all tiling related endpoints is: https://tiles.myassetmap.co
 - [General](General.md)
   * Outlines various useful functions relating to testing, uptime, and performance of the database/endpoint.
 - [Layers](Layers.md)
-  * Outlines how to use the layer enpoints, including geojson, creating layers, updating layers, and getting layers.
+  * Outlines how to use the layer endpoints, including  creating layers, updating layers, and getting layers.
+- [Layer Data](LayerData.md)
+  * Outlines how to use the layer data enpoints, including geojson, creating layers, updating layers, and getting layers.
 - [Users](Users.md)
   * Outlines how to use the user enpoints, including init, user prefs, account setup, and user setup.
 - [MVT Tiling Server](MVTTiles.md)

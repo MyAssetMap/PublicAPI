@@ -1,21 +1,13 @@
 'use strict';
 
+const config = require('./config');
+const util = require('./util');
+
 // =====================
 // = DATABASE SETTINGS =
 // =====================
 const pg = require('pg')
-const pool = new pg.Pool({
-    database: 'myassetmapv2_db',
-    user: 'Javier_root',
-    host: 'myassetmapv2.c7tqiynvcd79.us-east-1.rds.amazonaws.com',
-    password: 'javierroot123',
-    port: 5432,
-    ssl: true,
-    max: 20, // set pool max size to 20
-    min: 4, // set min pool size to 4
-    idleTimeoutMillis: 1000, // close idle clients after 1 second
-    connectionTimeoutMillis: 1000, // return an error after 1 second if connection could not be established
-})
+const pool = new pg.Pool(config.dbPool)
 
 function toSlug(str) {
   var res = str.toLowerCase();
@@ -200,6 +192,34 @@ const createUserGroup = (payload, callback) => {
   
   //Add to User List Data
   appendToJSONRow(
+    'User',
+    'userLayers',
+    [[
+      {
+        label: label,
+        color: color,
+        parent: parentID,
+        groupId: groupID,
+        layerIds: []
+      },
+      {}
+    ]],
+    'id',
+    userID,
+    function(error, userRowID) {
+      if (error) return callback(true, userRowID);
+      console.log('UserGroupID:',groupID)
+      callback(false, groupID)
+    }
+  );
+}
+
+const deleteUserGroup = (groupID, callback) => {
+  
+  if (groupID == null) return callback(true, 'Group ID (`groupID`) must be supplied.');
+  
+  //Add to User List Data
+  deleteFromJSONRow(
     'User',
     'userLayers',
     [[
@@ -618,18 +638,6 @@ const deleteTableWhere = (table, fieldName, value, callback) => {
   }
 }
 
-// function addSingleQuoteToFields(fieldsToAddQuote) {
-
-// 	let values = fieldsToAddQuote.split(',');
-// 	let newvalues = "";
-// 	values.forEach(function (element) {
-// 		newvalues += "'" + element + "',";
-// 	});
-
-// 	newvalues = newvalues.substring(0, newvalues.length - 1); //trim last coma
-// 	return newvalues;
-// }
-
 const processValue = function(value,char = `'`) {
   if (typeof value === 'string') {
     value = value.trim(); //We remove any extra space used between values
@@ -665,48 +673,6 @@ const fromSingleValueToValues = function(valuesOrValues,char = `'`) {
     return result.join(`, `);
   } else if (typeof valuesOrValues === 'string') return processValue(valuesOrValues,char);
 }
-
-//SELECT "firstName", "emailAddress" FROM public."User";
-
-//
-// const createUser = (request, response) => {
-//   const { name, email } = request.body
-//
-//   pool.query('INSERT INTO users (name, email) VALUES ($1, $2)', [name, email], (error, results) => {
-//     if (error) {
-//       throw error
-//     }
-//     response.status(201).send(`User added with ID: ${result.insertId}`)
-//   })
-// }
-//
-// const updateUser = (request, response) => {
-//   const id = parseInt(request.params.id)
-//   const { name, email } = request.body
-//
-//   pool.query(
-//     'UPDATE users SET name = $1, email = $2 WHERE id = $3',
-//     [name, email, id],
-//     (error, results) => {
-//       if (error) {
-//         throw error
-//       }
-//       response.status(200).send(`User modified with ID: ${id}`)
-//     }
-//   )
-// }
-//
-// const deleteUser = (request, response) => {
-//   const id = parseInt(request.params.id)
-//
-//   pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
-//     if (error) {
-//       throw error
-//     }
-//     response.status(200).send(`User deleted with ID: ${id}`)
-//   })
-// }
-
 
 module.exports = {
     testPG,

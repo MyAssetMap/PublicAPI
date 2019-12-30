@@ -1,28 +1,13 @@
 'use strict';
 
+const config = require('./config');
+const util = require('./util');
+
 // =====================
 // = DATABASE SETTINGS =
 // =====================
 const pg = require('pg')
-const pool = new pg.Pool({
-    database: 'myassetmapv2_layers',
-    user: 'Javier_root',
-    host: 'myassetmapv2.c7tqiynvcd79.us-east-1.rds.amazonaws.com',
-    password: 'javierroot123',
-    port: 5432,
-    ssl: true,
-    max: 20, // set pool max size to 20
-    min: 4, // set min pool size to 4
-    idleTimeoutMillis: 1000, // close idle clients after 1 second
-    connectionTimeoutMillis: 1000, // return an error after 1 second if connection could not be established
-})
-
-function toSlug(str) {
-  var res = str.toLowerCase();
-  res = res.replace(/ /g, "-");
-  return res;
-}
-
+const pool = new pg.Pool(config.pgPool)
 // ========================
 // = CUSTOM LOGIC QUERIES =
 // ========================
@@ -104,10 +89,10 @@ const insertLayer = (payload, callback) => {
     console.log('No Properties passed');
   }
   
-  var layerType = `"public"."layer_`+mapID+((type != '') ? '_'+type : type)+`"`;
-  layerType = layerType.toLowerCase();
+  var tableName = `"public"."layer_`+mapID+((type != '') ? '_'+type : type)+`"`;
+  tableName = tableName.toLowerCase();
   
-  var sqlCreate = `CREATE TABLE IF NOT EXISTS `+layerType+` (
+  var sqlCreate = `CREATE TABLE IF NOT EXISTS `+tableName+` (
     "id" serial,
     "layer" integer,
     "geom" geometry,
@@ -118,7 +103,7 @@ const insertLayer = (payload, callback) => {
   runQuery(sqlCreate, function(error, result) {
     if (error) return callback(true, result)
     
-    var sqlQuery = `INSERT INTO `+layerType+` (layer, geom, prop)
+    var sqlQuery = `INSERT INTO `+tableName+` (layer, geom, prop)
     VALUES
     (
       '`+layerID+`',
@@ -127,10 +112,49 @@ const insertLayer = (payload, callback) => {
     )`;
     return runQuery(sqlQuery, callback)
   });
+}
+
+const updateFeature = (mapID, type, featureID, geom, prop, callback) => {
   
+  if (mapID == null) callback(true, 'Map ID (`mapID`) must be provided.');
+  if (type == null) type = 'user';
+  if (featureID == null) callback(true, 'Feature ID (`featureID`) must be provided.');
+  if (geom == null && prop == null) callback(true, 'GEOJSON Geometry or Properties (`json`) must be provided.');
   
+  var geometry = JSON.stringify(geom);
+  var properties = JSON.stringify(prop);
   
-  //runQuery(sqlQuery, callback);
+  var tableName = `"public"."layer_`+mapID+((type != '') ? '_'+type : type)+`"`;
+  tableName = tableName.toLowerCase();
+  
+  var sqlQuery = ''
+  if (geom != null)       sqlQuery += `UPDATE  `+tableName+` SET "geom" = ST_TRANSFORM(ST_SetSRID(ST_GeomFromGeoJSON('`+geometry+`'),4326),4326) WHERE "id"=`+featureID+';';
+  if (properties != null) sqlQuery += `UPDATE  `+tableName+` SET "prop" = '`+properties+`' WHERE "id"=`+featureID+';';
+  return runQuery(sqlQuery, callback)
+}
+
+const deleteLayer = (mapID, type, layerID, callback) => {
+  
+  if (mapID == null) callback(true, 'Map ID (`mapID`) must be provided.');
+  if (type == null) type = 'user';
+  if (layerID == null) callback(true, 'Layer ID (`layerID`) must be provided.');
+  
+  var tableName = `layer_`+mapID+((type != '') ? '_'+type : type);
+  tableName = tableName.toLowerCase();
+  
+  return deleteTableWhere(tableName, 'layer', layerID, callback)
+}
+
+const deleteFeature = (mapID, type, featureID, callback) => {
+  
+  if (mapID == null) callback(true, 'Map ID (`mapID`) must be provided.');
+  if (type == null) type = 'user';
+  if (featureID == null) callback(true, 'Feature ID (`featureID`) must be provided.');
+  
+  var tableName = `layer_`+mapID+((type != '') ? '_'+type : type);
+  tableName = tableName.toLowerCase();
+  
+  return deleteTableWhere(tableName, 'id', featureID, callback)
 }
 
 
@@ -228,7 +252,7 @@ const getGlobalLayers = (mapID, callback) => {
 // ==========
 
 const runQuery = (queryMsg, callback) => {
-  //console.log(queryMsg)
+  console.log('QUERY:',queryMsg)
   
   pool.query(queryMsg, (error, results) => {
     if (error) {
@@ -242,119 +266,90 @@ const getTable = (table, callback) => {
 }
 
 const getRowFromTable = (table, row, callback) => {
-  runQuery('SELECT "' + fromSingleValueToValues(row) + '" FROM public."' + table + '"', callback);
+  runQuery('SELECT ' + fromSingleValueToValues(row,'"') + ' FROM public."' + table + '"', callback);
 }
 
 const getTableWhere = (table, fieldName, value, callback) => {
   if (!Array.isArray(value)) {
-    runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" = ' + value + ';', callback);
+    runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" = ' + processValue(value) + ';', callback);
   }else{
-    runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + value.join(', ') + ');', callback);
+    if (value.length == 0) callback(false, [])
+    runQuery('SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + fromSingleValueToValues(value) + ');', callback);
   }
 }
 
 const getRowFromTableWhere = (table, row, fieldName, value, callback) => {
-  runQuery('SELECT "' + fromSingleValueToValues(row) + '" FROM public."' + table + '" WHERE "' + fieldName + '" = ' + value + ';', callback);
-}
-
-const getInnerJoin = (fields, firstTable, firstIdentifier, secondTable, secondIdentifier, callback) => {
-  runQuery('Select "' + fields + '" from public."' + firstTable + '", public."' + secondTable + '" Where public."' + firstTable + '".' + firstIdentifier + ' = public."' + secondTable + '".' + secondIdentifier + ';', callback);
-}
-
-const updateRow = (table, column, value, identifierColumn, identifier, callback) => {
-  runQuery('UPDATE public."' + table + '" SET ' + '"' + column + '" = "' + value + '"' + ' WHERE ' + identifierColumn + '= "' + identifier + '";', callback);
-}
-
-const insertRow = (table, columns, values, callback) => {
-  runQuery('INSERT INTO public."' + table + '" (' + fromSingleValueToValues(columns) + ') VALUES (' + fromSingleValueToValues(values) + ');', callback);
-}
-
-// function addSingleQuoteToFields(fieldsToAddQuote) {
-
-// 	let values = fieldsToAddQuote.split(',');
-// 	let newvalues = "";
-// 	values.forEach(function (element) {
-// 		newvalues += "'" + element + "',";
-// 	});
-
-// 	newvalues = newvalues.substring(0, newvalues.length - 1); //trim last coma
-// 	return newvalues;
-// }
-
-
-
-const fromSingleValueToValues = function(valuesOrValues) {
-
-  if (valuesOrValues.includes(",")) {
-    var values = valuesOrValues.split(',');
-    var result = "";
-
-    values.forEach(function(value) {
-      value = value.trim() //We remove any extra space used between values
-
-      result += '"' + value + '",';
-
-    });
-    result = result.substring(0, result.length - 1) //Remove last comma 
-    return result;
-
-  } else { //Since the input has no comma, it is a single value. 
-    return '"' + valuesOrValues + '"';
+  if (!Array.isArray(value)) {
+    runQuery('SELECT ' + fromSingleValueToValues(row,'"') + ' FROM public."' + table + '" WHERE "' + fieldName + '" = ' + processValue(value) + ';', callback);
+  }else{
+    if (value.length == 0) callback(false, [])
+    runQuery('SELECT ' + fromSingleValueToValues(row,'"') + ' FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + fromSingleValueToValues(value) + ');', callback);
   }
 }
 
-//SELECT "firstName", "emailAddress" FROM public."User";
+const getInnerJoin = (fields, firstTable, firstIdentifier, secondTable, secondIdentifier, callback) => {
+  runQuery('SELECT "' + fields + '" from public."' + firstTable + '", public."' + secondTable + '" Where public."' + firstTable + '".' + firstIdentifier + ' = public."' + secondTable + '".' + secondIdentifier + ';', callback);
+}
 
-//
-// const getUserById = (request, response) => {
-//   const id = parseInt(request.params.id)
-//
-//   pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
-//     if (error) {
-//       throw error
-//     }
-//     response.status(200).json(results.rows)
-//   })
-// }
-//
-// const createUser = (request, response) => {
-//   const { name, email } = request.body
-//
-//   pool.query('INSERT INTO users (name, email) VALUES ($1, $2)', [name, email], (error, results) => {
-//     if (error) {
-//       throw error
-//     }
-//     response.status(201).send(`User added with ID: ${result.insertId}`)
-//   })
-// }
-//
-// const updateUser = (request, response) => {
-//   const id = parseInt(request.params.id)
-//   const { name, email } = request.body
-//
-//   pool.query(
-//     'UPDATE users SET name = $1, email = $2 WHERE id = $3',
-//     [name, email, id],
-//     (error, results) => {
-//       if (error) {
-//         throw error
-//       }
-//       response.status(200).send(`User modified with ID: ${id}`)
-//     }
-//   )
-// }
-//
-// const deleteUser = (request, response) => {
-//   const id = parseInt(request.params.id)
-//
-//   pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
-//     if (error) {
-//       throw error
-//     }
-//     response.status(200).send(`User deleted with ID: ${id}`)
-//   })
-// }
+const updateRow = (table, column, value, identifierColumn, identifier, callback) => {
+  runQuery('UPDATE public."' + table + '" SET "' + column + '" = ' + processValue(value) + ' WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
+}
 
+const appendToJSONRow = (table, column, value, identifierColumn, identifier, callback) => {
+  runQuery('UPDATE public."' + table + '" SET "' + column + '" = "' + column + '"::jsonb || '+processValue(value)+'::jsonb WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
+}
+
+const insertRow = (table, columns, values, callback) => {
+  runQuery('INSERT INTO public."' + table + '" (' + fromSingleValueToValues(columns,'"') + ') VALUES (' + fromSingleValueToValues(values) + ') RETURNING id;', function(error, row) {
+    if (error) return callback(true, row);
+    callback(false, row[0].id)
+  });
+}
+
+const deleteTableWhere = (table, fieldName, value, callback) => {
+  if (!Array.isArray(value)) {
+    runQuery('DELETE FROM public."' + table + '" WHERE "' + fieldName + '" = ' + processValue(value) + ';', callback);
+  }else{
+    if (value.length == 0) callback(false, [])
+    runQuery('DELETE FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + fromSingleValueToValues(value) + ');', callback);
+  }
+}
+
+const processValue = function(value,char = `'`) {
+  if (typeof value === 'string') {
+    value = value.trim(); //We remove any extra space used between values
+  }else if (typeof value === 'object') {
+    value = JSON.stringify(value);
+  }
+  if (value === null) {
+    value = "null";
+  }else{
+    if (value === '') {
+      value = char+char;
+    }else{
+      if (isNaN(value)) value = char + value + char;
+    }
+  }
+  
+  return value;
+}
+
+const fromSingleValueToValues = function(valuesOrValues,char = `'`) {
+
+  if (typeof valuesOrValues === 'object' || (typeof valuesOrValues === 'string' && valuesOrValues.includes(","))) {
+    if (typeof valuesOrValues === 'object') {
+      var values = valuesOrValues;
+    }else var values = valuesOrValues.split(',');
+    
+    var result = [];
+
+    values.forEach(function(value) {
+      result.push(processValue(value,char));
+    });
+    
+    return result.join(`, `);
+  } else if (typeof valuesOrValues === 'string') return processValue(valuesOrValues,char);
+}
 
 module.exports = {
     testPG,
@@ -364,6 +359,9 @@ module.exports = {
     getGlobalLayers,
   
     insertLayer,
+    updateFeature,
+    deleteLayer,
+    deleteFeature,
   
     getTable,
     getRowFromTable,

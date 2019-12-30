@@ -4,11 +4,47 @@
 // = CONFIG SETTINGS =
 // =====================
 
-const auth = {
-  DEV: "DEV-3f69e80b-63d0-47b0-8ed6-a503f2245619",
-  PROD: "PROD-3f69e80b-63d0-47b0-8ed6-a503f2245619"
+const DBInfo = {
+    user: 'Javier_root',
+    host: 'myassetmapv2.c7tqiynvcd79.us-east-1.rds.amazonaws.com',
+    password: 'javierroot123',
+    port: 5432,
+    ssl: true,
+    max: 20, // set pool max size to 20
+    min: 4, // set min pool size to 4
+    idleTimeoutMillis: 1000, // close idle clients after 1 second
+    connectionTimeoutMillis: 1000, // return an error after 1 second if connection could not be established
 }
 
+const dbPool = {
+    database: 'myassetmapv2_db',
+    user: DBInfo.user,
+    host: DBInfo.host,
+    password: DBInfo.password,
+    port: DBInfo.port,
+    ssl: DBInfo.ssl,
+    max: DBInfo.max, // set pool max size to 20
+    min: DBInfo.min, // set min pool size to 4
+    idleTimeoutMillis: DBInfo.idleTimeoutMillis, // close idle clients after 1 second
+    connectionTimeoutMillis: DBInfo.connectionTimeoutMillis, // return an error after 1 second if connection could not be established
+}
+
+const pgPool = {
+    database: 'myassetmapv2_layers',
+    user: DBInfo.user,
+    host: DBInfo.host,
+    password: DBInfo.password,
+    port: DBInfo.port,
+    ssl: DBInfo.ssl,
+    max: DBInfo.max, // set pool max size to 20
+    min: DBInfo.min, // set min pool size to 4
+    idleTimeoutMillis: DBInfo.idleTimeoutMillis, // close idle clients after 1 second
+    connectionTimeoutMillis: DBInfo.connectionTimeoutMillis, // return an error after 1 second if connection could not be established
+}
+
+
+
 module.exports = {
-  auth
+  dbPool,
+  pgPool
 }	

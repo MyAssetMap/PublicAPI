@@ -319,8 +319,13 @@ app.post('/layer/geojson/create', function(req, res) {
     if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
   
     if (json == null || json == '') return APIReturn(res,false, 'GEOJSON (`json`) must be supplied.');
-    var geoJSON = JSON.parse(json);
-    //console.log(geoJSON);
+    console.log(json);
+    if (typeof json === 'string') {
+      var geoJSON = JSON.parse(json);
+    }else if (typeof json === 'object') {
+      var geoJSON = json;
+    }
+
     
     if (geoJSON.type == 'FeatureCollection') {
       geoJSON.features.forEach(function(feature) {

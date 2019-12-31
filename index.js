@@ -76,13 +76,20 @@ function checkAPIKey(req, res) {
 }
 
 function checkAuthentication(req, res, callback) {
-  var userUUID = req.query.userID;
-  if (typeof userUUID === 'undefined') userUUID = req.body.userID;
+  var userUUID = null;
+  var userUUID_GET = req.query.userID;
+  var userUUID_POST = req.body.userID;
   
-  if (typeof userUUID === 'undefined') return callback(true, 'Unable to Autenticate User: information was not passed.');
+  if (userUUID_GET != null) {
+    userUUID = userUUID_GET;
+  }else if (userUUID_GET == null && userUUID_POST != null) {
+    userUUID = userUUID_POST;
+  }
+  
+  if (userUUID == null || typeof userUUID == 'undefined') return APIReturn(res, false, 'Authentication Failed: User UUID (`userID`) was not passed.');
   
   db.getUserIDByUUID(userUUID, function(error, userID) {
-    // console.log('userID',userUUID,userID);
+    console.log('userID',userUUID,userID);
     return callback(!error, userID);
   });
 }

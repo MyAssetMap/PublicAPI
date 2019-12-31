@@ -15,7 +15,17 @@ const toSlug = (str) => {
   return res;
 }
 
+const processLayerID = (layerID) => {
+  if (isNaN(layerID) && layerID != null) {
+    var layerIDArr = layerID.split("_");
+    if (layerIDArr.length > 1) layerID = layerIDArr.end();
+    console.log('Layer ID is being parsed: '+layerID);
+  }
+  return layerID;
+}
+
 
 module.exports = {
-  toSlug
+  toSlug,
+  processLayerID
 }

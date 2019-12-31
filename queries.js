@@ -327,28 +327,39 @@ const setupLayer = (payload, groupID, callback) => {
       
       //Create Layer Source
       insertRow(
-        'LayerSource',
-        ["type","layerID"],
-        [sourceType,layerID],
-        function(error, sourceID) {
-          if (error) return callback(true, sourceID);
-          console.log('SourceID:',sourceID)
+        'LayerSublayer',
+        ["layerID","key","type","label"],
+        [layerID,"symbol","symbol","Symbol"],
+        function(error, subSymbolID) {
+          if (error) return callback(true, subSymbolID);
+          console.log('Sublayer_SymboldID:',subSymbolID)
+      
+          //Create Layer Source
+          insertRow(
+            'LayerSource',
+            ["type","layerID"],
+            [sourceType,layerID],
+            function(error, sourceID) {
+              if (error) return callback(true, sourceID);
+              console.log('SourceID:',sourceID)
           
-          //Add to User List Data
-          appendToJSONRow(
-            'User',
-            'userLayers',
-            '[['+groupID+',{}]]',
-            'id',
-            userID,
-            function(error, userRowID) {
-              if (error) return callback(true, userRowID);
-              console.log('UserRowID:',userRowID)
-              callback(false, groupID)
+              //Add to User List Data
+              appendToJSONRow(
+                'User',
+                'userLayers',
+                '[['+groupID+',{}]]',
+                'id',
+                userID,
+                function(error, userRowID) {
+                  if (error) return callback(true, userRowID);
+                  console.log('UserRowID:',userRowID)
+                  callback(false, groupID)
+                }
+              )
             }
-          );
+          )
         }
-      );
+      )
     }
   )
 }
@@ -446,53 +457,74 @@ const getGroupByID = (currentKey, groupID, callback) => {
             layer.id = layerLabel + layer.id.toString();
             layer.source = layerLabel + 'source';
           }
-
+          
+          layer.metadata.label = layer.label;
           delete layer.label;
           delete layer.ownerID;
           delete layer.groupID;
           
-          processedLayers.push({ 
+          var processedLayer = { 
             beforeLayer: null,
             layer: layer
-          })
-          
-          
-          getTableWhere('LayerSource','layerID',layerID, function(error,layersources) {
-            if (error) return callback(true, currentKey, groupID, layersources);
-          
-            var processedSource = [];
-          
-            layersources.forEach(layerSource => {
-              var layerID = layerSource.layerID;
+          };
+          getTableWhere('LayerSublayer','layerID',layerID, function(error,layersubs) {
+            if (error) return callback(true, currentKey, groupID, layersubs);
             
-              layerSource.id = layerLabel + 'source';
-              
-              delete layer.layerID;
+            layersubs.forEach(subLayer => {
+              var sublayerID = subLayer.layerID;
+              var sublayerKey = subLayer.key;
+          
+              subLayer.id = layer.id +'_' +sublayerKey;
+              subLayer["source-layer"] = layer["source-layer"];
+              subLayer.source = layerLabel + 'source';
             
-              if (['global','org','user'].includes(layerSource.type)) {
-                var layerName = 'layer_'+mapID+'_'+layerSource.type;
-                layerSource.type = 'vector';
-                layerSource.tiles = ['https://tiles.myassetmap.com/v1/mvt/'+layerName+'/{z}/{x}/{y}?filter=layer%20%3D%20'+layerID];
-              }
-            
-              processedSource.push(layerSource)
+              subLayer.metadata.label = subLayer.label;
+              delete subLayer.layerID;
+              delete subLayer.key;
+              delete subLayer.label;
+          
+              processedLayer[sublayerKey] = subLayer;
             })
+            
+            processedLayers.push(processedLayer);
           
-            layersProcessed++;
-            if (layersProcessed === layers.length) {
+            getTableWhere('LayerSource','layerID',layerID, function(error,layersources) {
+              if (error) return callback(true, currentKey, groupID, layersources);
+          
+              var processedSource = [];
+          
+              layersources.forEach(layerSource => {
+                var layerID = layerSource.layerID;
+            
+                layerSource.id = layerLabel + 'source';
               
-              //format the payload
-              var groupPayload = {
-                toc: processedGroup,
-                sourcesArray: processedSource,
-                layersArray: processedLayers
-              };
+                delete layer.layerID;
+            
+                if (['global','org','user'].includes(layerSource.type)) {
+                  var layerName = 'layer_'+mapID+'_'+layerSource.type;
+                  layerSource.type = 'vector';
+                  layerSource.tiles = ['https://tiles.myassetmap.com/v1/mvt/'+layerName+'/{z}/{x}/{y}?filter=layer%20%3D%20'+layerID];
+                }
+            
+                processedSource.push(layerSource)
+              })
+          
+              layersProcessed++;
+              if (layersProcessed === layers.length) {
               
-              finalReturn.push(groupPayload);
+                //format the payload
+                var groupPayload = {
+                  toc: processedGroup,
+                  sourcesArray: processedSource,
+                  layersArray: processedLayers
+                };
               
-              //NOW THAT EVERYTHING IS DONE, CONTINUE.
-              callback(false, currentKey, groupID, finalReturn);
-            }
+                finalReturn.push(groupPayload);
+              
+                //NOW THAT EVERYTHING IS DONE, CONTINUE.
+                callback(false, currentKey, groupID, finalReturn);
+              }
+            })
           })
         })
       })

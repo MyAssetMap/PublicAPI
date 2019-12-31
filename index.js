@@ -309,7 +309,7 @@ app.post('/layer/geojson/create', function(req, res) {
   
     var mapID = req.body.mapID
     var type = req.body.type;
-    var layerID = req.body.layerID;
+    var layerID = util.processLayerID(req.body.layerID);
     var json = req.body.json;
   
     if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
@@ -391,7 +391,7 @@ app.post('/layer/geojson/get', function(req, res) {
     
     var mapID = req.body.mapID
     var type = req.body.type;
-    var layerID = req.body.layerID;
+    var layerID = util.processLayerID(req.body.layerID);
     var featureID = req.body.featureID;
   
     if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
@@ -431,7 +431,7 @@ app.post('/layer/geojson/delete', function(req, res) {
     
     var mapID = req.body.mapID
     var type = req.body.type;
-    var layerID = req.body.layerID;
+    var layerID = util.processLayerID(req.body.layerID);
     var featureID = req.body.featureID;
   
     if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
@@ -632,13 +632,7 @@ app.post('/layer/delete', function(req, res) {
     if (!isLoggedIn) return authRequired(res, userID);
   
     // var userID = req.body.userID;
-    var layerID = req.body.layerID;
-    
-    if (isNaN(layerID)) {
-      var layerIDArr = layerID.split("_");
-      if (layerIDArr.length > 1) layerID = layerIDArr.end();
-      console.log('Layer ID is being parsed: '+layerID);
-    }
+    var layerID = util.processLayerID(req.body.layerID);
 
     if (layerID == null) return APIReturn(res,false, 'Layer Group ID (`layerID`) must be supplied.');
     if (isNaN(layerID)) return APIReturn(res,false, 'Layer Group ID (`layerID`) is being passed in the incorrect format.');

@@ -478,8 +478,7 @@ app.post('/group/add', function(req, res) {
     var payload = {
       userID: userID,
       label: req.body.label,
-      color: req.body.color,
-      parentID: req.body.parentID,
+      color: req.body.color
     };
 
     db.createUserGroup(payload, function(error, result) {

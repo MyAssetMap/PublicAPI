@@ -183,7 +183,6 @@ const createUserGroup = (payload, callback) => {
   
   var label = payload.label;
   var color = payload.color;
-  var parentID = payload.parentID;
   
   if (label == null) return callback(true, 'Label (`label`) must be supplied.');
   if (color == null) color = '#f2f2f2';
@@ -198,9 +197,11 @@ const createUserGroup = (payload, callback) => {
       {
         label: label,
         color: color,
-        parent: parentID,
         groupId: groupID,
-        layerIds: []
+        children: {
+          groupIds: [],
+          layerIds: []
+        }
       },
       {}
     ]],
@@ -417,7 +418,27 @@ const updateLayerOrder = (userID, order, callback) => {
         
         if (orderItem.group != null) {
           if (userRef[orderItem.group] != null) {
-            newUserLayers.push(userRef[orderItem.group]);
+            var groupObj = userRef[orderItem.group];
+            
+            //Wipe out the existing children relationships.
+            groupObj[0].children = {groupIds: [],layerIds: []};
+            
+            if (orderItem.children != null) {
+              if (typeof orderItem.children === 'object') {
+                
+                if (groupObj[0].children == null) groupObj[0].children = {groupIds: [],layerIds: []};
+                
+                orderItem.children.forEach(function(child) {
+                  if (child.group != null) {
+                    groupObj[0].children.groupIds.push(child.group);
+                  }
+                  if (child.layer != null){
+                    groupObj[0].children.layerIds.push(util.processLayerID(child.layer));
+                  }
+                })
+              }
+            }
+            newUserLayers.push(groupObj);
             delete userRef[orderItem.group];
           }else console.error('orderItem: Group Passed does not exist: '+orderItem.group)
         }else if (orderItem.layer != null) {
@@ -450,30 +471,6 @@ const updateLayerOrder = (userID, order, callback) => {
         
         return callback(false, newUserLayers);
       })
-      // userLayers.forEach(function(layer) {
-//
-//         var layerTitle = layer[0];
-//         var layerCustomize = layer[1];
-//
-//         if (typeof layerTitle === 'object') {//LAYER OR GROUP
-//           if (layerTitle.groupId != null) {
-//             if (layerTitle.groupId == groupID) {
-//               deleteFromJSONRow(
-//                 'User',
-//                 'userLayers',
-//                 layer,
-//                 'id',
-//                 userID,
-//                 function(error, userRowID) {
-//                   if (error) return callback(true, userRowID);
-//                   console.log('UserGroupID:',groupID)
-//                   callback(false, groupID)
-//                 }
-//               );
-//             }
-//           }
-//         }
-//       })
     })
   })
 }

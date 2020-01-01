@@ -11,7 +11,7 @@ const getJSONByLayerID = (mapID, type, layerID, callback) => {
   if (type == null) type = 'user';
   if (layerID == null) callback(true, 'Layer ID (`layerID`) must be provided.');
   
-  var APIUrl = 'https://tiles.myassetmap.com/v1/geojson/layer_'+mapID+'_'+type+'?geom_column=geom&columns=prop&filter=layer%20%3D%20'+layerID;
+  var APIUrl = 'https://tiles.myassetmap.com/v1/geojson/layer_'+mapID+'_'+type+'?geom_column=geom&columns=prop%2Cid&&filter=layer%20%3D%20'+layerID;
   
   https.get(APIUrl, (resp) => {
     let data = '';

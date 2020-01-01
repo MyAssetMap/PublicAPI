@@ -38,6 +38,8 @@ app.use(bodyParser.json());
 function APIReturn(res, success, message, data) {
   res.set('Access-Control-Allow-Origin', '*');
   res.set('Access-Control-Allow-Credentials', true);
+  
+  res.set('Cache-Control', 'no-cache, must-revalidate, max-age=0');
 
   if (typeof data == 'undefined') {
     res.json({
@@ -325,7 +327,6 @@ app.post('/layer/geojson/create', function(req, res) {
     }else if (typeof json === 'object') {
       var geoJSON = json;
     }
-
     
     if (geoJSON.type == 'FeatureCollection') {
       geoJSON.features.forEach(function(feature) {
@@ -340,7 +341,7 @@ app.post('/layer/geojson/create', function(req, res) {
           if (error) return APIReturn(res,false, result)
 
           return APIReturn(res,
-            true, 'GEOJson has been imported.', result
+            true, 'GEOJson has been created.', result
           )
         })
 
@@ -467,53 +468,6 @@ app.post('/layer/geojson/delete', function(req, res) {
   });
 });
 
-// //LAYERS
-// app.post('/group/add', function(req, res) {
-//   if (!checkAPIKey(req, res)) return;
-//
-//   checkAuthentication(req, res, function(isLoggedIn, userID) {
-//     if (!isLoggedIn) return authRequired(res, userID);
-//
-//     var ownerID = req.body.userID;
-//     var mapID = req.body.mapID;
-//     var groupID = req.body.groupID;
-//     var label = req.body.label;
-//     var description = req.body.description;
-//     var canExpand = req.body.canExpand;
-//     var canOrgView = req.body.canOrgView;
-//     var canOrgEdit = req.body.canOrgEdit;
-//
-//     if (ownerID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
-//     if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
-//     if (groupID == null) groupID = 0;
-//
-//     if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
-//     if (description == null) description = '';
-//     if (canExpand == null) canExpand = false;
-//     if (canOrgView == null) canOrgView = false;
-//     if (canOrgEdit == null) canOrgEdit = false;
-//
-//     var payload = {
-//       ownerID: ownerID,
-//       mapID: mapID,
-//       groupID: groupID,
-//       label: label,
-//       description: description,
-//       canExpand: canExpand,
-//       canOrgView: canOrgView,
-//       canOrgEdit: canOrgEdit,
-//     };
-//
-//     db.createGroup(payload, function(error, result) {
-//       if (error) return APIReturn(res,false, result)
-//
-//       return APIReturn(res,
-//         true, 'Group has been created.', result
-//       )
-//     })
-//   })
-// });
-
 //USER Groups
 app.post('/group/add', function(req, res) {
   if (!checkAPIKey(req, res)) return;
@@ -533,6 +487,28 @@ app.post('/group/add', function(req, res) {
 
       return APIReturn(res,
         true, 'User Group has been created.', result
+      )
+    })
+  })
+});
+
+//USER Groups
+
+
+//USER Groups
+app.post('/group/delete', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+    
+    var groupID = req.body.groupID;
+    
+    db.deleteUserGroup(userID, groupID, function(error, result) {
+      if (error) return APIReturn(res,false, result)
+
+      return APIReturn(res,
+        true, 'User Group has been deleted.', result
       )
     })
   })
@@ -610,10 +586,16 @@ app.post('/layer/order', function(req, res) {
   
   checkAuthentication(req, res, function(isLoggedIn, userID) {
     if (!isLoggedIn) return authRequired(res, userID);
-  
-    return APIReturn(res,
-      true, 'Layer ordering is not yet built.', result
-    )
+    
+    var orderObj = req.body.order;
+    
+    db.updateLayerOrder(userID, orderObj, function(error, result) {
+      if (error) return APIReturn(res,false, result)
+
+      return APIReturn(res,
+        true, 'User Layers & Groups has been reordered.', result
+      )
+    })
   })
 });
 

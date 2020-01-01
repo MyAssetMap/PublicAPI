@@ -218,28 +218,44 @@ const deleteUserGroup = (groupID, callback) => {
   
   if (groupID == null) return callback(true, 'Group ID (`groupID`) must be supplied.');
   
+  
+  
   //Add to User List Data
-  deleteFromJSONRow(
-    'User',
-    'userLayers',
-    [[
-      {
-        label: label,
-        color: color,
-        parent: parentID,
-        groupId: groupID,
-        layerIds: []
-      },
-      {}
-    ]],
-    'id',
-    userID,
-    function(error, userRowID) {
-      if (error) return callback(true, userRowID);
-      console.log('UserGroupID:',groupID)
-      callback(false, groupID)
-    }
-  );
+  getRowFromTableWhere('User',['userLayers'],'id',userID,function(error,users) {
+    if (error) return callback(true, users);
+    
+    if (!users.length) return callback(false, finalReturn);
+    users.forEach(function(user) {
+      const userLayers = user.userLayers;
+      
+      if (!userLayers.length) return callback(false, finalReturn);
+      
+      userLayers.forEach(function(layer) {
+        
+        var layerTitle = layer[0];
+        var layerCustomize = layer[1];
+    
+        if (typeof layerTitle === 'object') {//LAYER OR GROUP
+          if (layerTitle.groupId != null) {
+            if (layerTitle.groupId == groupID) {
+              deleteFromJSONRow(
+                'User',
+                'userLayers',
+                layer,
+                'id',
+                userID,
+                function(error, userRowID) {
+                  if (error) return callback(true, userRowID);
+                  console.log('UserGroupID:',groupID)
+                  callback(false, groupID)
+                }
+              );
+            }
+          }
+        }
+      })
+    })
+  })
 }
 
 const createLayer = (payload, callback) => {
@@ -362,6 +378,104 @@ const setupLayer = (payload, groupID, callback) => {
       )
     }
   )
+}
+
+const updateLayerOrder = (userID, order, callback) => {
+
+  if (order == null) return callback(true, 'Layer & Group Order Object (`order`) must be supplied.');
+  
+  //Add to User List Data
+  getRowFromTableWhere('User',['userLayers'],'id',userID,function(error,users) {
+    if (error) return callback(true, users);
+    
+    if (!users.length) return callback(false, finalReturn);
+    users.forEach(function(user) {
+      const userLayers = user.userLayers;
+      
+      if (!userLayers.length) return callback(true, 'No user layers exist.');
+      //Create a userLayers reference object with the keys.
+      var userRef = {};
+      userLayers.forEach(function(layer) {
+        var layerTitle = layer[0];
+        var layerCustomize = layer[1];
+        
+        if (typeof layerTitle !== 'object') {
+          userRef[layer[0]] = layer;
+        }else{
+          if (layerTitle.groupId != null) {
+            userRef[layerTitle.groupId] = layer;
+          }
+        }
+      })
+      
+      var newUserLayers = [];
+      
+      if (!Array.isArray(order)) return callback(true, 'Order object passed must be an array.');
+      //For each order item passed, see if it is a valid key in the reference object. If it is, append it to the new element, and delete it from the ref object.
+      order.forEach(function(orderItem) {
+        //console.log('orderItem',orderItem);
+        
+        if (orderItem.group != null) {
+          if (userRef[orderItem.group] != null) {
+            newUserLayers.push(userRef[orderItem.group]);
+            delete userRef[orderItem.group];
+          }else console.error('orderItem: Group Passed does not exist: '+orderItem.group)
+        }else if (orderItem.layer != null) {
+          var layerID = util.processLayerID(orderItem.layer);
+          if (userRef[layerID] != null) {
+            newUserLayers.push(userRef[layerID]);
+            delete userRef[layerID];
+          }else console.error('orderItem: Layer Passed does not exist: '+orderItem.layer)
+        }
+      })
+      //Now, check the reference object for any items that were not in the order object passed.
+      userRef.forEach(function(layer, key) {
+        //console.log('Not in order:',layer);
+        
+        var layerTitle = layer[0];
+        var layerCustomize = layer[1];
+
+        if (typeof layerTitle !== 'object') {//Just a layer
+          newUserLayers.push(layer);
+        }else if (layerTitle.groupId == null) {//Manually defined layers
+          newUserLayers.push(layer);
+        }else {
+          //Skip Groups
+          console.log('Deleted Group: '+layerTitle.groupId);
+        }
+      })
+      
+      updateRow('User','userLayers',newUserLayers,'id',userID,function(error,users) {
+        if (error) return callback(true, users);
+        
+        return callback(false, newUserLayers);
+      })
+      // userLayers.forEach(function(layer) {
+//
+//         var layerTitle = layer[0];
+//         var layerCustomize = layer[1];
+//
+//         if (typeof layerTitle === 'object') {//LAYER OR GROUP
+//           if (layerTitle.groupId != null) {
+//             if (layerTitle.groupId == groupID) {
+//               deleteFromJSONRow(
+//                 'User',
+//                 'userLayers',
+//                 layer,
+//                 'id',
+//                 userID,
+//                 function(error, userRowID) {
+//                   if (error) return callback(true, userRowID);
+//                   console.log('UserGroupID:',groupID)
+//                   callback(false, groupID)
+//                 }
+//               );
+//             }
+//           }
+//         }
+//       })
+    })
+  })
 }
 
 const deleteLayer = (groupID, callback) => {
@@ -498,12 +612,14 @@ const getGroupByID = (currentKey, groupID, callback) => {
             
                 layerSource.id = layerLabel + 'source';
               
-                delete layer.layerID;
+                delete layerSource.layerID;
             
                 if (['global','org','user'].includes(layerSource.type)) {
                   var layerName = 'layer_'+mapID+'_'+layerSource.type;
                   layerSource.type = 'vector';
                   layerSource.tiles = ['https://tiles.myassetmap.com/v1/mvt/'+layerName+'/{z}/{x}/{y}?filter=layer%20%3D%20'+layerID];
+                  
+                  processedLayer.layer['source-layer'] = layerName;
                 }
             
                 processedSource.push(layerSource)
@@ -654,6 +770,10 @@ const appendToJSONRow = (table, column, value, identifierColumn, identifier, cal
   runQuery('UPDATE public."' + table + '" SET "' + column + '" = "' + column + '"::jsonb || '+processValue(value)+'::jsonb WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
 }
 
+const deleteFromJSONRow = (table, column, value, identifierColumn, identifier, callback) => {
+  runQuery('UPDATE public."' + table + '" SET "' + column + '" = "' + column + '"::jsonb || '+processValue(value)+'::jsonb WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
+}
+
 const insertRow = (table, columns, values, callback) => {
   runQuery('INSERT INTO public."' + table + '" (' + fromSingleValueToValues(columns,'"') + ') VALUES (' + fromSingleValueToValues(values) + ') RETURNING id;', function(error, row) {
     if (error) return callback(true, row);
@@ -728,8 +848,9 @@ module.exports = {
   
     createGroup,
     createUserGroup,
-    createLayer,
   
+    createLayer,
+    updateLayerOrder,
     deleteLayer,
   
     getTable,

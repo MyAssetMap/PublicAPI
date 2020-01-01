@@ -83,45 +83,176 @@ json — {
 
 + Body:
 ```
-mapID — 1
-layerID — 85
-json — {
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              84.375,
-              53.74871079689897
-            ],
-            [
-              132.1875,
-              38.548165423046584
-            ],
-            [
-              119.17968749999999,
-              71.52490903732816
-            ],
-            [
-              84.375,
-              53.74871079689897
-            ]
-          ]
+{
+    "userID": 16,
+    "type": "user",
+    "mapID": 1,
+    "layerID": "polygon_polygon_83",
+    "json": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [
+                                -104.010643,
+                                40.0163698
+                            ],
+                            [
+                                -104.0137329,
+                                40.006509
+                            ],
+                            [
+                                -103.9931335,
+                                40.0066404
+                            ],
+                            [
+                                -103.9872971,
+                                40.0159754
+                            ],
+                            [
+                                -103.9969101,
+                                40.0232058
+                            ],
+                            [
+                                -104.010643,
+                                40.0163698
+                            ]
+                        ]
+                    ]
+                },
+                "id": 0
+            }
         ]
-      }
     }
-  ]
 }
 ```
 
 ***
 
 
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "GEOJson has been imported.",
+    "data": []
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "GEOJSON (`json`) must be supplied."
+}
+```
+***
+### Response:
+
++ Status: **403**
+
++ Body:
+```
+{
+    "message": "When Content-Type:application/x-www-form-urlencoded, URL cannot include query-string parameters (after '?'): '/dev/layer/geojson/create?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c'"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **502**
+
++ Body:
+```
+{
+    "message": "Internal server error"
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": false,
+    "message": "Map ID (`mapID`) must be supplied."
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "GEOJson has been imported.",
+    "data": []
+}
+```
+***
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "GEOJson has been imported.",
+    "data": []
+}
+```
+***
 ### Response:
 
 + Status: **200**
@@ -369,13 +500,245 @@ json — {
 
 + Body:
 ```
-mapID — 1
-layerID — 899
+{
+    "mapID": "1",
+    "layerID": "83"
+}
 ```
 
 ***
 
 
+### Response:
+
++ Status: **200**
+
++ Body:
+```
+{
+    "success": true,
+    "message": "GEOJson for this layer has been returned.",
+    "data": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [
+                                84.375,
+                                53.748710796899
+                            ],
+                            [
+                                132.1875,
+                                38.5481654230466
+                            ],
+                            [
+                                119.1796875,
+                                71.5249090373282
+                            ],
+                            [
+                                84.375,
+                                53.748710796899
+                            ]
+                        ]
+                    ]
+                },
+                "properties": {
+                    "prop": {}
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [
+                                84.375,
+                                53.748710796899
+                            ],
+                            [
+                                132.1875,
+                                38.5481654230466
+                            ],
+                            [
+                                119.1796875,
+                                71.5249090373282
+                            ],
+                            [
+                                84.375,
+                                53.748710796899
+                            ]
+                        ]
+                    ]
+                },
+                "properties": {
+                    "prop": {}
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [
+                                84.375,
+                                53.748710796899
+                            ],
+                            [
+                                132.1875,
+                                38.5481654230466
+                            ],
+                            [
+                                119.1796875,
+                                71.5249090373282
+                            ],
+                            [
+                                84.375,
+                                53.748710796899
+                            ]
+                        ]
+                    ]
+                },
+                "properties": {
+                    "prop": {}
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [
+                                -104.010643,
+                                40.0163698
+                            ],
+                            [
+                                -104.0137329,
+                                40.006509
+                            ],
+                            [
+                                -103.9931335,
+                                40.0066404
+                            ],
+                            [
+                                -103.9872971,
+                                40.0159754
+                            ],
+                            [
+                                -103.9969101,
+                                40.0232058
+                            ],
+                            [
+                                -104.010643,
+                                40.0163698
+                            ]
+                        ]
+                    ]
+                },
+                "properties": {
+                    "prop": {}
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [
+                                -104.0183111,
+                                40.0123082
+                            ],
+                            [
+                                -104.020886,
+                                40.0063915
+                            ],
+                            [
+                                -104.0100713,
+                                40.0020522
+                            ],
+                            [
+                                -103.9925619,
+                                40.005734
+                            ],
+                            [
+                                -103.9932485,
+                                40.0180929
+                            ],
+                            [
+                                -104.0093847,
+                                40.0215109
+                            ],
+                            [
+                                -104.0183111,
+                                40.0123082
+                            ]
+                        ]
+                    ]
+                },
+                "properties": {
+                    "prop": {}
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [
+                                -104.0964654,
+                                40.0531798
+                            ],
+                            [
+                                -104.0945473,
+                                40.0531798
+                            ],
+                            [
+                                -104.0947492,
+                                40.050913
+                            ],
+                            [
+                                -104.0973871,
+                                40.0508613
+                            ],
+                            [
+                                -104.0988413,
+                                40.0522851
+                            ],
+                            [
+                                -104.0964654,
+                                40.0531798
+                            ]
+                        ]
+                    ]
+                },
+                "properties": {
+                    "prop": {}
+                }
+            }
+        ]
+    }
+}
+```
+***
+### Response:
+
++ Status: **403**
+
++ Body:
+```
+{
+    "message": "When Content-Type:application/x-www-form-urlencoded, URL cannot include query-string parameters (after '?'): '/alpha/layer/geojson/get?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c'"
+}
+```
+***
 ### Response:
 
 + Status: **200**

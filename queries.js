@@ -343,13 +343,9 @@ const setupLayer = (payload, groupID, callback) => {
       console.log('LayerID:',layerID)
       
       //Create Layer Source
-      insertRow(
-        'LayerSublayer',
-        ["layerID","key","type","label"],
-        [layerID,"symbol","symbol","Symbol"],
+      setupSubLayers(layerID, type, 
         function(error, subSymbolID) {
           if (error) return callback(true, subSymbolID);
-          console.log('Sublayer_SymboldID:',subSymbolID)
       
           //Create Layer Source
           insertRow(
@@ -375,6 +371,34 @@ const setupLayer = (payload, groupID, callback) => {
               )
             }
           )
+        }
+      )
+    }
+  )
+}
+
+const setupSubLayers = (layerID, type, callback) => {
+  if (layerID == null) return callback(true, 'Sublayers could not be setup as layerID was not defined.');
+  
+  insertRow(
+    'LayerSublayer',
+    ["layerID","key","type","label"],
+    [layerID,"symbol","symbol","Symbol"],
+    function(error, subSymbolID) {
+      if (error) return callback(true, subSymbolID);
+      console.log('Sublayer_SymboldID:',subSymbolID)
+      
+      if (type != 'fill') return callback(false, 'Sublayers have been added!');
+      
+      insertRow(
+        'LayerSublayer',
+        ["layerID","key","type","label"],
+        [layerID,"outline","outline","Outline"],
+        function(error, subSymbolID) {
+          if (error) return callback(true, subSymbolID);
+          console.log('Sublayer_SymboldID:',subSymbolID)
+          
+          callback(false, 'Sublayers have been added!');
         }
       )
     }

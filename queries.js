@@ -393,7 +393,7 @@ const setupSubLayers = (layerID, type, callback) => {
       insertRow(
         'LayerSublayer',
         ["layerID","key","type","label"],
-        [layerID,"outline","outline","Outline"],
+        [layerID,"outline","line","Outline"],
         function(error, subSymbolID) {
           if (error) return callback(true, subSymbolID);
           console.log('Sublayer_SymboldID:',subSymbolID)
@@ -647,7 +647,12 @@ const getGroupByID = (currentKey, groupID, callback) => {
                   layerSource.type = 'vector';
                   layerSource.tiles = ['https://tiles.myassetmap.com/v1/mvt/'+layerName+'/{z}/{x}/{y}?filter=layer%20%3D%20'+layerID];
                   
-                  processedLayer.layer['source-layer'] = layerName;
+                  //Overwrite each of the source layers to be the correct value needed for the tiling server.
+                  processedLayer.forEach(function( layer, key) {
+                    if (processedLayer[key] != null && typeof processedLayer[key] === 'object') {
+                      processedLayer[key]['source-layer'] = layerName;
+                    }
+                  })
                 }
             
                 processedSource.push(layerSource)

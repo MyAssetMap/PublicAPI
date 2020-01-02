@@ -1,5 +1,5 @@
 # Get All Possible Addons
-## `GET` /dev/addons
+## `GET` /alpha/addons
 
 *`WIP` Returns all possible addons and their information
 
@@ -15,7 +15,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e48
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -23,11 +23,12 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": true,
@@ -51,12 +52,13 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     ]
 }
 ```
-***
+</details>
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": true,
@@ -80,11 +82,41 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     ]
 }
 ```
-***
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Addon information has been returned.",
+    "data": [
+        {
+            "id": 1,
+            "name": "NearMap",
+            "description": "Aerial imagery and data insights move location analysis out of the field and into the office, giving businesses the tools to scale quickly and bring their most important initiatives to life."
+        },
+        {
+            "id": 2,
+            "name": "US Land Grid",
+            "description": "USLandGrid provides instant access to high resolution vector data based on nationally trusted sources."
+        },
+        {
+            "id": 3,
+            "name": "Free System Layers",
+            "description": "na"
+        }
+    ]
+}
+```
+</details>
 
 
 # Get Super Users
-## `GET` /dev/superusers
+## `GET` /alpha/superusers
 
 *`WIP` Returns the super user information. 
 
@@ -100,7 +132,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e48
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -108,11 +140,12 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": true,
@@ -141,11 +174,11 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     ]
 }
 ```
-***
+</details>
 
 
 # Get Accounts
-## `GET` /dev/accounts
+## `GET` /alpha/accounts
 
 *`WIP` Returns a list of all accounts and their properties
 
@@ -162,7 +195,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e48
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -170,11 +203,12 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": true,
@@ -223,11 +257,11 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     ]
 }
 ```
-***
+</details>
 
 
 # Get Users
-## `GET` /dev/users
+## `GET` /alpha/users
 
 *`WIP` Returns a list of all users and their properties
 
@@ -244,7 +278,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e48
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -252,11 +286,12 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": true,
@@ -411,11 +446,11 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     ]
 }
 ```
-***
+</details>
 
 
 # Get Users Preferences
-## `GET` /dev/userpreference
+## `GET` /alpha/userpreference
 
 *`WIP` Returns a list of all users and their properties
 
@@ -432,7 +467,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e48
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -440,11 +475,12 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": true,
@@ -477,11 +513,11 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     ]
 }
 ```
-***
+</details>
 
 
 # Get User Initialization
-## `GET` /dev/users/init
+## `GET` /alpha/users/init
 
 *`WIP` Returns all necessary information about the user upon first login to the application. Occurs on login automatically; userID is automatically passed in UUID form.
 
@@ -504,47 +540,82 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
-```
-{
-    "success": true,
-    "message": "User did not exist. User has been created.",
-    "data": {
-        "profile": {
-            "userID": 15,
-            "firstName": "–",
-            "lastName": "–",
-            "displayName": "– –"
-        },
-        "isActive": true,
-        "superUserID": [],
-        "accountID": [],
-        "mapID": []
-    }
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
 ```
 {
     "success": true,
     "message": "User information obtained successfully.",
     "data": {
+        "isActive": true,
         "profile": {
             "userID": 8,
             "firstName": "Dakotah",
             "lastName": "Intriglia",
             "displayName": "Dakotah Intriglia"
         },
+        "superUserID": [],
+        "accountID": [
+            1
+        ],
+        "mapID": [
+            1
+        ]
+    }
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "User information obtained successfully.",
+    "data": {
         "isActive": true,
+        "profile": {
+            "userID": 16,
+            "firstName": "Shane",
+            "lastName": "Bergman",
+            "displayName": "Shane Bergman"
+        },
+        "superUserID": [],
+        "accountID": [
+            1
+        ],
+        "mapID": [
+            1
+        ]
+    }
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "User information obtained successfully.",
+    "data": {
+        "isActive": true,
+        "profile": {
+            "userID": 16,
+            "firstName": "Shane",
+            "lastName": "Bergman",
+            "displayName": "Shane Bergman"
+        },
         "superUserID": [],
         "accountID": [
             1
@@ -556,6 +627,6 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     }
 }
 ```
-***
+</details>
 
 

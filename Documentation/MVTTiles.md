@@ -17,11 +17,12 @@
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
 	"message":"Welcome to the My Asset Map Tile Server",
@@ -29,7 +30,7 @@
 	"statusCode":200
 }
 ```
-***
+</details>
 
 
 # List Layers
@@ -51,11 +52,12 @@
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 [
     {
@@ -87,7 +89,7 @@
     }
 ]
 ```
-***
+</details>
 
 
 # Get MVT Tile
@@ -115,11 +117,12 @@
 ***
 
 
+
 ### Response:
 
-+ Status: **400**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "statusCode": 400,
@@ -127,6 +130,6 @@
     "message": "params.z should be integer, params.x should be integer, params.y should be integer"
 }
 ```
-***
+</details>
 
 

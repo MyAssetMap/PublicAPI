@@ -84,62 +84,21 @@ json — {
 + Body:
 ```
 {
-    "userID": 16,
-    "type": "user",
-    "mapID": 1,
+    "mapID": "1",
     "layerID": "polygon_polygon_83",
-    "json": {
-        "type": "FeatureCollection",
-        "features": [
-            {
-                "type": "Feature",
-                "properties": {},
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
-                        [
-                            [
-                                -104.010643,
-                                40.0163698
-                            ],
-                            [
-                                -104.0137329,
-                                40.006509
-                            ],
-                            [
-                                -103.9931335,
-                                40.0066404
-                            ],
-                            [
-                                -103.9872971,
-                                40.0159754
-                            ],
-                            [
-                                -103.9969101,
-                                40.0232058
-                            ],
-                            [
-                                -104.010643,
-                                40.0163698
-                            ]
-                        ]
-                    ]
-                },
-                "id": 0
-            }
-        ]
-    }
+    "json": "{\n  \"type\": \"FeatureCollection\",\n  \"features\": [\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [\n            [\n              84.375,\n              53.74871079689897\n            ],\n            [\n              132.1875,\n              38.548165423046584\n            ],\n            [\n              119.17968749999999,\n              71.52490903732816\n            ],\n            [\n              84.375,\n              53.74871079689897\n            ]\n          ]\n        ]\n      }\n    }\n  ]\n}"
 }
 ```
 
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": true,
@@ -147,207 +106,79 @@ json — {
     "data": []
 }
 ```
-***
+</details>
+
 ### Response:
 
-+ Status: **502**
+<details>
+<summary>Expand</summary>
 
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
 ```
 {
     "success": false,
     "message": "GEOJSON (`json`) must be supplied."
 }
 ```
-***
+</details>
+
 ### Response:
 
-+ Status: **403**
+<details>
+<summary>Expand</summary>
 
-+ Body:
-```
-{
-    "message": "When Content-Type:application/x-www-form-urlencoded, URL cannot include query-string parameters (after '?'): '/dev/layer/geojson/create?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c'"
-}
-```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
 ```
 {
     "success": false,
     "message": "Map ID (`mapID`) must be supplied."
 }
 ```
-***
-### Response:
+</details>
 
-+ Status: **200**
+
+# Create & Save GEOJSON by layerID Duplicate
+## `POST` /alpha/layer/geojson/create
+
+*Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
+
+- **mapID (Required):** The Map ID you wish to import to.
+- **type (Optional):** The type of layer you are importing to (user, org, global). Defaults to _user_
+- **layerID (Required):** The Layer ID you wish to import to.
+- **json (Required):** The json you are importing.*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
+```
+{
+    "mapID": "1",
+    "layerID": "85",
+    "json": "{\n  \"type\": \"FeatureCollection\",\n  \"features\": [\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [\n            [\n              84.375,\n              53.74871079689897\n            ],\n            [\n              132.1875,\n              38.548165423046584\n            ],\n            [\n              119.17968749999999,\n              71.52490903732816\n            ],\n            [\n              84.375,\n              53.74871079689897\n            ]\n          ]\n        ]\n      }\n    }\n  ]\n}"
+}
+```
+
+***
+
+
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
 ```
 {
     "success": true,
-    "message": "GEOJson has been imported.",
+    "message": "GEOJson has been created.",
     "data": []
 }
 ```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": true,
-    "message": "GEOJson has been imported.",
-    "data": []
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": true,
-    "message": "GEOJson has been imported.",
-    "data": []
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": true,
-    "message": "GEOJson has been imported.",
-    "data": []
-}
-```
-***
-### Response:
-
-+ Status: **404**
-
-+ Body:
-```
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Error</title>
-</head>
-<body>
-<pre>Cannot POST /alpha/layer/geojson/create</pre>
-</body>
-</html>
-
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": true,
-    "message": "GEOJson has been imported.",
-    "data": []
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": false,
-    "message": "Layer ID (`layerID`) must be supplied."
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": true,
-    "message": "GEOJson has been imported.",
-    "data": []
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": false,
-    "message": "GEOJSON (`json`) must be supplied."
-}
-```
-***
+</details>
 
 
 # Update GEOJSON by featureID
@@ -392,88 +223,45 @@ json — {
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": true,
     "message": "Feature has been updated."
 }
 ```
-***
+</details>
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
-```
-{
-    "success": true,
-    "message": "Feature has been updated."
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": false,
-    "message": "syntax error at or near \"UPDATE\""
-}
-```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
 ```
 {
     "success": false,
     "message": "Please only pass one GEOJSON feature to endpoint for updating."
 }
 ```
-***
+</details>
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": false,
     "message": "Feature ID (`featureID`) must be supplied."
 }
 ```
-***
-### Response:
-
-+ Status: **502**
-
-+ Body:
-```
-{
-    "message": "Internal server error"
-}
-```
-***
+</details>
 
 
 # Get GEOJSON by featureID/layerID
@@ -500,20 +288,19 @@ json — {
 
 + Body:
 ```
-{
-    "mapID": "1",
-    "layerID": "83"
-}
+mapID — 1
+layerID — 899
 ```
 
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": true,
@@ -727,39 +514,13 @@ json — {
     }
 }
 ```
-***
+</details>
+
 ### Response:
 
-+ Status: **403**
+<details>
+<summary>Expand</summary>
 
-+ Body:
-```
-{
-    "message": "When Content-Type:application/x-www-form-urlencoded, URL cannot include query-string parameters (after '?'): '/alpha/layer/geojson/get?userID=6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c'"
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
-```
-{
-    "success": true,
-    "message": "GEOJson for this layer has been returned.",
-    "data": {
-        "type": "FeatureCollection",
-        "features": []
-    }
-}
-```
-***
-### Response:
-
-+ Status: **200**
-
-+ Body:
 ```
 {
     "success": true,
@@ -770,19 +531,20 @@ json — {
     }
 }
 ```
-***
+</details>
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": false,
     "message": "Layer ID (`layerID`) must be provided."
 }
 ```
-***
+</details>
 
 
 # Delete GEOMETRY by layerID
@@ -818,11 +580,12 @@ layerID — 85
 ***
 
 
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": true,
@@ -830,12 +593,13 @@ layerID — 85
     "data": []
 }
 ```
-***
+</details>
+
 ### Response:
 
-+ Status: **200**
+<details>
+<summary>Expand</summary>
 
-+ Body:
 ```
 {
     "success": true,
@@ -843,6 +607,6 @@ layerID — 85
     "data": []
 }
 ```
-***
+</details>
 
 

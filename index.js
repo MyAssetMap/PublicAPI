@@ -587,8 +587,9 @@ app.post('/layer/order', function(req, res) {
     if (!isLoggedIn) return authRequired(res, userID);
     
     var orderObj = req.body.order;
+    var deleteGroups = req.body.delete;
     
-    db.updateLayerOrder(userID, orderObj, function(error, result) {
+    db.updateLayerOrder(userID, orderObj, deleteGroups, function(error, result) {
       if (error) return APIReturn(res,false, result)
 
       return APIReturn(res,

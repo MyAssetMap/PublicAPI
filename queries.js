@@ -405,15 +405,17 @@ const setupSubLayers = (layerID, type, callback) => {
   )
 }
 
-const updateLayerOrder = (userID, order, callback) => {
+const updateLayerOrder = (userID, order, deleteGroups, callback) => {
 
+  if (deleteGroups == null) deleteGroups = true;
+  
   if (order == null) return callback(true, 'Layer & Group Order Object (`order`) must be supplied.');
   
   //Add to User List Data
   getRowFromTableWhere('User',['userLayers'],'id',userID,function(error,users) {
     if (error) return callback(true, users);
     
-    if (!users.length) return callback(false, finalReturn);
+    if (!users.length) return callback(true, 'No data was found for this userID');
     users.forEach(function(user) {
       const userLayers = user.userLayers;
       
@@ -485,8 +487,14 @@ const updateLayerOrder = (userID, order, callback) => {
         }else if (layerTitle.groupId == null) {//Manually defined layers
           newUserLayers.push(layer);
         }else {
-          //Skip Groups
-          console.log('Deleted Group: '+layerTitle.groupId);
+          if (!deleteGroups) {
+            newUserLayers.push(layer);
+            console.log('Unused Group: '+layerTitle.groupId);
+            
+          }else {
+            //Skip Groups
+            console.log('Deleted Group: '+layerTitle.groupId);
+          }
         }
       })
       
@@ -500,7 +508,6 @@ const updateLayerOrder = (userID, order, callback) => {
 }
 
 const deleteLayer = (groupID, callback) => {
-  var finalReturn = [];
 
     //Get Layer Group from ID
   getTableWhere('LayerGroup','id',groupID,function(error,groups) {

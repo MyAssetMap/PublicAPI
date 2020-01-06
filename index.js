@@ -262,14 +262,17 @@ app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
           if (!isLoggedIn) return authRequired(res, userID);
     
           var key = req.body.key;
+          var prefName = req.body.name;
+          var prefValue = req.body.value;
     
           if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+          if (prefValue == null) return APIReturn(res,false, 'Value (`value`) must be supplied.');
     
-          Q.User.getUserPreferences(userID, key, function(error,preferences) {
+          Q.User.createUserPreferences(userID, key, prefName, prefValue, function(error,preferences) {
           if (error) return APIReturn(res,false, preferences)
     
             return APIReturn(res,
-              true, 'User preferences have been returned.', preferences
+              true, 'User preferences have been created.', preferences
             )
           });
         })
@@ -301,15 +304,23 @@ app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
         checkAuthentication(req, res, function(isLoggedIn, userID) {
           if (!isLoggedIn) return authRequired(res, userID);
     
-          var key = req.body.key;
+          var prefID = req.body.prefID;
+          var prefName = req.body.name;
+          var prefValue = req.body.value;
     
           if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+          if (prefID == null) return APIReturn(res,false, 'User Preference ID (`prefID`) must be supplied.');
+          if (prefName == null && prefValue == null) return APIReturn(res,false, 'Name OR Value (`name`,`value`) must be supplied.');
+          
+          var updates = {};
+          if (prefName != null) updates.name = prefName;
+          if (prefValue != null) updates.value = prefValue;
     
-          Q.User.getUserPreferences(userID, key, function(error,preferences) {
+          Q.User.updateUserPreferences(prefID, updates, function(error,preferences) {
           if (error) return APIReturn(res,false, preferences)
     
             return APIReturn(res,
-              true, 'User preferences have been returned.', preferences
+              true, 'User preferences have been updated.', preferences
             )
           });
         })
@@ -321,15 +332,16 @@ app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
         checkAuthentication(req, res, function(isLoggedIn, userID) {
           if (!isLoggedIn) return authRequired(res, userID);
     
-          var key = req.body.key;
+          var prefID = req.body.prefID;
     
           if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+          if (prefID == null) return APIReturn(res,false, 'User Preference ID (`prefID`) must be supplied.');
     
-          Q.User.getUserPreferences(userID, key, function(error,preferences) {
+          Q.User.deleteUserPreferences(prefID, function(error,preferences) {
           if (error) return APIReturn(res,false, preferences)
     
             return APIReturn(res,
-              true, 'User preferences have been returned.', preferences
+              true, 'User preferences have been deleted.', preferences
             )
           });
         })

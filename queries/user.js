@@ -16,6 +16,24 @@ module.exports = class Users {
     var thisClass = this;
     DB.runQuery(pool, 'SELECT * FROM public."SuperUser"', callback);
   }
+  
+  static createUserPreferences(userID, prefKey, prefName, prefValue, callback) {
+    var thisClass = this;
+    var prefKeyID;
+    DB.getRowFromTableWhere(pool, 'UserPreferenceKey', 'id', 'name', prefKey, function(error, prefKeyID) {
+      if (error) return callback(true, prefKeyID);
+      
+      if (!Array.isArray(prefKeyID) || prefKeyID.length != 1) return callback(false, 'User Preference Key (`key`) is invalid.');
+      prefKeyID = prefKeyID[0].id;
+      
+      DB.insertRow(pool, 
+        'UserPreference',
+        ["userID","key","name","value"],
+        [userID,prefKeyID,prefName,prefValue],
+        callback
+      );
+    })
+  }
 
   static getUserPreferences(userID, prefKey, callback) {
     var thisClass = this;
@@ -33,13 +51,15 @@ module.exports = class Users {
           delete pref.userID;
           delete pref.key;
           
+          if (pref.name == null) delete pref.name;
+          
           prefReturn[prefKeyID].push(pref);
         })
         
         var itemsProcessed = 0;
         var finalReturn = {}
         var prefKey;
-        console.log(itemsProcessed === Object.size(prefReturn),itemsProcessed,Object.size(prefReturn))
+
         prefReturn.forEach(function(pref, prefKeyID) {
           
           DB.getRowFromTableWhere(pool, 'UserPreferenceKey', 'name', 'id', prefKeyID, function(error, prefKey) {
@@ -56,7 +76,7 @@ module.exports = class Users {
             
               //NOW THAT EVERYTHING IS DONE, CONTINUE.
               callback(false, finalReturn);
-            }else console.log(itemsProcessed === Object.size(prefReturn),itemsProcessed,Object.size(prefReturn))
+            }//else console.log(itemsProcessed === Object.size(prefReturn),itemsProcessed,Object.size(prefReturn))
           })
         })
         
@@ -82,6 +102,8 @@ module.exports = class Users {
             delete pref.userID;
             delete pref.key;
           
+            if (pref.name == null) delete pref.name;
+          
             prefReturn[prefKeyID].push(pref);
           })
         
@@ -89,6 +111,28 @@ module.exports = class Users {
         });
       })
     }
+  }
+  
+  static updateUserPreferences(prefID, payload, callback) {
+    DB.getTableWhere(pool, 'UserPreference','id',prefID,function(error,prefs) {
+      if (error) return callback(true, prefs);
+    
+      // finalReturn.push(groups);
+      if (!prefs.length) return callback(true, 'User Preference ID (`prefID`) does not exist!');
+    
+      DB.bulkUpdateRow(pool, 'UserPreference', payload, 'id', prefID, callback)
+    })
+  }
+  
+  static deleteUserPreferences(prefID, callback) {
+    DB.getTableWhere(pool, 'UserPreference','id',prefID,function(error,prefs) {
+      if (error) return callback(true, prefs);
+    
+      // finalReturn.push(groups);
+      if (!prefs.length) return callback(true, 'User Preference ID (`prefID`) does not exist!');
+      
+      DB.deleteTableWhere(pool,'UserPreference', 'id', prefID, callback)
+    })
   }
 
   static getUserByEmail(emailAddress, callback) {

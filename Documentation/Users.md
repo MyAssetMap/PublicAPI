@@ -15,7 +15,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -23,6 +23,96 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Addon information has been returned.",
+    "data": [
+        {
+            "id": 1,
+            "name": "NearMap",
+            "description": "Aerial imagery and data insights move location analysis out of the field and into the office, giving businesses the tools to scale quickly and bring their most important initiatives to life."
+        },
+        {
+            "id": 2,
+            "name": "US Land Grid",
+            "description": "USLandGrid provides instant access to high resolution vector data based on nationally trusted sources."
+        },
+        {
+            "id": 3,
+            "name": "Free System Layers",
+            "description": "na"
+        }
+    ]
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Addon information has been returned.",
+    "data": [
+        {
+            "id": 1,
+            "name": "NearMap",
+            "description": "Aerial imagery and data insights move location analysis out of the field and into the office, giving businesses the tools to scale quickly and bring their most important initiatives to life."
+        },
+        {
+            "id": 2,
+            "name": "US Land Grid",
+            "description": "USLandGrid provides instant access to high resolution vector data based on nationally trusted sources."
+        },
+        {
+            "id": 3,
+            "name": "Free System Layers",
+            "description": "na"
+        }
+    ]
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Addon information has been returned.",
+    "data": [
+        {
+            "id": 1,
+            "name": "NearMap",
+            "description": "Aerial imagery and data insights move location analysis out of the field and into the office, giving businesses the tools to scale quickly and bring their most important initiatives to life."
+        },
+        {
+            "id": 2,
+            "name": "US Land Grid",
+            "description": "USLandGrid provides instant access to high resolution vector data based on nationally trusted sources."
+        },
+        {
+            "id": 3,
+            "name": "Free System Layers",
+            "description": "na"
+        }
+    ]
+}
+```
+</details>
 
 
 # Get Accounts
@@ -43,7 +133,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -51,6 +141,61 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Accounts information has been returned.",
+    "data": [
+        {
+            "id": 1,
+            "name": "Greeley Pipelines",
+            "userCount": 2,
+            "stripeSubscriptionID": 12,
+            "dateUpdated": "2015-10-09T00:00:00.000Z",
+            "dateCreated": "2013-10-02T00:00:00.000Z"
+        },
+        {
+            "id": 2,
+            "name": "Greeley Electrical",
+            "userCount": 1,
+            "stripeSubscriptionID": 23,
+            "dateUpdated": "2016-05-19T00:00:00.000Z",
+            "dateCreated": "2010-11-05T00:00:00.000Z"
+        },
+        {
+            "id": 3,
+            "name": "Denver Construction LLC",
+            "userCount": 2,
+            "stripeSubscriptionID": 55,
+            "dateUpdated": "2018-01-10T00:00:00.000Z",
+            "dateCreated": "2006-01-11T00:00:00.000Z"
+        },
+        {
+            "id": 4,
+            "name": "FoCo Industries",
+            "userCount": 1,
+            "stripeSubscriptionID": 24,
+            "dateUpdated": "2017-12-15T00:00:00.000Z",
+            "dateCreated": "2010-05-19T00:00:00.000Z"
+        },
+        {
+            "id": 0,
+            "name": "GLOBAL",
+            "userCount": 0,
+            "stripeSubscriptionID": 0,
+            "dateUpdated": null,
+            "dateCreated": null
+        }
+    ]
+}
+```
+</details>
 
 
 # Get Users
@@ -71,7 +216,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -91,440 +236,82 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     "message": "User information has been returned.",
     "data": [
         {
-            "id": 17,
-            "firstName": "–",
-            "lastName": "–",
+            "id": 1,
+            "firstName": "Ted",
+            "lastName": "Murillo",
+            "email": "TMurillo@GPipelines.com",
+            "cognitoUUID": "00000000-0000-0000-0000-000000000000",
             "isDisabled": false,
-            "lastLogin": "2020-01-03T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2019-12-23T00:00:00.000Z"
+            "lastLogin": "2019-09-02T00:00:00.000Z",
+            "dateUpdated": "2019-04-02T00:00:00.000Z",
+            "dateCreated": "2015-10-15T00:00:00.000Z",
+            "userLayers": []
+        },
+        {
+            "id": 2,
+            "firstName": "Joss",
+            "lastName": "Murillo",
+            "email": "JWood@Greeleyelectrical.com",
+            "cognitoUUID": "00000000-0000-0000-0000-000000000000",
+            "isDisabled": false,
+            "lastLogin": "2019-09-02T00:00:00.000Z",
+            "dateUpdated": "2019-04-03T00:00:00.000Z",
+            "dateCreated": "2010-11-05T00:00:00.000Z",
+            "userLayers": []
+        },
+        {
+            "id": 3,
+            "firstName": "Roland",
+            "lastName": "Edwards",
+            "email": "RolandEd1@GPipelines.com",
+            "cognitoUUID": "00000000-0000-0000-0000-000000000000",
+            "isDisabled": false,
+            "lastLogin": "2019-09-02T00:00:00.000Z",
+            "dateUpdated": "2018-04-04T00:00:00.000Z",
+            "dateCreated": "2015-10-09T00:00:00.000Z",
+            "userLayers": []
+        },
+        {
+            "id": 4,
+            "firstName": "Carol",
+            "lastName": "House",
+            "email": "CarolH@denverLLC.com",
+            "cognitoUUID": "00000000-0000-0000-0000-000000000000",
+            "isDisabled": true,
+            "lastLogin": "2019-09-01T00:00:00.000Z",
+            "dateUpdated": "2017-08-05T00:00:00.000Z",
+            "dateCreated": "2006-01-11T00:00:00.000Z",
+            "userLayers": []
+        },
+        {
+            "id": 5,
+            "firstName": "Darius",
+            "lastName": "Vance",
+            "email": "DDDV@denverLLC.com",
+            "cognitoUUID": "00000000-0000-0000-0000-000000000000",
+            "isDisabled": false,
+            "lastLogin": "2019-09-02T00:00:00.000Z",
+            "dateUpdated": "2018-04-06T00:00:00.000Z",
+            "dateCreated": "2007-02-14T00:00:00.000Z",
+            "userLayers": []
+        },
+        {
+            "id": 6,
+            "firstName": "Malak",
+            "lastName": "Webb",
+            "email": "MalakWeb@FoCoIndustries.com",
+            "cognitoUUID": "00000000-0000-0000-0000-000000000000",
+            "isDisabled": false,
+            "lastLogin": "2019-09-02T00:00:00.000Z",
+            "dateUpdated": "2019-04-07T00:00:00.000Z",
+            "dateCreated": "2010-05-19T00:00:00.000Z",
+            "userLayers": []
         },
         {
             "id": 0,
             "firstName": "GLOBAL",
             "lastName": "USER",
-            "isDisabled": false,
-            "lastLogin": null,
-            "dateUpdated": null,
-            "dateCreated": null
-        },
-        {
-            "id": 16,
-            "firstName": "Shane",
-            "lastName": "Bergman",
-            "isDisabled": false,
-            "lastLogin": "2020-01-06T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2019-12-14T00:00:00.000Z"
-        },
-        {
-            "id": 19,
-            "firstName": "–",
-            "lastName": "–",
-            "isDisabled": false,
-            "lastLogin": "2020-01-06T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2020-01-03T00:00:00.000Z"
-        },
-        {
-            "id": 8,
-            "firstName": "Dakotah",
-            "lastName": "Intriglia",
-            "isDisabled": false,
-            "lastLogin": "2020-01-06T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": null
-        },
-        {
-            "id": 18,
-            "firstName": "–",
-            "lastName": "–",
-            "isDisabled": false,
-            "lastLogin": "2020-01-03T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2020-01-03T00:00:00.000Z"
-        }
-    ]
-}
-```
-</details>
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "success": true,
-    "message": "User information has been returned.",
-    "data": [
-        {
-            "id": 17,
-            "firstName": "–",
-            "lastName": "–",
-            "cognitoUUID": "3b625216-4823-498c-9fea-ba46c406d803",
-            "isDisabled": false,
-            "lastLogin": "2020-01-03T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2019-12-23T00:00:00.000Z",
-            "userLayers": [
-                [
-                    "plss",
-                    {}
-                ],
-                [
-                    "counties",
-                    {}
-                ],
-                [
-                    {
-                        "label": "Common Layers",
-                        "groupId": "gKlasSdDsS",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": [
-                                "plss",
-                                "counties"
-                            ]
-                        }
-                    },
-                    {}
-                ],
-                [
-                    {
-                        "color": "#f2f2f2",
-                        "label": "kjhlkjhjklh",
-                        "groupId": "VwGpXu7FCy",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": []
-                        }
-                    },
-                    {}
-                ],
-                [
-                    112,
-                    {}
-                ],
-                [
-                    105,
-                    {}
-                ],
-                [
-                    103,
-                    {}
-                ],
-                [
-                    13,
-                    {}
-                ],
-                [
-                    22,
-                    {}
-                ],
-                [
-                    23,
-                    {}
-                ],
-                [
-                    24,
-                    {}
-                ],
-                [
-                    25,
-                    {}
-                ],
-                [
-                    26,
-                    {}
-                ],
-                [
-                    27,
-                    {}
-                ],
-                [
-                    28,
-                    {}
-                ],
-                [
-                    29,
-                    {}
-                ],
-                [
-                    30,
-                    {}
-                ],
-                [
-                    34,
-                    {}
-                ],
-                [
-                    35,
-                    {}
-                ],
-                [
-                    36,
-                    {}
-                ],
-                [
-                    37,
-                    {}
-                ],
-                [
-                    38,
-                    {}
-                ],
-                [
-                    39,
-                    {}
-                ],
-                [
-                    40,
-                    {}
-                ],
-                [
-                    41,
-                    {}
-                ],
-                [
-                    42,
-                    {}
-                ],
-                [
-                    47,
-                    {}
-                ],
-                [
-                    48,
-                    {}
-                ],
-                [
-                    49,
-                    {}
-                ],
-                [
-                    50,
-                    {}
-                ],
-                [
-                    51,
-                    {}
-                ],
-                [
-                    52,
-                    {}
-                ],
-                [
-                    53,
-                    {}
-                ],
-                [
-                    54,
-                    {}
-                ],
-                [
-                    55,
-                    {}
-                ],
-                [
-                    56,
-                    {}
-                ],
-                [
-                    57,
-                    {}
-                ],
-                [
-                    58,
-                    {}
-                ],
-                [
-                    59,
-                    {}
-                ],
-                [
-                    60,
-                    {}
-                ],
-                [
-                    61,
-                    {}
-                ],
-                [
-                    62,
-                    {}
-                ],
-                [
-                    63,
-                    {}
-                ],
-                [
-                    64,
-                    {}
-                ],
-                [
-                    65,
-                    {}
-                ],
-                [
-                    66,
-                    {}
-                ],
-                [
-                    67,
-                    {}
-                ],
-                [
-                    68,
-                    {}
-                ],
-                [
-                    69,
-                    {}
-                ],
-                [
-                    70,
-                    {}
-                ],
-                [
-                    71,
-                    {}
-                ],
-                [
-                    72,
-                    {}
-                ],
-                [
-                    73,
-                    {}
-                ],
-                [
-                    74,
-                    {}
-                ],
-                [
-                    75,
-                    {}
-                ],
-                [
-                    76,
-                    {}
-                ],
-                [
-                    77,
-                    {}
-                ],
-                [
-                    78,
-                    {}
-                ],
-                [
-                    79,
-                    {}
-                ],
-                [
-                    82,
-                    {}
-                ],
-                [
-                    83,
-                    {}
-                ],
-                [
-                    84,
-                    {}
-                ],
-                [
-                    87,
-                    {}
-                ],
-                [
-                    88,
-                    {}
-                ],
-                [
-                    89,
-                    {}
-                ],
-                [
-                    90,
-                    {}
-                ],
-                [
-                    91,
-                    {}
-                ],
-                [
-                    93,
-                    {}
-                ],
-                [
-                    94,
-                    {}
-                ],
-                [
-                    95,
-                    {}
-                ],
-                [
-                    98,
-                    {}
-                ],
-                [
-                    99,
-                    {}
-                ],
-                [
-                    102,
-                    {}
-                ],
-                [
-                    104,
-                    {}
-                ],
-                [
-                    106,
-                    {}
-                ],
-                [
-                    107,
-                    {}
-                ],
-                [
-                    108,
-                    {}
-                ],
-                [
-                    109,
-                    {}
-                ],
-                [
-                    110,
-                    {}
-                ],
-                [
-                    111,
-                    {}
-                ],
-                [
-                    113,
-                    {}
-                ],
-                [
-                    114,
-                    {}
-                ],
-                [
-                    115,
-                    {}
-                ]
-            ]
-        },
-        {
-            "id": 0,
-            "firstName": "GLOBAL",
-            "lastName": "USER",
+            "email": "support@myassetmap.com",
             "cognitoUUID": "00000000-0000-0000-0000-000000000000",
             "isDisabled": false,
             "lastLogin": null,
@@ -558,2193 +345,11 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
             ]
         },
         {
-            "id": 16,
-            "firstName": "Shane",
-            "lastName": "Bergman",
-            "cognitoUUID": "6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c",
-            "isDisabled": false,
-            "lastLogin": "2020-01-06T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2019-12-14T00:00:00.000Z",
-            "userLayers": [
-                [
-                    13,
-                    {}
-                ],
-                [
-                    "plss",
-                    {}
-                ],
-                [
-                    22,
-                    {}
-                ],
-                [
-                    23,
-                    {}
-                ],
-                [
-                    24,
-                    {}
-                ],
-                [
-                    25,
-                    {}
-                ],
-                [
-                    26,
-                    {}
-                ],
-                [
-                    27,
-                    {}
-                ],
-                [
-                    28,
-                    {}
-                ],
-                [
-                    29,
-                    {}
-                ],
-                [
-                    30,
-                    {}
-                ],
-                [
-                    34,
-                    {}
-                ],
-                [
-                    35,
-                    {}
-                ],
-                [
-                    36,
-                    {}
-                ],
-                [
-                    37,
-                    {}
-                ],
-                [
-                    38,
-                    {}
-                ],
-                [
-                    39,
-                    {}
-                ],
-                [
-                    40,
-                    {}
-                ],
-                [
-                    41,
-                    {}
-                ],
-                [
-                    42,
-                    {}
-                ],
-                [
-                    47,
-                    {}
-                ],
-                [
-                    48,
-                    {}
-                ],
-                [
-                    49,
-                    {}
-                ],
-                [
-                    50,
-                    {}
-                ],
-                [
-                    51,
-                    {}
-                ],
-                [
-                    52,
-                    {}
-                ],
-                [
-                    53,
-                    {}
-                ],
-                [
-                    54,
-                    {}
-                ],
-                [
-                    55,
-                    {}
-                ],
-                [
-                    56,
-                    {}
-                ],
-                [
-                    57,
-                    {}
-                ],
-                [
-                    58,
-                    {}
-                ],
-                [
-                    59,
-                    {}
-                ],
-                [
-                    60,
-                    {}
-                ],
-                [
-                    61,
-                    {}
-                ],
-                [
-                    62,
-                    {}
-                ],
-                [
-                    63,
-                    {}
-                ],
-                [
-                    64,
-                    {}
-                ],
-                [
-                    65,
-                    {}
-                ],
-                [
-                    66,
-                    {}
-                ],
-                [
-                    67,
-                    {}
-                ],
-                [
-                    68,
-                    {}
-                ],
-                [
-                    69,
-                    {}
-                ],
-                [
-                    70,
-                    {}
-                ],
-                [
-                    71,
-                    {}
-                ],
-                [
-                    72,
-                    {}
-                ],
-                [
-                    73,
-                    {}
-                ],
-                [
-                    74,
-                    {}
-                ],
-                [
-                    75,
-                    {}
-                ],
-                [
-                    76,
-                    {}
-                ],
-                [
-                    77,
-                    {}
-                ],
-                [
-                    78,
-                    {}
-                ],
-                [
-                    79,
-                    {}
-                ],
-                [
-                    82,
-                    {}
-                ],
-                [
-                    83,
-                    {}
-                ],
-                [
-                    84,
-                    {}
-                ],
-                [
-                    87,
-                    {}
-                ],
-                [
-                    88,
-                    {}
-                ],
-                [
-                    89,
-                    {}
-                ],
-                [
-                    90,
-                    {}
-                ],
-                [
-                    91,
-                    {}
-                ],
-                [
-                    93,
-                    {}
-                ],
-                [
-                    94,
-                    {}
-                ],
-                [
-                    95,
-                    {}
-                ],
-                [
-                    98,
-                    {}
-                ],
-                [
-                    99,
-                    {}
-                ],
-                [
-                    102,
-                    {}
-                ],
-                [
-                    103,
-                    {}
-                ],
-                [
-                    104,
-                    {}
-                ],
-                [
-                    105,
-                    {}
-                ],
-                [
-                    106,
-                    {}
-                ],
-                [
-                    107,
-                    {}
-                ],
-                [
-                    108,
-                    {}
-                ],
-                [
-                    109,
-                    {}
-                ],
-                [
-                    110,
-                    {}
-                ],
-                [
-                    111,
-                    {}
-                ],
-                [
-                    112,
-                    {}
-                ],
-                [
-                    113,
-                    {}
-                ],
-                [
-                    114,
-                    {}
-                ],
-                [
-                    115,
-                    {}
-                ],
-                [
-                    117,
-                    {}
-                ],
-                [
-                    118,
-                    {}
-                ],
-                [
-                    119,
-                    {}
-                ],
-                [
-                    120,
-                    {}
-                ],
-                [
-                    121,
-                    {}
-                ],
-                [
-                    122,
-                    {}
-                ],
-                [
-                    123,
-                    {}
-                ],
-                [
-                    "counties",
-                    {}
-                ]
-            ]
-        },
-        {
-            "id": 19,
-            "firstName": "–",
-            "lastName": "–",
-            "cognitoUUID": "d3dafb67-a09b-4f6a-a867-9c5c63bbd108",
-            "isDisabled": false,
-            "lastLogin": "2020-01-06T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2020-01-03T00:00:00.000Z",
-            "userLayers": [
-                [
-                    "plss",
-                    {}
-                ],
-                [
-                    "counties",
-                    {}
-                ],
-                [
-                    {
-                        "label": "Common Layers",
-                        "groupId": "gKlasSdDsS",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": [
-                                "plss",
-                                "counties"
-                            ]
-                        }
-                    },
-                    {}
-                ],
-                [
-                    {
-                        "color": "#f2f2f2",
-                        "label": "kjhlkjhjklh",
-                        "groupId": "VwGpXu7FCy",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": []
-                        }
-                    },
-                    {}
-                ],
-                [
-                    112,
-                    {}
-                ],
-                [
-                    105,
-                    {}
-                ],
-                [
-                    103,
-                    {}
-                ],
-                [
-                    13,
-                    {}
-                ],
-                [
-                    22,
-                    {}
-                ],
-                [
-                    23,
-                    {}
-                ],
-                [
-                    24,
-                    {}
-                ],
-                [
-                    25,
-                    {}
-                ],
-                [
-                    26,
-                    {}
-                ],
-                [
-                    27,
-                    {}
-                ],
-                [
-                    28,
-                    {}
-                ],
-                [
-                    29,
-                    {}
-                ],
-                [
-                    30,
-                    {}
-                ],
-                [
-                    34,
-                    {}
-                ],
-                [
-                    35,
-                    {}
-                ],
-                [
-                    36,
-                    {}
-                ],
-                [
-                    37,
-                    {}
-                ],
-                [
-                    38,
-                    {}
-                ],
-                [
-                    39,
-                    {}
-                ],
-                [
-                    40,
-                    {}
-                ],
-                [
-                    41,
-                    {}
-                ],
-                [
-                    42,
-                    {}
-                ],
-                [
-                    47,
-                    {}
-                ],
-                [
-                    48,
-                    {}
-                ],
-                [
-                    49,
-                    {}
-                ],
-                [
-                    50,
-                    {}
-                ],
-                [
-                    51,
-                    {}
-                ],
-                [
-                    52,
-                    {}
-                ],
-                [
-                    53,
-                    {}
-                ],
-                [
-                    54,
-                    {}
-                ],
-                [
-                    55,
-                    {}
-                ],
-                [
-                    56,
-                    {}
-                ],
-                [
-                    57,
-                    {}
-                ],
-                [
-                    58,
-                    {}
-                ],
-                [
-                    59,
-                    {}
-                ],
-                [
-                    60,
-                    {}
-                ],
-                [
-                    61,
-                    {}
-                ],
-                [
-                    62,
-                    {}
-                ],
-                [
-                    63,
-                    {}
-                ],
-                [
-                    64,
-                    {}
-                ],
-                [
-                    65,
-                    {}
-                ],
-                [
-                    66,
-                    {}
-                ],
-                [
-                    67,
-                    {}
-                ],
-                [
-                    68,
-                    {}
-                ],
-                [
-                    69,
-                    {}
-                ],
-                [
-                    70,
-                    {}
-                ],
-                [
-                    71,
-                    {}
-                ],
-                [
-                    72,
-                    {}
-                ],
-                [
-                    73,
-                    {}
-                ],
-                [
-                    74,
-                    {}
-                ],
-                [
-                    75,
-                    {}
-                ],
-                [
-                    76,
-                    {}
-                ],
-                [
-                    77,
-                    {}
-                ],
-                [
-                    78,
-                    {}
-                ],
-                [
-                    79,
-                    {}
-                ],
-                [
-                    82,
-                    {}
-                ],
-                [
-                    83,
-                    {}
-                ],
-                [
-                    84,
-                    {}
-                ],
-                [
-                    87,
-                    {}
-                ],
-                [
-                    88,
-                    {}
-                ],
-                [
-                    89,
-                    {}
-                ],
-                [
-                    90,
-                    {}
-                ],
-                [
-                    91,
-                    {}
-                ],
-                [
-                    93,
-                    {}
-                ],
-                [
-                    94,
-                    {}
-                ],
-                [
-                    95,
-                    {}
-                ],
-                [
-                    98,
-                    {}
-                ],
-                [
-                    99,
-                    {}
-                ],
-                [
-                    102,
-                    {}
-                ],
-                [
-                    104,
-                    {}
-                ],
-                [
-                    106,
-                    {}
-                ],
-                [
-                    107,
-                    {}
-                ],
-                [
-                    108,
-                    {}
-                ],
-                [
-                    109,
-                    {}
-                ],
-                [
-                    110,
-                    {}
-                ],
-                [
-                    111,
-                    {}
-                ],
-                [
-                    113,
-                    {}
-                ],
-                [
-                    114,
-                    {}
-                ],
-                [
-                    115,
-                    {}
-                ]
-            ]
-        },
-        {
             "id": 8,
             "firstName": "Dakotah",
             "lastName": "Intriglia",
+            "email": "\"\"",
             "cognitoUUID": "6872305e-65e3-48f1-a785-08ce114c8e49",
-            "isDisabled": false,
-            "lastLogin": "2020-01-06T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": null,
-            "userLayers": [
-                [
-                    13,
-                    {}
-                ],
-                [
-                    "plss",
-                    {}
-                ],
-                [
-                    "counties",
-                    {}
-                ],
-                [
-                    22,
-                    {}
-                ],
-                [
-                    23,
-                    {}
-                ],
-                [
-                    24,
-                    {}
-                ],
-                [
-                    25,
-                    {}
-                ],
-                [
-                    26,
-                    {}
-                ],
-                [
-                    27,
-                    {}
-                ],
-                [
-                    28,
-                    {}
-                ],
-                [
-                    29,
-                    {}
-                ],
-                [
-                    30,
-                    {}
-                ],
-                [
-                    34,
-                    {}
-                ],
-                [
-                    35,
-                    {}
-                ],
-                [
-                    36,
-                    {}
-                ],
-                [
-                    37,
-                    {}
-                ],
-                [
-                    38,
-                    {}
-                ],
-                [
-                    39,
-                    {}
-                ],
-                [
-                    40,
-                    {}
-                ],
-                [
-                    41,
-                    {}
-                ],
-                [
-                    42,
-                    {}
-                ],
-                [
-                    47,
-                    {}
-                ],
-                [
-                    48,
-                    {}
-                ],
-                [
-                    49,
-                    {}
-                ],
-                [
-                    50,
-                    {}
-                ],
-                [
-                    51,
-                    {}
-                ],
-                [
-                    52,
-                    {}
-                ],
-                [
-                    53,
-                    {}
-                ],
-                [
-                    54,
-                    {}
-                ],
-                [
-                    55,
-                    {}
-                ],
-                [
-                    56,
-                    {}
-                ],
-                [
-                    57,
-                    {}
-                ],
-                [
-                    58,
-                    {}
-                ],
-                [
-                    59,
-                    {}
-                ],
-                [
-                    60,
-                    {}
-                ],
-                [
-                    61,
-                    {}
-                ],
-                [
-                    62,
-                    {}
-                ],
-                [
-                    63,
-                    {}
-                ],
-                [
-                    64,
-                    {}
-                ],
-                [
-                    65,
-                    {}
-                ],
-                [
-                    66,
-                    {}
-                ],
-                [
-                    67,
-                    {}
-                ],
-                [
-                    68,
-                    {}
-                ],
-                [
-                    69,
-                    {}
-                ],
-                [
-                    70,
-                    {}
-                ],
-                [
-                    71,
-                    {}
-                ],
-                [
-                    72,
-                    {}
-                ],
-                [
-                    73,
-                    {}
-                ],
-                [
-                    74,
-                    {}
-                ],
-                [
-                    75,
-                    {}
-                ],
-                [
-                    76,
-                    {}
-                ],
-                [
-                    77,
-                    {}
-                ],
-                [
-                    78,
-                    {}
-                ],
-                [
-                    79,
-                    {}
-                ],
-                [
-                    82,
-                    {}
-                ],
-                [
-                    83,
-                    {}
-                ],
-                [
-                    84,
-                    {}
-                ],
-                [
-                    87,
-                    {}
-                ],
-                [
-                    88,
-                    {}
-                ],
-                [
-                    89,
-                    {}
-                ],
-                [
-                    90,
-                    {}
-                ],
-                [
-                    91,
-                    {}
-                ],
-                [
-                    93,
-                    {}
-                ],
-                [
-                    94,
-                    {}
-                ],
-                [
-                    95,
-                    {}
-                ],
-                [
-                    98,
-                    {}
-                ],
-                [
-                    99,
-                    {}
-                ],
-                [
-                    102,
-                    {}
-                ],
-                [
-                    103,
-                    {}
-                ],
-                [
-                    104,
-                    {}
-                ],
-                [
-                    105,
-                    {}
-                ],
-                [
-                    106,
-                    {}
-                ],
-                [
-                    107,
-                    {}
-                ],
-                [
-                    108,
-                    {}
-                ],
-                [
-                    109,
-                    {}
-                ],
-                [
-                    110,
-                    {}
-                ],
-                [
-                    111,
-                    {}
-                ],
-                [
-                    112,
-                    {}
-                ],
-                [
-                    113,
-                    {}
-                ],
-                [
-                    116,
-                    {}
-                ]
-            ]
-        },
-        {
-            "id": 18,
-            "firstName": "–",
-            "lastName": "–",
-            "cognitoUUID": "1a1742bb-2f35-4439-ab4e-6f24dd4fa274",
-            "isDisabled": false,
-            "lastLogin": "2020-01-03T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2020-01-03T00:00:00.000Z",
-            "userLayers": [
-                [
-                    "plss",
-                    {}
-                ],
-                [
-                    "counties",
-                    {}
-                ],
-                [
-                    {
-                        "label": "Common Layers",
-                        "groupId": "gKlasSdDsS",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": [
-                                "plss",
-                                "counties"
-                            ]
-                        }
-                    },
-                    {}
-                ],
-                [
-                    {
-                        "color": "#f2f2f2",
-                        "label": "kjhlkjhjklh",
-                        "groupId": "VwGpXu7FCy",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": []
-                        }
-                    },
-                    {}
-                ],
-                [
-                    112,
-                    {}
-                ],
-                [
-                    105,
-                    {}
-                ],
-                [
-                    103,
-                    {}
-                ],
-                [
-                    13,
-                    {}
-                ],
-                [
-                    22,
-                    {}
-                ],
-                [
-                    23,
-                    {}
-                ],
-                [
-                    24,
-                    {}
-                ],
-                [
-                    25,
-                    {}
-                ],
-                [
-                    26,
-                    {}
-                ],
-                [
-                    27,
-                    {}
-                ],
-                [
-                    28,
-                    {}
-                ],
-                [
-                    29,
-                    {}
-                ],
-                [
-                    30,
-                    {}
-                ],
-                [
-                    34,
-                    {}
-                ],
-                [
-                    35,
-                    {}
-                ],
-                [
-                    36,
-                    {}
-                ],
-                [
-                    37,
-                    {}
-                ],
-                [
-                    38,
-                    {}
-                ],
-                [
-                    39,
-                    {}
-                ],
-                [
-                    40,
-                    {}
-                ],
-                [
-                    41,
-                    {}
-                ],
-                [
-                    42,
-                    {}
-                ],
-                [
-                    47,
-                    {}
-                ],
-                [
-                    48,
-                    {}
-                ],
-                [
-                    49,
-                    {}
-                ],
-                [
-                    50,
-                    {}
-                ],
-                [
-                    51,
-                    {}
-                ],
-                [
-                    52,
-                    {}
-                ],
-                [
-                    53,
-                    {}
-                ],
-                [
-                    54,
-                    {}
-                ],
-                [
-                    55,
-                    {}
-                ],
-                [
-                    56,
-                    {}
-                ],
-                [
-                    57,
-                    {}
-                ],
-                [
-                    58,
-                    {}
-                ],
-                [
-                    59,
-                    {}
-                ],
-                [
-                    60,
-                    {}
-                ],
-                [
-                    61,
-                    {}
-                ],
-                [
-                    62,
-                    {}
-                ],
-                [
-                    63,
-                    {}
-                ],
-                [
-                    64,
-                    {}
-                ],
-                [
-                    65,
-                    {}
-                ],
-                [
-                    66,
-                    {}
-                ],
-                [
-                    67,
-                    {}
-                ],
-                [
-                    68,
-                    {}
-                ],
-                [
-                    69,
-                    {}
-                ],
-                [
-                    70,
-                    {}
-                ],
-                [
-                    71,
-                    {}
-                ],
-                [
-                    72,
-                    {}
-                ],
-                [
-                    73,
-                    {}
-                ],
-                [
-                    74,
-                    {}
-                ],
-                [
-                    75,
-                    {}
-                ],
-                [
-                    76,
-                    {}
-                ],
-                [
-                    77,
-                    {}
-                ],
-                [
-                    78,
-                    {}
-                ],
-                [
-                    79,
-                    {}
-                ],
-                [
-                    82,
-                    {}
-                ],
-                [
-                    83,
-                    {}
-                ],
-                [
-                    84,
-                    {}
-                ],
-                [
-                    87,
-                    {}
-                ],
-                [
-                    88,
-                    {}
-                ],
-                [
-                    89,
-                    {}
-                ],
-                [
-                    90,
-                    {}
-                ],
-                [
-                    91,
-                    {}
-                ],
-                [
-                    93,
-                    {}
-                ],
-                [
-                    94,
-                    {}
-                ],
-                [
-                    95,
-                    {}
-                ],
-                [
-                    98,
-                    {}
-                ],
-                [
-                    99,
-                    {}
-                ],
-                [
-                    102,
-                    {}
-                ],
-                [
-                    104,
-                    {}
-                ],
-                [
-                    106,
-                    {}
-                ],
-                [
-                    107,
-                    {}
-                ],
-                [
-                    108,
-                    {}
-                ],
-                [
-                    109,
-                    {}
-                ],
-                [
-                    110,
-                    {}
-                ],
-                [
-                    111,
-                    {}
-                ],
-                [
-                    113,
-                    {}
-                ],
-                [
-                    114,
-                    {}
-                ],
-                [
-                    115,
-                    {}
-                ]
-            ]
-        }
-    ]
-}
-```
-</details>
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "success": true,
-    "message": "User information has been returned.",
-    "data": [
-        {
-            "id": 17,
-            "firstName": "–",
-            "lastName": "–",
-            "cognitoUUID": "3b625216-4823-498c-9fea-ba46c406d803",
-            "isDisabled": false,
-            "lastLogin": "2020-01-03T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2019-12-23T00:00:00.000Z",
-            "userLayers": [
-                [
-                    "plss",
-                    {}
-                ],
-                [
-                    "counties",
-                    {}
-                ],
-                [
-                    {
-                        "label": "Common Layers",
-                        "groupId": "gKlasSdDsS",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": [
-                                "plss",
-                                "counties"
-                            ]
-                        }
-                    },
-                    {}
-                ],
-                [
-                    {
-                        "color": "#f2f2f2",
-                        "label": "kjhlkjhjklh",
-                        "groupId": "VwGpXu7FCy",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": []
-                        }
-                    },
-                    {}
-                ],
-                [
-                    112,
-                    {}
-                ],
-                [
-                    105,
-                    {}
-                ],
-                [
-                    103,
-                    {}
-                ],
-                [
-                    13,
-                    {}
-                ],
-                [
-                    22,
-                    {}
-                ],
-                [
-                    23,
-                    {}
-                ],
-                [
-                    24,
-                    {}
-                ],
-                [
-                    25,
-                    {}
-                ],
-                [
-                    26,
-                    {}
-                ],
-                [
-                    27,
-                    {}
-                ],
-                [
-                    28,
-                    {}
-                ],
-                [
-                    29,
-                    {}
-                ],
-                [
-                    30,
-                    {}
-                ],
-                [
-                    34,
-                    {}
-                ],
-                [
-                    35,
-                    {}
-                ],
-                [
-                    36,
-                    {}
-                ],
-                [
-                    37,
-                    {}
-                ],
-                [
-                    38,
-                    {}
-                ],
-                [
-                    39,
-                    {}
-                ],
-                [
-                    40,
-                    {}
-                ],
-                [
-                    41,
-                    {}
-                ],
-                [
-                    42,
-                    {}
-                ],
-                [
-                    47,
-                    {}
-                ],
-                [
-                    48,
-                    {}
-                ],
-                [
-                    49,
-                    {}
-                ],
-                [
-                    50,
-                    {}
-                ],
-                [
-                    51,
-                    {}
-                ],
-                [
-                    52,
-                    {}
-                ],
-                [
-                    53,
-                    {}
-                ],
-                [
-                    54,
-                    {}
-                ],
-                [
-                    55,
-                    {}
-                ],
-                [
-                    56,
-                    {}
-                ],
-                [
-                    57,
-                    {}
-                ],
-                [
-                    58,
-                    {}
-                ],
-                [
-                    59,
-                    {}
-                ],
-                [
-                    60,
-                    {}
-                ],
-                [
-                    61,
-                    {}
-                ],
-                [
-                    62,
-                    {}
-                ],
-                [
-                    63,
-                    {}
-                ],
-                [
-                    64,
-                    {}
-                ],
-                [
-                    65,
-                    {}
-                ],
-                [
-                    66,
-                    {}
-                ],
-                [
-                    67,
-                    {}
-                ],
-                [
-                    68,
-                    {}
-                ],
-                [
-                    69,
-                    {}
-                ],
-                [
-                    70,
-                    {}
-                ],
-                [
-                    71,
-                    {}
-                ],
-                [
-                    72,
-                    {}
-                ],
-                [
-                    73,
-                    {}
-                ],
-                [
-                    74,
-                    {}
-                ],
-                [
-                    75,
-                    {}
-                ],
-                [
-                    76,
-                    {}
-                ],
-                [
-                    77,
-                    {}
-                ],
-                [
-                    78,
-                    {}
-                ],
-                [
-                    79,
-                    {}
-                ],
-                [
-                    82,
-                    {}
-                ],
-                [
-                    83,
-                    {}
-                ],
-                [
-                    84,
-                    {}
-                ],
-                [
-                    87,
-                    {}
-                ],
-                [
-                    88,
-                    {}
-                ],
-                [
-                    89,
-                    {}
-                ],
-                [
-                    90,
-                    {}
-                ],
-                [
-                    91,
-                    {}
-                ],
-                [
-                    93,
-                    {}
-                ],
-                [
-                    94,
-                    {}
-                ],
-                [
-                    95,
-                    {}
-                ],
-                [
-                    98,
-                    {}
-                ],
-                [
-                    99,
-                    {}
-                ],
-                [
-                    102,
-                    {}
-                ],
-                [
-                    104,
-                    {}
-                ],
-                [
-                    106,
-                    {}
-                ],
-                [
-                    107,
-                    {}
-                ],
-                [
-                    108,
-                    {}
-                ],
-                [
-                    109,
-                    {}
-                ],
-                [
-                    110,
-                    {}
-                ],
-                [
-                    111,
-                    {}
-                ],
-                [
-                    113,
-                    {}
-                ],
-                [
-                    114,
-                    {}
-                ],
-                [
-                    115,
-                    {}
-                ]
-            ]
-        },
-        {
-            "id": 16,
-            "firstName": "Shane",
-            "lastName": "Bergman",
-            "cognitoUUID": "6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c",
-            "isDisabled": false,
-            "lastLogin": "2020-01-03T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2019-12-14T00:00:00.000Z",
-            "userLayers": [
-                [
-                    "plss",
-                    {}
-                ],
-                [
-                    "counties",
-                    {}
-                ],
-                [
-                    {
-                        "label": "Common Layers",
-                        "groupId": "gKlasSdDsS",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": [
-                                "plss",
-                                "counties"
-                            ]
-                        }
-                    },
-                    {}
-                ],
-                [
-                    {
-                        "color": "#f2f2f2",
-                        "label": "kjhlkjhjklh",
-                        "groupId": "VwGpXu7FCy",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": []
-                        }
-                    },
-                    {}
-                ],
-                [
-                    112,
-                    {}
-                ],
-                [
-                    105,
-                    {}
-                ],
-                [
-                    103,
-                    {}
-                ],
-                [
-                    13,
-                    {}
-                ],
-                [
-                    22,
-                    {}
-                ],
-                [
-                    23,
-                    {}
-                ],
-                [
-                    24,
-                    {}
-                ],
-                [
-                    25,
-                    {}
-                ],
-                [
-                    26,
-                    {}
-                ],
-                [
-                    27,
-                    {}
-                ],
-                [
-                    28,
-                    {}
-                ],
-                [
-                    29,
-                    {}
-                ],
-                [
-                    30,
-                    {}
-                ],
-                [
-                    34,
-                    {}
-                ],
-                [
-                    35,
-                    {}
-                ],
-                [
-                    36,
-                    {}
-                ],
-                [
-                    37,
-                    {}
-                ],
-                [
-                    38,
-                    {}
-                ],
-                [
-                    39,
-                    {}
-                ],
-                [
-                    40,
-                    {}
-                ],
-                [
-                    41,
-                    {}
-                ],
-                [
-                    42,
-                    {}
-                ],
-                [
-                    47,
-                    {}
-                ],
-                [
-                    48,
-                    {}
-                ],
-                [
-                    49,
-                    {}
-                ],
-                [
-                    50,
-                    {}
-                ],
-                [
-                    51,
-                    {}
-                ],
-                [
-                    52,
-                    {}
-                ],
-                [
-                    53,
-                    {}
-                ],
-                [
-                    54,
-                    {}
-                ],
-                [
-                    55,
-                    {}
-                ],
-                [
-                    56,
-                    {}
-                ],
-                [
-                    57,
-                    {}
-                ],
-                [
-                    58,
-                    {}
-                ],
-                [
-                    59,
-                    {}
-                ],
-                [
-                    60,
-                    {}
-                ],
-                [
-                    61,
-                    {}
-                ],
-                [
-                    62,
-                    {}
-                ],
-                [
-                    63,
-                    {}
-                ],
-                [
-                    64,
-                    {}
-                ],
-                [
-                    65,
-                    {}
-                ],
-                [
-                    66,
-                    {}
-                ],
-                [
-                    67,
-                    {}
-                ],
-                [
-                    68,
-                    {}
-                ],
-                [
-                    69,
-                    {}
-                ],
-                [
-                    70,
-                    {}
-                ],
-                [
-                    71,
-                    {}
-                ],
-                [
-                    72,
-                    {}
-                ],
-                [
-                    73,
-                    {}
-                ],
-                [
-                    74,
-                    {}
-                ],
-                [
-                    75,
-                    {}
-                ],
-                [
-                    76,
-                    {}
-                ],
-                [
-                    77,
-                    {}
-                ],
-                [
-                    78,
-                    {}
-                ],
-                [
-                    79,
-                    {}
-                ],
-                [
-                    82,
-                    {}
-                ],
-                [
-                    83,
-                    {}
-                ],
-                [
-                    84,
-                    {}
-                ],
-                [
-                    87,
-                    {}
-                ],
-                [
-                    88,
-                    {}
-                ],
-                [
-                    89,
-                    {}
-                ],
-                [
-                    90,
-                    {}
-                ],
-                [
-                    91,
-                    {}
-                ],
-                [
-                    93,
-                    {}
-                ],
-                [
-                    94,
-                    {}
-                ],
-                [
-                    95,
-                    {}
-                ],
-                [
-                    98,
-                    {}
-                ],
-                [
-                    99,
-                    {}
-                ],
-                [
-                    102,
-                    {}
-                ],
-                [
-                    104,
-                    {}
-                ],
-                [
-                    106,
-                    {}
-                ],
-                [
-                    107,
-                    {}
-                ],
-                [
-                    108,
-                    {}
-                ],
-                [
-                    109,
-                    {}
-                ],
-                [
-                    110,
-                    {}
-                ],
-                [
-                    111,
-                    {}
-                ],
-                [
-                    113,
-                    {}
-                ],
-                [
-                    114,
-                    {}
-                ],
-                [
-                    115,
-                    {}
-                ],
-                [
-                    {
-                        "color": "#f2f2f2",
-                        "label": "This is a good group 2",
-                        "groupId": "E8GDS6Ufjh",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": []
-                        }
-                    },
-                    {}
-                ],
-                [
-                    {
-                        "color": "#f2f2f2",
-                        "label": "This is a good group 2",
-                        "groupId": "cKYSpTTk2x",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": []
-                        }
-                    },
-                    {}
-                ]
-            ]
-        },
-        {
-            "id": 0,
-            "firstName": "GLOBAL",
-            "lastName": "USER",
-            "cognitoUUID": "00000000-0000-0000-0000-000000000000",
             "isDisabled": false,
             "lastLogin": null,
             "dateUpdated": null,
@@ -2772,1088 +377,6 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                 ],
                 [
                     "counties",
-                    {}
-                ]
-            ]
-        },
-        {
-            "id": 19,
-            "firstName": "–",
-            "lastName": "–",
-            "cognitoUUID": "d3dafb67-a09b-4f6a-a867-9c5c63bbd108",
-            "isDisabled": false,
-            "lastLogin": "2020-01-03T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2020-01-03T00:00:00.000Z",
-            "userLayers": [
-                [
-                    "plss",
-                    {}
-                ],
-                [
-                    "counties",
-                    {}
-                ],
-                [
-                    {
-                        "label": "Common Layers",
-                        "groupId": "gKlasSdDsS",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": [
-                                "plss",
-                                "counties"
-                            ]
-                        }
-                    },
-                    {}
-                ],
-                [
-                    {
-                        "color": "#f2f2f2",
-                        "label": "kjhlkjhjklh",
-                        "groupId": "VwGpXu7FCy",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": []
-                        }
-                    },
-                    {}
-                ],
-                [
-                    112,
-                    {}
-                ],
-                [
-                    105,
-                    {}
-                ],
-                [
-                    103,
-                    {}
-                ],
-                [
-                    13,
-                    {}
-                ],
-                [
-                    22,
-                    {}
-                ],
-                [
-                    23,
-                    {}
-                ],
-                [
-                    24,
-                    {}
-                ],
-                [
-                    25,
-                    {}
-                ],
-                [
-                    26,
-                    {}
-                ],
-                [
-                    27,
-                    {}
-                ],
-                [
-                    28,
-                    {}
-                ],
-                [
-                    29,
-                    {}
-                ],
-                [
-                    30,
-                    {}
-                ],
-                [
-                    34,
-                    {}
-                ],
-                [
-                    35,
-                    {}
-                ],
-                [
-                    36,
-                    {}
-                ],
-                [
-                    37,
-                    {}
-                ],
-                [
-                    38,
-                    {}
-                ],
-                [
-                    39,
-                    {}
-                ],
-                [
-                    40,
-                    {}
-                ],
-                [
-                    41,
-                    {}
-                ],
-                [
-                    42,
-                    {}
-                ],
-                [
-                    47,
-                    {}
-                ],
-                [
-                    48,
-                    {}
-                ],
-                [
-                    49,
-                    {}
-                ],
-                [
-                    50,
-                    {}
-                ],
-                [
-                    51,
-                    {}
-                ],
-                [
-                    52,
-                    {}
-                ],
-                [
-                    53,
-                    {}
-                ],
-                [
-                    54,
-                    {}
-                ],
-                [
-                    55,
-                    {}
-                ],
-                [
-                    56,
-                    {}
-                ],
-                [
-                    57,
-                    {}
-                ],
-                [
-                    58,
-                    {}
-                ],
-                [
-                    59,
-                    {}
-                ],
-                [
-                    60,
-                    {}
-                ],
-                [
-                    61,
-                    {}
-                ],
-                [
-                    62,
-                    {}
-                ],
-                [
-                    63,
-                    {}
-                ],
-                [
-                    64,
-                    {}
-                ],
-                [
-                    65,
-                    {}
-                ],
-                [
-                    66,
-                    {}
-                ],
-                [
-                    67,
-                    {}
-                ],
-                [
-                    68,
-                    {}
-                ],
-                [
-                    69,
-                    {}
-                ],
-                [
-                    70,
-                    {}
-                ],
-                [
-                    71,
-                    {}
-                ],
-                [
-                    72,
-                    {}
-                ],
-                [
-                    73,
-                    {}
-                ],
-                [
-                    74,
-                    {}
-                ],
-                [
-                    75,
-                    {}
-                ],
-                [
-                    76,
-                    {}
-                ],
-                [
-                    77,
-                    {}
-                ],
-                [
-                    78,
-                    {}
-                ],
-                [
-                    79,
-                    {}
-                ],
-                [
-                    82,
-                    {}
-                ],
-                [
-                    83,
-                    {}
-                ],
-                [
-                    84,
-                    {}
-                ],
-                [
-                    87,
-                    {}
-                ],
-                [
-                    88,
-                    {}
-                ],
-                [
-                    89,
-                    {}
-                ],
-                [
-                    90,
-                    {}
-                ],
-                [
-                    91,
-                    {}
-                ],
-                [
-                    93,
-                    {}
-                ],
-                [
-                    94,
-                    {}
-                ],
-                [
-                    95,
-                    {}
-                ],
-                [
-                    98,
-                    {}
-                ],
-                [
-                    99,
-                    {}
-                ],
-                [
-                    102,
-                    {}
-                ],
-                [
-                    104,
-                    {}
-                ],
-                [
-                    106,
-                    {}
-                ],
-                [
-                    107,
-                    {}
-                ],
-                [
-                    108,
-                    {}
-                ],
-                [
-                    109,
-                    {}
-                ],
-                [
-                    110,
-                    {}
-                ],
-                [
-                    111,
-                    {}
-                ],
-                [
-                    113,
-                    {}
-                ],
-                [
-                    114,
-                    {}
-                ],
-                [
-                    115,
-                    {}
-                ]
-            ]
-        },
-        {
-            "id": 18,
-            "firstName": "–",
-            "lastName": "–",
-            "cognitoUUID": "1a1742bb-2f35-4439-ab4e-6f24dd4fa274",
-            "isDisabled": false,
-            "lastLogin": "2020-01-03T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": "2020-01-03T00:00:00.000Z",
-            "userLayers": [
-                [
-                    "plss",
-                    {}
-                ],
-                [
-                    "counties",
-                    {}
-                ],
-                [
-                    {
-                        "label": "Common Layers",
-                        "groupId": "gKlasSdDsS",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": [
-                                "plss",
-                                "counties"
-                            ]
-                        }
-                    },
-                    {}
-                ],
-                [
-                    {
-                        "color": "#f2f2f2",
-                        "label": "kjhlkjhjklh",
-                        "groupId": "VwGpXu7FCy",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": []
-                        }
-                    },
-                    {}
-                ],
-                [
-                    112,
-                    {}
-                ],
-                [
-                    105,
-                    {}
-                ],
-                [
-                    103,
-                    {}
-                ],
-                [
-                    13,
-                    {}
-                ],
-                [
-                    22,
-                    {}
-                ],
-                [
-                    23,
-                    {}
-                ],
-                [
-                    24,
-                    {}
-                ],
-                [
-                    25,
-                    {}
-                ],
-                [
-                    26,
-                    {}
-                ],
-                [
-                    27,
-                    {}
-                ],
-                [
-                    28,
-                    {}
-                ],
-                [
-                    29,
-                    {}
-                ],
-                [
-                    30,
-                    {}
-                ],
-                [
-                    34,
-                    {}
-                ],
-                [
-                    35,
-                    {}
-                ],
-                [
-                    36,
-                    {}
-                ],
-                [
-                    37,
-                    {}
-                ],
-                [
-                    38,
-                    {}
-                ],
-                [
-                    39,
-                    {}
-                ],
-                [
-                    40,
-                    {}
-                ],
-                [
-                    41,
-                    {}
-                ],
-                [
-                    42,
-                    {}
-                ],
-                [
-                    47,
-                    {}
-                ],
-                [
-                    48,
-                    {}
-                ],
-                [
-                    49,
-                    {}
-                ],
-                [
-                    50,
-                    {}
-                ],
-                [
-                    51,
-                    {}
-                ],
-                [
-                    52,
-                    {}
-                ],
-                [
-                    53,
-                    {}
-                ],
-                [
-                    54,
-                    {}
-                ],
-                [
-                    55,
-                    {}
-                ],
-                [
-                    56,
-                    {}
-                ],
-                [
-                    57,
-                    {}
-                ],
-                [
-                    58,
-                    {}
-                ],
-                [
-                    59,
-                    {}
-                ],
-                [
-                    60,
-                    {}
-                ],
-                [
-                    61,
-                    {}
-                ],
-                [
-                    62,
-                    {}
-                ],
-                [
-                    63,
-                    {}
-                ],
-                [
-                    64,
-                    {}
-                ],
-                [
-                    65,
-                    {}
-                ],
-                [
-                    66,
-                    {}
-                ],
-                [
-                    67,
-                    {}
-                ],
-                [
-                    68,
-                    {}
-                ],
-                [
-                    69,
-                    {}
-                ],
-                [
-                    70,
-                    {}
-                ],
-                [
-                    71,
-                    {}
-                ],
-                [
-                    72,
-                    {}
-                ],
-                [
-                    73,
-                    {}
-                ],
-                [
-                    74,
-                    {}
-                ],
-                [
-                    75,
-                    {}
-                ],
-                [
-                    76,
-                    {}
-                ],
-                [
-                    77,
-                    {}
-                ],
-                [
-                    78,
-                    {}
-                ],
-                [
-                    79,
-                    {}
-                ],
-                [
-                    82,
-                    {}
-                ],
-                [
-                    83,
-                    {}
-                ],
-                [
-                    84,
-                    {}
-                ],
-                [
-                    87,
-                    {}
-                ],
-                [
-                    88,
-                    {}
-                ],
-                [
-                    89,
-                    {}
-                ],
-                [
-                    90,
-                    {}
-                ],
-                [
-                    91,
-                    {}
-                ],
-                [
-                    93,
-                    {}
-                ],
-                [
-                    94,
-                    {}
-                ],
-                [
-                    95,
-                    {}
-                ],
-                [
-                    98,
-                    {}
-                ],
-                [
-                    99,
-                    {}
-                ],
-                [
-                    102,
-                    {}
-                ],
-                [
-                    104,
-                    {}
-                ],
-                [
-                    106,
-                    {}
-                ],
-                [
-                    107,
-                    {}
-                ],
-                [
-                    108,
-                    {}
-                ],
-                [
-                    109,
-                    {}
-                ],
-                [
-                    110,
-                    {}
-                ],
-                [
-                    111,
-                    {}
-                ],
-                [
-                    113,
-                    {}
-                ],
-                [
-                    114,
-                    {}
-                ],
-                [
-                    115,
-                    {}
-                ]
-            ]
-        },
-        {
-            "id": 8,
-            "firstName": "Dakotah",
-            "lastName": "Intriglia",
-            "cognitoUUID": "6872305e-65e3-48f1-a785-08ce114c8e49",
-            "isDisabled": false,
-            "lastLogin": "2020-01-02T00:00:00.000Z",
-            "dateUpdated": null,
-            "dateCreated": null,
-            "userLayers": [
-                [
-                    {
-                        "color": "#f2f2f2",
-                        "label": "kjhlkjhjklh",
-                        "groupId": "VwGpXu7FCy",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": []
-                        }
-                    },
-                    {}
-                ],
-                [
-                    112,
-                    {}
-                ],
-                [
-                    105,
-                    {}
-                ],
-                [
-                    103,
-                    {}
-                ],
-                [
-                    "plss",
-                    {}
-                ],
-                [
-                    "counties",
-                    {}
-                ],
-                [
-                    {
-                        "label": "Common Layers",
-                        "groupId": "gKlasSdDsS",
-                        "children": {
-                            "groupIds": [],
-                            "layerIds": [
-                                "plss",
-                                "counties"
-                            ]
-                        }
-                    },
-                    {}
-                ],
-                [
-                    13,
-                    {}
-                ],
-                [
-                    22,
-                    {}
-                ],
-                [
-                    23,
-                    {}
-                ],
-                [
-                    24,
-                    {}
-                ],
-                [
-                    25,
-                    {}
-                ],
-                [
-                    26,
-                    {}
-                ],
-                [
-                    27,
-                    {}
-                ],
-                [
-                    28,
-                    {}
-                ],
-                [
-                    29,
-                    {}
-                ],
-                [
-                    30,
-                    {}
-                ],
-                [
-                    34,
-                    {}
-                ],
-                [
-                    35,
-                    {}
-                ],
-                [
-                    36,
-                    {}
-                ],
-                [
-                    37,
-                    {}
-                ],
-                [
-                    38,
-                    {}
-                ],
-                [
-                    39,
-                    {}
-                ],
-                [
-                    40,
-                    {}
-                ],
-                [
-                    41,
-                    {}
-                ],
-                [
-                    42,
-                    {}
-                ],
-                [
-                    47,
-                    {}
-                ],
-                [
-                    48,
-                    {}
-                ],
-                [
-                    49,
-                    {}
-                ],
-                [
-                    50,
-                    {}
-                ],
-                [
-                    51,
-                    {}
-                ],
-                [
-                    52,
-                    {}
-                ],
-                [
-                    53,
-                    {}
-                ],
-                [
-                    54,
-                    {}
-                ],
-                [
-                    55,
-                    {}
-                ],
-                [
-                    56,
-                    {}
-                ],
-                [
-                    57,
-                    {}
-                ],
-                [
-                    58,
-                    {}
-                ],
-                [
-                    59,
-                    {}
-                ],
-                [
-                    60,
-                    {}
-                ],
-                [
-                    61,
-                    {}
-                ],
-                [
-                    62,
-                    {}
-                ],
-                [
-                    63,
-                    {}
-                ],
-                [
-                    64,
-                    {}
-                ],
-                [
-                    65,
-                    {}
-                ],
-                [
-                    66,
-                    {}
-                ],
-                [
-                    67,
-                    {}
-                ],
-                [
-                    68,
-                    {}
-                ],
-                [
-                    69,
-                    {}
-                ],
-                [
-                    70,
-                    {}
-                ],
-                [
-                    71,
-                    {}
-                ],
-                [
-                    72,
-                    {}
-                ],
-                [
-                    73,
-                    {}
-                ],
-                [
-                    74,
-                    {}
-                ],
-                [
-                    75,
-                    {}
-                ],
-                [
-                    76,
-                    {}
-                ],
-                [
-                    77,
-                    {}
-                ],
-                [
-                    78,
-                    {}
-                ],
-                [
-                    79,
-                    {}
-                ],
-                [
-                    82,
-                    {}
-                ],
-                [
-                    83,
-                    {}
-                ],
-                [
-                    84,
-                    {}
-                ],
-                [
-                    87,
-                    {}
-                ],
-                [
-                    88,
-                    {}
-                ],
-                [
-                    89,
-                    {}
-                ],
-                [
-                    90,
-                    {}
-                ],
-                [
-                    91,
-                    {}
-                ],
-                [
-                    93,
-                    {}
-                ],
-                [
-                    94,
-                    {}
-                ],
-                [
-                    95,
-                    {}
-                ],
-                [
-                    98,
-                    {}
-                ],
-                [
-                    99,
-                    {}
-                ],
-                [
-                    102,
-                    {}
-                ],
-                [
-                    104,
-                    {}
-                ],
-                [
-                    106,
-                    {}
-                ],
-                [
-                    107,
-                    {}
-                ],
-                [
-                    108,
-                    {}
-                ],
-                [
-                    109,
-                    {}
-                ],
-                [
-                    110,
-                    {}
-                ],
-                [
-                    111,
-                    {}
-                ],
-                [
-                    113,
-                    {}
-                ],
-                [
-                    116,
                     {}
                 ]
             ]
@@ -3896,82 +419,31 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 <summary>Expand</summary>
 
 ```
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Error</title>
-</head>
-<body>
-<pre>TypeError: Q.General.getSuperUsers is not a function<br> &nbsp; &nbsp;at /var/task/index.js:236:13<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/task/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at next (/var/task/node_modules/express/lib/router/route.js:137:13)<br> &nbsp; &nbsp;at Route.dispatch (/var/task/node_modules/express/lib/router/route.js:112:3)<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/task/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at /var/task/node_modules/express/lib/router/index.js:281:22<br> &nbsp; &nbsp;at Function.process_params (/var/task/node_modules/express/lib/router/index.js:335:12)<br> &nbsp; &nbsp;at next (/var/task/node_modules/express/lib/router/index.js:275:10)<br> &nbsp; &nbsp;at jsonParser (/var/task/node_modules/body-parser/lib/types/json.js:119:7)<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/task/node_modules/express/lib/router/layer.js:95:5)</pre>
-</body>
-</html>
-
-```
-</details>
-
-
-# Get Users Preferences
-## `GET` /alpha/userpreference
-
-*`WIP` Returns a list of all users and their properties
-
-**userID Authentication (`Required`):**
-This endpoint requires the user to authenticate themselves with their UUID.
-
-_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
-
-*
-
-### Request:
-
-+ Headers:
-    –
-
-+ Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
-
-+ Body:
-    –
-
-***
-
-
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
 {
     "success": true,
-    "message": "User preference information has been returned.",
-    "data": []
-}
-```
-</details>
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "message": "Internal server error"
-}
-```
-</details>
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "message": "Internal server error"
+    "message": "Super User preference has been returned.",
+    "data": [
+        {
+            "id": 1,
+            "userID": 1,
+            "accountID": 1
+        },
+        {
+            "id": 2,
+            "userID": 2,
+            "accountID": 2
+        },
+        {
+            "id": 3,
+            "userID": 4,
+            "accountID": 3
+        },
+        {
+            "id": 4,
+            "userID": 6,
+            "accountID": 4
+        }
+    ]
 }
 ```
 </details>
@@ -3993,7 +465,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -4001,6 +473,81 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "User information obtained successfully.",
+    "data": {
+        "isActive": true,
+        "profile": {
+            "userID": 8,
+            "firstName": "Dakotah",
+            "lastName": "Intriglia",
+            "displayName": "Dakotah Intriglia"
+        },
+        "preferences": {
+            "tool.print.layout": [
+                {
+                    "id": 9,
+                    "name": "",
+                    "value": null
+                },
+                {
+                    "id": 10,
+                    "name": "",
+                    "value": null
+                }
+            ]
+        },
+        "superUserID": [],
+        "accountID": [
+            1
+        ],
+        "mapID": [
+            1
+        ]
+    }
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "User information obtained successfully.",
+    "data": {
+        "isActive": true,
+        "profile": {
+            "userID": 8,
+            "firstName": "Dakotah",
+            "lastName": "Intriglia",
+            "displayName": "Dakotah Intriglia"
+        },
+        "tools": {
+            "printLayouts": []
+        },
+        "superUserID": [],
+        "accountID": [
+            1
+        ],
+        "mapID": [
+            1
+        ]
+    }
+}
+```
+</details>
 
 ### Response:
 
@@ -4031,6 +578,48 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ```
 </details>
 
+
+# Create Users Preference
+## `POST` /alpha/user/preferences/add
+
+*Create a new User Preference Item
+
+- **userID (Required):** The User ID you wish to add the user preferencer for.
+- **key (Required):** The textual key of the user preference you wish to create.
+- **——OPTIONAL——**
+- **name (Optional):** The Name of the preference
+- **value (Required):** The Value of the preference
+
+Value is required, and name can be used if you would like. Here are some examples:
+
+- **Boolean:** {value: true}
+- **Book Review:** {name: "Book Title", value: "I love this book so much!"}
+
+If the name is null, it will be removed from the payload on return. Value will be in the payload no matter what.
+
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
+*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+
++ Body:
+```
+{
+    "key": "tool.print.layout",
+    "value": "[\"Hello\"]"
+}
+```
+
+***
+
+
+
 ### Response:
 
 <details>
@@ -4038,7 +627,248 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 
 ```
 {
-    "message": "Internal server error"
+    "success": true,
+    "message": "User preferences have been created.",
+    "data": "User Preference Key (`key`) is invalid."
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "User preferences have been created.",
+    "data": 13
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "User preferences have been created.",
+    "data": 12
+}
+```
+</details>
+
+
+# Get Users Preferences
+## `POST` /alpha/user/preferences/get
+
+*Get all user preferences for a user, or by a key for a user.
+
+- **userID (Required):** The User ID you wish to add the user preferencer for.
+- **key (Optional):** The textual key of the user preference you wish to locate. If not provided, all user preferences would be returned.
+
+If the name is null, it will be removed from the payload on return. Value will be in the payload no matter what.
+
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
+*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+
++ Body:
+```
+{}
+```
+
+***
+
+
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "User preferences have been returned.",
+    "data": {
+        "tool.print.layout": [
+            {
+                "id": 9,
+                "value": null
+            },
+            {
+                "id": 10,
+                "value": null
+            },
+            {
+                "id": 12,
+                "name": "undefined",
+                "value": [
+                    "Hello"
+                ]
+            },
+            {
+                "id": 13,
+                "value": [
+                    "Hello"
+                ]
+            }
+        ]
+    }
+}
+```
+</details>
+
+
+# Update Users Preferences 
+## `POST` /alpha/user/preferences/update
+
+*Update a User Preference Item by prefID
+
+- **userID (Required):** The User ID you wish to add the user preferencer for.
+- **prefID (Required):** The User Preferences ID of the user preference you wish to update.
+- **——OPTIONAL——**
+- **name (Optional):** The Name of the preference
+- **value (Optional):** The Value of the preference
+
+Both items can be used, either can be used, or neither can be used. Here are some examples:
+
+- **Boolean:** {value: true}
+- **Book Review:** {name: "Book Title", value: "I love this book so much!"}
+
+If the name is null, it will be removed from the payload on return. Value will be in the payload no matter what.
+
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
+*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+
++ Body:
+```
+{
+    "prefID": 14,
+    "name": "Test",
+    "value": "\"Another value\""
+}
+```
+
+***
+
+
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": false,
+    "message": "User Preference ID (`prefID`) does not exist!"
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "User preferences have been updated.",
+    "data": []
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "User preferences have been returned.",
+    "data": []
+}
+```
+</details>
+
+
+# Delete Users Preferences 
+## `POST` /alpha/user/preferences/delete
+
+*Delete a User Preference Item by prefID
+
+- **userID (Required):** The User ID you wish to add the user preferencer for.
+- **prefID (Required):** The User Preferences ID of the user preference you wish to update.
+
+_**Note:** Instead of passing a userID, it should be passed automatically using the logged in user._
+*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+
++ Body:
+```
+{
+    "prefID": 12
+}
+```
+
+***
+
+
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": false,
+    "message": "User Preference ID (`prefID`) does not exist!"
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "User preferences have been returned.",
+    "data": []
 }
 ```
 </details>
@@ -4077,13 +907,13 @@ _**Note:** parentID was removed on Dec 31, 2019. Please use layer/order to set r
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
 {
-    "label": "This is a good group 2",
-    "mapID": "0"
+    "label": "This is a Test!",
+    "mapID": "1"
 }
 ```
 
@@ -4100,7 +930,7 @@ _**Note:** parentID was removed on Dec 31, 2019. Please use layer/order to set r
 {
     "success": true,
     "message": "User Group has been created.",
-    "data": "cKYSpTTk2x"
+    "data": "XCE22fIfQa"
 }
 ```
 </details>
@@ -4112,9 +942,7 @@ _**Note:** parentID was removed on Dec 31, 2019. Please use layer/order to set r
 
 ```
 {
-    "success": true,
-    "message": "User Group has been created.",
-    "data": "E8GDS6Ufjh"
+    "message": "Internal server error"
 }
 ```
 </details>
@@ -4126,9 +954,7 @@ _**Note:** parentID was removed on Dec 31, 2019. Please use layer/order to set r
 
 ```
 {
-    "success": true,
-    "message": "User Group has been created.",
-    "data": "0GmxejyQKp"
+    "message": "Internal server error"
 }
 ```
 </details>
@@ -4150,7 +976,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -4173,58 +999,21 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
             "0": "plss",
             "1": "counties",
             "2": {
-                "color": "#f2f2f2",
-                "label": "ADMIN",
-                "groupId": "nc5Eyfi1h3",
+                "label": "Common Layers",
+                "groupId": "gKlasSdDsS",
                 "children": {
                     "groupIds": [],
                     "layerIds": [
+                        "plss",
                         "counties"
                     ]
                 }
             },
-            "3": {
-                "color": "#f2f2f2",
-                "label": "CHILD 1",
-                "groupId": "lJJp3VZQ2E",
-                "children": {
-                    "groupIds": [
-                        "nc5Eyfi1h3"
-                    ],
-                    "layerIds": [
-                        "123",
-                        "123",
-                        "plss",
-                        "123"
-                    ]
-                }
-            },
-            "4": {
-                "color": "#f2f2f2",
-                "label": "SURVEY",
-                "groupId": "4cjyyRhAcd",
-                "children": {
-                    "groupIds": [],
-                    "layerIds": []
-                }
-            },
-            "5": {
-                "color": "#f2f2f2",
-                "label": "COMMON",
-                "groupId": "Wl45bVx7yc",
-                "children": {
-                    "groupIds": [
-                        "lJJp3VZQ2E",
-                        "4cjyyRhAcd"
-                    ],
-                    "layerIds": []
-                }
-            },
-            "6": [
+            "69": [
                 {
                     "toc": {
-                        "id": "tesd_123",
-                        "label": "TESD",
+                        "id": "test_103",
+                        "label": "TEST",
                         "description": "",
                         "canExpand": false,
                         "canOrgView": false,
@@ -4233,10 +1022,10 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                     },
                     "sourcesArray": [
                         {
-                            "id": "tesd_tesd_source",
+                            "id": "test_test_source",
                             "type": "vector",
                             "tiles": [
-                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?columns=prop%2Cid&filter=layer%20%3D%20119"
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2099"
                             ],
                             "maxzoom": 10
                         }
@@ -4245,11 +1034,11 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                         {
                             "beforeLayer": null,
                             "layer": {
-                                "id": "tesd_tesd_119",
+                                "id": "test_test_99",
                                 "type": "fill",
                                 "source-layer": "layer_1_user",
                                 "interactive": true,
-                                "minzoom": 8,
+                                "minzoom": 10,
                                 "layout": {
                                     "visibility": "none"
                                 },
@@ -4258,40 +1047,139 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                                     "fill-color": "#000000"
                                 },
                                 "metadata": {
-                                    "label": "TESD"
+                                    "label": "TEST"
                                 },
-                                "filter": {},
-                                "source": "tesd_tesd_source"
+                                "filter": [],
+                                "source": "test_test_source"
                             },
                             "symbol": {
-                                "id": "tesd_tesd_119_symbol",
+                                "id": "test_test_99_symbol",
                                 "type": "symbol",
                                 "interactive": false,
-                                "minzoom": 8,
-                                "layout": {
-                                    "visibility": "none"
-                                },
+                                "minzoom": 0,
+                                "layout": {},
                                 "paint": {},
                                 "metadata": {
                                     "label": "Symbol"
                                 },
                                 "source-layer": "layer_1_user",
-                                "source": "tesd_tesd_source"
+                                "source": "test_test_source"
                             },
                             "outline": {
-                                "id": "tesd_tesd_119_outline",
+                                "id": "test_test_99_outline",
                                 "type": "line",
                                 "interactive": false,
-                                "minzoom": 8,
-                                "layout": {
-                                    "visibility": "none"
-                                },
+                                "minzoom": 0,
+                                "layout": {},
                                 "paint": {},
                                 "metadata": {
                                     "label": "Outline"
                                 },
                                 "source-layer": "layer_1_user",
-                                "source": "tesd_tesd_source"
+                                "source": "test_test_source"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "User Layers have been returned for user #16",
+    "data": {
+        "user": {
+            "0": "plss",
+            "1": "counties",
+            "2": {
+                "label": "Common Layers",
+                "groupId": "gKlasSdDsS",
+                "children": {
+                    "groupIds": [],
+                    "layerIds": [
+                        "plss",
+                        "counties"
+                    ]
+                }
+            },
+            "68": [
+                {
+                    "toc": {
+                        "id": "fill-sub_102",
+                        "label": "FILL SUB",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "fill-sub_fill-sub_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2098"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "fill-sub_fill-sub_98",
+                                "type": "fill",
+                                "source-layer": "layer_1_user",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {
+                                    "fill-opacity": 1,
+                                    "fill-color": "#000000"
+                                },
+                                "metadata": {
+                                    "label": "FILL SUB"
+                                },
+                                "filter": [],
+                                "source": "fill-sub_fill-sub_source"
+                            },
+                            "symbol": {
+                                "id": "fill-sub_fill-sub_98_symbol",
+                                "type": "symbol",
+                                "interactive": false,
+                                "minzoom": 0,
+                                "layout": {},
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Symbol"
+                                },
+                                "source-layer": "fill-sub",
+                                "source": "fill-sub_fill-sub_source"
+                            },
+                            "outline": {
+                                "id": "fill-sub_fill-sub_98_outline",
+                                "type": "outline",
+                                "interactive": false,
+                                "minzoom": 0,
+                                "layout": {},
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Outline"
+                                },
+                                "source-layer": "fill-sub",
+                                "source": "fill-sub_fill-sub_source"
                             }
                         }
                     ]
@@ -4314,33 +1202,11 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     "message": "User Layers have been returned for user #8",
     "data": {
         "user": {
-            "0": {
-                "color": "#f2f2f2",
-                "label": "kjhlkjhjklh",
-                "groupId": "VwGpXu7FCy",
-                "children": {
-                    "groupIds": [],
-                    "layerIds": []
-                }
-            },
-            "4": "plss",
-            "5": "counties",
-            "6": {
-                "label": "Common Layers",
-                "groupId": "gKlasSdDsS",
-                "children": {
-                    "groupIds": [],
-                    "layerIds": [
-                        "plss",
-                        "counties"
-                    ]
-                }
-            },
-            "81": [
+            "0": [
                 {
                     "toc": {
-                        "id": "fill-test_116",
-                        "label": "Fill Test",
+                        "id": "prod-test_33",
+                        "label": "Prod Test",
                         "description": "",
                         "canExpand": false,
                         "canOrgView": false,
@@ -4349,10 +1215,10 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                     },
                     "sourcesArray": [
                         {
-                            "id": "fill-test_fill-test_source",
+                            "id": "prod-test_prod-test_source",
                             "type": "vector",
                             "tiles": [
-                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?columns=prop%2Cid&filter=layer%20%3D%20112"
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2031"
                             ],
                             "maxzoom": 10
                         }
@@ -4361,8 +1227,8 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                         {
                             "beforeLayer": null,
                             "layer": {
-                                "id": "fill-test_fill-test_112",
-                                "type": "fill",
+                                "id": "prod-test_prod-test_31",
+                                "type": "line",
                                 "source-layer": "layer_1_user",
                                 "interactive": true,
                                 "minzoom": 10,
@@ -4371,88 +1237,480 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                                 },
                                 "paint": {},
                                 "metadata": {
-                                    "label": "Fill Test"
+                                    "label": "Prod Test"
                                 },
                                 "filter": [],
-                                "source": "fill-test_fill-test_source"
-                            },
-                            "symbol": {
-                                "id": "fill-test_fill-test_112_symbol",
-                                "type": "symbol",
-                                "interactive": false,
-                                "minzoom": 8,
-                                "layout": {
-                                    "visibility": "none"
-                                },
-                                "paint": {},
-                                "metadata": {
-                                    "label": "Symbol"
-                                },
-                                "source-layer": "layer_1_user",
-                                "source": "fill-test_fill-test_source"
-                            },
-                            "outline": {
-                                "id": "fill-test_fill-test_112_outline",
-                                "type": "line",
-                                "interactive": false,
-                                "minzoom": 8,
-                                "layout": {
-                                    "visibility": "none"
-                                },
-                                "paint": {},
-                                "metadata": {
-                                    "label": "Outline"
-                                },
-                                "source-layer": "layer_1_user",
-                                "source": "fill-test_fill-test_source"
+                                "source": "prod-test_prod-test_source"
                             }
                         }
                     ]
                 }
-            ]
-        }
-    }
-}
-```
-</details>
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "success": true,
-    "message": "User Layers have been returned for user #8",
-    "data": {
-        "user": {
-            "0": {
+            ],
+            "2": "counties",
+            "3": [
+                {
+                    "toc": {
+                        "id": "prod-test_44",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2042"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_42",
+                                "type": "line",
+                                "source-layer": "layer_1_user",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Prod Test"
+                                },
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "4": [
+                {
+                    "toc": {
+                        "id": "prod-test_43",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2041"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_41",
+                                "type": "line",
+                                "source-layer": "layer_1_user",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Prod Test"
+                                },
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "5": "plss",
+            "6": {
                 "color": "#f2f2f2",
-                "label": "kjhlkjhjklh",
-                "groupId": "VwGpXu7FCy",
+                "label": "This is a good group 2",
+                "groupId": "tyrxgvRmKB",
                 "children": {
                     "groupIds": [],
                     "layerIds": []
                 }
             },
-            "4": "plss",
-            "5": "counties",
-            "6": {
-                "label": "Common Layers",
-                "groupId": "gKlasSdDsS",
+            "7": {
+                "color": "#f2f2f2",
+                "label": "This is a good group 2",
+                "groupId": "ou34ckvFHm",
                 "children": {
                     "groupIds": [],
+                    "layerIds": []
+                }
+            },
+            "8": {
+                "color": "#f2f2f2",
+                "label": "This is a good group 2",
+                "groupId": "pgowvUVGHG",
+                "children": {
+                    "groupIds": [],
+                    "layerIds": []
+                }
+            },
+            "9": {
+                "color": "#f2f2f2",
+                "label": "This is a good group 2",
+                "groupId": "0GmxejyQKp",
+                "children": {
+                    "groupIds": [],
+                    "layerIds": []
+                }
+            },
+            "10": {
+                "color": "#f2f2f2",
+                "label": "This is a good group 2",
+                "groupId": "tRe6hnfiPy",
+                "children": {
+                    "groupIds": [],
+                    "layerIds": []
+                }
+            },
+            "11": {
+                "label": "Common Layers",
+                "parent": null,
+                "groupId": "gAkJksSjSj",
+                "children": {
+                    "groupIds": [
+                        "tRe6hnfiPy"
+                    ],
                     "layerIds": [
                         "plss",
                         "counties"
                     ]
                 }
             },
-            "81": [
+            "12": [
                 {
                     "toc": {
-                        "id": "fill-test_116",
+                        "id": "prod-test_45",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2043"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_43",
+                                "type": "line",
+                                "source-layer": "layer_1_user",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Prod Test"
+                                },
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "13": [
+                {
+                    "toc": {
+                        "id": "prod-test_46",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2044"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_44",
+                                "type": "line",
+                                "source-layer": "layer_1_user",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Prod Test"
+                                },
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "14": [
+                {
+                    "toc": {
+                        "id": "prod-test_85",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2081"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_81",
+                                "type": "circle",
+                                "source-layer": "layer_1_user",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Prod Test"
+                                },
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            },
+                            "symbol": {
+                                "id": "prod-test_prod-test_81_symbol",
+                                "type": "symbol",
+                                "interactive": false,
+                                "minzoom": 0,
+                                "layout": {},
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Sublayer"
+                                },
+                                "source-layer": "prod-test",
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "15": [
+                {
+                    "toc": {
+                        "id": "prod-test_86",
+                        "label": "Prod Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "prod-test_prod-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2082"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "prod-test_prod-test_82",
+                                "type": "circle",
+                                "source-layer": "layer_1_user",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Prod Test"
+                                },
+                                "filter": [],
+                                "source": "prod-test_prod-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "16": [
+                {
+                    "toc": {
+                        "id": "symbol-test_92",
+                        "label": "Symbol Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "symbol-test_symbol-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2088"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "symbol-test_symbol-test_88",
+                                "type": "circle",
+                                "source-layer": "layer_1_user",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Symbol Test"
+                                },
+                                "filter": [],
+                                "source": "symbol-test_symbol-test_source"
+                            },
+                            "symbol": {
+                                "id": "symbol-test_symbol-test_88_symbol",
+                                "type": "symbol",
+                                "interactive": false,
+                                "minzoom": 0,
+                                "layout": {},
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Symbol"
+                                },
+                                "source-layer": "symbol-test",
+                                "source": "symbol-test_symbol-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "17": {
+                "color": "#f2f2f2",
+                "label": "Testing the new format",
+                "groupId": "vYG7eeqSzv",
+                "children": {
+                    "groupIds": [],
+                    "layerIds": []
+                }
+            },
+            "18": [
+                {
+                    "toc": {
+                        "id": "symbol-test_100",
+                        "label": "Symbol Test",
+                        "description": "",
+                        "canExpand": false,
+                        "canOrgView": false,
+                        "canOrgEdit": false,
+                        "group": "dataLayer"
+                    },
+                    "sourcesArray": [
+                        {
+                            "id": "symbol-test_symbol-test_source",
+                            "type": "vector",
+                            "tiles": [
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2096"
+                            ],
+                            "maxzoom": 10
+                        }
+                    ],
+                    "layersArray": [
+                        {
+                            "beforeLayer": null,
+                            "layer": {
+                                "id": "symbol-test_symbol-test_96",
+                                "type": "circle",
+                                "source-layer": "layer_1_user",
+                                "interactive": true,
+                                "minzoom": 10,
+                                "layout": {
+                                    "visibility": "none"
+                                },
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Symbol Test"
+                                },
+                                "filter": [],
+                                "source": "symbol-test_symbol-test_source"
+                            },
+                            "symbol": {
+                                "id": "symbol-test_symbol-test_96_symbol",
+                                "type": "symbol",
+                                "interactive": false,
+                                "minzoom": 0,
+                                "layout": {},
+                                "paint": {},
+                                "metadata": {
+                                    "label": "Symbol"
+                                },
+                                "source-layer": "symbol-test",
+                                "source": "symbol-test_symbol-test_source"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "19": [
+                {
+                    "toc": {
+                        "id": "fill-test_101",
                         "label": "Fill Test",
                         "description": "",
                         "canExpand": false,
@@ -4465,7 +1723,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                             "id": "fill-test_fill-test_source",
                             "type": "vector",
                             "tiles": [
-                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?columns=prop%2Cid&filter=layer%20%3D%20112"
+                                "https://tiles.myassetmap.com/v1/mvt/layer_1_user/{z}/{x}/{y}?filter=layer%20%3D%2097"
                             ],
                             "maxzoom": 10
                         }
@@ -4474,7 +1732,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                         {
                             "beforeLayer": null,
                             "layer": {
-                                "id": "fill-test_fill-test_112",
+                                "id": "fill-test_fill-test_97",
                                 "type": "fill",
                                 "source-layer": "layer_1_user",
                                 "interactive": true,
@@ -4490,33 +1748,29 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                                 "source": "fill-test_fill-test_source"
                             },
                             "symbol": {
-                                "id": "fill-test_fill-test_112_symbol",
+                                "id": "fill-test_fill-test_97_symbol",
                                 "type": "symbol",
                                 "interactive": false,
                                 "minzoom": 0,
-                                "layout": {
-                                    "visibility": "none"
-                                },
+                                "layout": {},
                                 "paint": {},
                                 "metadata": {
                                     "label": "Symbol"
                                 },
-                                "source-layer": "layer_1_user",
+                                "source-layer": "fill-test",
                                 "source": "fill-test_fill-test_source"
                             },
                             "outline": {
-                                "id": "fill-test_fill-test_112_outline",
-                                "type": "line",
+                                "id": "fill-test_fill-test_97_outline",
+                                "type": "outline",
                                 "interactive": false,
                                 "minzoom": 0,
-                                "layout": {
-                                    "visibility": "none"
-                                },
+                                "layout": {},
                                 "paint": {},
                                 "metadata": {
                                     "label": "Outline"
                                 },
-                                "source-layer": "layer_1_user",
+                                "source-layer": "fill-test",
                                 "source": "fill-test_fill-test_source"
                             }
                         }
@@ -4541,7 +1795,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
     –
@@ -4573,7 +1827,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                 },
                 "sourcesArray": [
                     {
-                        "id": "counties_counties_source",
+                        "id": "counties_counties_4",
                         "type": "vector",
                         "tiles": [
                             "https://my-asset-map-data.s3.amazonaws.com/public_data/counties/{z}/{x}/{y}.pbf"
@@ -4587,9 +1841,10 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                         "layer": {
                             "id": "counties_counties_4",
                             "type": "line",
+                            "source": "counties_counties_4",
                             "source-layer": "counties",
                             "interactive": false,
-                            "minzoom": 10,
+                            "minzoom": 0,
                             "layout": {
                                 "visibility": "none"
                             },
@@ -4597,11 +1852,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                                 "line-color": "red",
                                 "line-opacity": 1
                             },
-                            "metadata": {
-                                "label": "Counties"
-                            },
-                            "filter": [],
-                            "source": "counties_counties_source"
+                            "metadata": {}
                         }
                     }
                 ]
@@ -4635,7 +1886,15 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                 },
                 "sourcesArray": [
                     {
-                        "id": "plss_townships_source",
+                        "id": "plss_sections_3",
+                        "type": "vector",
+                        "tiles": [
+                            "https://my-asset-map-data.s3.amazonaws.com/public_data/plss/sections/{z}/{x}/{y}.pbf"
+                        ],
+                        "maxzoom": 10
+                    },
+                    {
+                        "id": "plss_townships_2",
                         "type": "vector",
                         "tiles": [
                             "https://my-asset-map-data.s3.amazonaws.com/public_data/plss/townships/{z}/{x}/{y}.pbf"
@@ -4649,6 +1908,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                         "layer": {
                             "id": "plss_sections_2",
                             "type": "line",
+                            "source": "plss_sections_3",
                             "source-layer": "sections",
                             "interactive": false,
                             "minzoom": 10,
@@ -4672,11 +1932,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                                 ],
                                 "line-opacity": 1
                             },
-                            "metadata": {
-                                "label": "Sections"
-                            },
-                            "filter": [],
-                            "source": "plss_sections_source"
+                            "metadata": {}
                         }
                     },
                     {
@@ -4684,6 +1940,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                         "layer": {
                             "id": "plss_townships_1",
                             "type": "line",
+                            "source": "plss_townships_2",
                             "source-layer": "townships",
                             "interactive": true,
                             "minzoom": 10,
@@ -4718,42 +1975,14 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
                             "metadata": {
                                 "popup": {
                                     "title": "Township Line"
-                                },
-                                "label": "Townships"
-                            },
-                            "filter": [],
-                            "source": "plss_townships_source"
+                                }
+                            }
                         }
                     }
                 ]
             }
         ]
     ]
-}
-```
-</details>
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "message": "Internal server error"
-}
-```
-</details>
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "success": false,
-    "message": "Authentication Failed: User UUID (`userID`) was not passed."
 }
 ```
 </details>
@@ -4811,7 +2040,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
@@ -4867,372 +2096,9 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     "message": "User Layers & Groups has been reordered.",
     "data": [
         [
-            13,
+            33,
             {}
         ],
-        [
-            "plss",
-            {}
-        ],
-        [
-            22,
-            {}
-        ],
-        [
-            23,
-            {}
-        ],
-        [
-            24,
-            {}
-        ],
-        [
-            25,
-            {}
-        ],
-        [
-            26,
-            {}
-        ],
-        [
-            27,
-            {}
-        ],
-        [
-            28,
-            {}
-        ],
-        [
-            29,
-            {}
-        ],
-        [
-            30,
-            {}
-        ],
-        [
-            34,
-            {}
-        ],
-        [
-            35,
-            {}
-        ],
-        [
-            36,
-            {}
-        ],
-        [
-            37,
-            {}
-        ],
-        [
-            38,
-            {}
-        ],
-        [
-            39,
-            {}
-        ],
-        [
-            40,
-            {}
-        ],
-        [
-            41,
-            {}
-        ],
-        [
-            42,
-            {}
-        ],
-        [
-            47,
-            {}
-        ],
-        [
-            48,
-            {}
-        ],
-        [
-            49,
-            {}
-        ],
-        [
-            50,
-            {}
-        ],
-        [
-            51,
-            {}
-        ],
-        [
-            52,
-            {}
-        ],
-        [
-            53,
-            {}
-        ],
-        [
-            54,
-            {}
-        ],
-        [
-            55,
-            {}
-        ],
-        [
-            56,
-            {}
-        ],
-        [
-            57,
-            {}
-        ],
-        [
-            58,
-            {}
-        ],
-        [
-            59,
-            {}
-        ],
-        [
-            60,
-            {}
-        ],
-        [
-            61,
-            {}
-        ],
-        [
-            62,
-            {}
-        ],
-        [
-            63,
-            {}
-        ],
-        [
-            64,
-            {}
-        ],
-        [
-            65,
-            {}
-        ],
-        [
-            66,
-            {}
-        ],
-        [
-            67,
-            {}
-        ],
-        [
-            68,
-            {}
-        ],
-        [
-            69,
-            {}
-        ],
-        [
-            70,
-            {}
-        ],
-        [
-            71,
-            {}
-        ],
-        [
-            72,
-            {}
-        ],
-        [
-            73,
-            {}
-        ],
-        [
-            74,
-            {}
-        ],
-        [
-            75,
-            {}
-        ],
-        [
-            76,
-            {}
-        ],
-        [
-            77,
-            {}
-        ],
-        [
-            78,
-            {}
-        ],
-        [
-            79,
-            {}
-        ],
-        [
-            82,
-            {}
-        ],
-        [
-            83,
-            {}
-        ],
-        [
-            84,
-            {}
-        ],
-        [
-            87,
-            {}
-        ],
-        [
-            88,
-            {}
-        ],
-        [
-            89,
-            {}
-        ],
-        [
-            90,
-            {}
-        ],
-        [
-            91,
-            {}
-        ],
-        [
-            93,
-            {}
-        ],
-        [
-            94,
-            {}
-        ],
-        [
-            95,
-            {}
-        ],
-        [
-            98,
-            {}
-        ],
-        [
-            99,
-            {}
-        ],
-        [
-            102,
-            {}
-        ],
-        [
-            103,
-            {}
-        ],
-        [
-            104,
-            {}
-        ],
-        [
-            105,
-            {}
-        ],
-        [
-            106,
-            {}
-        ],
-        [
-            107,
-            {}
-        ],
-        [
-            108,
-            {}
-        ],
-        [
-            109,
-            {}
-        ],
-        [
-            110,
-            {}
-        ],
-        [
-            111,
-            {}
-        ],
-        [
-            112,
-            {}
-        ],
-        [
-            113,
-            {}
-        ],
-        [
-            114,
-            {}
-        ],
-        [
-            115,
-            {}
-        ],
-        [
-            117,
-            {}
-        ],
-        [
-            118,
-            {}
-        ],
-        [
-            119,
-            {}
-        ],
-        [
-            120,
-            {}
-        ],
-        [
-            121,
-            {}
-        ],
-        [
-            122,
-            {}
-        ],
-        [
-            123,
-            {}
-        ],
-        [
-            "counties",
-            {}
-        ]
-    ]
-}
-```
-</details>
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "success": true,
-    "message": "User Layers & Groups has been reordered.",
-    "data": [
         [
             13,
             {}
@@ -5246,646 +2112,70 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
             {}
         ],
         [
-            22,
+            {
+                "color": "#f2f2f2",
+                "label": "This is a good group 2",
+                "groupId": "ou34ckvFHm",
+                "children": {
+                    "groupIds": [
+                        "tyrxgvRmKB"
+                    ],
+                    "layerIds": [
+                        "plss",
+                        "counties"
+                    ]
+                }
+            },
             {}
         ],
         [
-            23,
+            {
+                "color": "#f2f2f2",
+                "label": "This is a good group 2",
+                "groupId": "tyrxgvRmKB",
+                "children": {
+                    "groupIds": [],
+                    "layerIds": [
+                        "33"
+                    ]
+                }
+            },
             {}
         ],
         [
-            24,
+            43,
             {}
         ],
         [
-            25,
+            44,
             {}
         ],
         [
-            26,
+            45,
             {}
         ],
         [
-            27,
+            46,
             {}
         ],
         [
-            28,
+            85,
             {}
         ],
         [
-            29,
+            86,
             {}
         ],
         [
-            30,
+            92,
             {}
         ],
         [
-            34,
+            100,
             {}
         ],
         [
-            35,
-            {}
-        ],
-        [
-            36,
-            {}
-        ],
-        [
-            37,
-            {}
-        ],
-        [
-            38,
-            {}
-        ],
-        [
-            39,
-            {}
-        ],
-        [
-            40,
-            {}
-        ],
-        [
-            41,
-            {}
-        ],
-        [
-            42,
-            {}
-        ],
-        [
-            47,
-            {}
-        ],
-        [
-            48,
-            {}
-        ],
-        [
-            49,
-            {}
-        ],
-        [
-            50,
-            {}
-        ],
-        [
-            51,
-            {}
-        ],
-        [
-            52,
-            {}
-        ],
-        [
-            53,
-            {}
-        ],
-        [
-            54,
-            {}
-        ],
-        [
-            55,
-            {}
-        ],
-        [
-            56,
-            {}
-        ],
-        [
-            57,
-            {}
-        ],
-        [
-            58,
-            {}
-        ],
-        [
-            59,
-            {}
-        ],
-        [
-            60,
-            {}
-        ],
-        [
-            61,
-            {}
-        ],
-        [
-            62,
-            {}
-        ],
-        [
-            63,
-            {}
-        ],
-        [
-            64,
-            {}
-        ],
-        [
-            65,
-            {}
-        ],
-        [
-            66,
-            {}
-        ],
-        [
-            67,
-            {}
-        ],
-        [
-            68,
-            {}
-        ],
-        [
-            69,
-            {}
-        ],
-        [
-            70,
-            {}
-        ],
-        [
-            71,
-            {}
-        ],
-        [
-            72,
-            {}
-        ],
-        [
-            73,
-            {}
-        ],
-        [
-            74,
-            {}
-        ],
-        [
-            75,
-            {}
-        ],
-        [
-            76,
-            {}
-        ],
-        [
-            77,
-            {}
-        ],
-        [
-            78,
-            {}
-        ],
-        [
-            79,
-            {}
-        ],
-        [
-            82,
-            {}
-        ],
-        [
-            83,
-            {}
-        ],
-        [
-            84,
-            {}
-        ],
-        [
-            87,
-            {}
-        ],
-        [
-            88,
-            {}
-        ],
-        [
-            89,
-            {}
-        ],
-        [
-            90,
-            {}
-        ],
-        [
-            91,
-            {}
-        ],
-        [
-            93,
-            {}
-        ],
-        [
-            94,
-            {}
-        ],
-        [
-            95,
-            {}
-        ],
-        [
-            98,
-            {}
-        ],
-        [
-            99,
-            {}
-        ],
-        [
-            102,
-            {}
-        ],
-        [
-            103,
-            {}
-        ],
-        [
-            104,
-            {}
-        ],
-        [
-            105,
-            {}
-        ],
-        [
-            106,
-            {}
-        ],
-        [
-            107,
-            {}
-        ],
-        [
-            108,
-            {}
-        ],
-        [
-            109,
-            {}
-        ],
-        [
-            110,
-            {}
-        ],
-        [
-            111,
-            {}
-        ],
-        [
-            112,
-            {}
-        ],
-        [
-            113,
-            {}
-        ],
-        [
-            116,
-            {}
-        ]
-    ]
-}
-```
-</details>
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "success": true,
-    "message": "User Layers & Groups has been reordered.",
-    "data": [
-        [
-            13,
-            {}
-        ],
-        [
-            "plss",
-            {}
-        ],
-        [
-            "counties",
-            {}
-        ],
-        [
-            22,
-            {}
-        ],
-        [
-            23,
-            {}
-        ],
-        [
-            24,
-            {}
-        ],
-        [
-            25,
-            {}
-        ],
-        [
-            26,
-            {}
-        ],
-        [
-            27,
-            {}
-        ],
-        [
-            28,
-            {}
-        ],
-        [
-            29,
-            {}
-        ],
-        [
-            30,
-            {}
-        ],
-        [
-            34,
-            {}
-        ],
-        [
-            35,
-            {}
-        ],
-        [
-            36,
-            {}
-        ],
-        [
-            37,
-            {}
-        ],
-        [
-            38,
-            {}
-        ],
-        [
-            39,
-            {}
-        ],
-        [
-            40,
-            {}
-        ],
-        [
-            41,
-            {}
-        ],
-        [
-            42,
-            {}
-        ],
-        [
-            47,
-            {}
-        ],
-        [
-            48,
-            {}
-        ],
-        [
-            49,
-            {}
-        ],
-        [
-            50,
-            {}
-        ],
-        [
-            51,
-            {}
-        ],
-        [
-            52,
-            {}
-        ],
-        [
-            53,
-            {}
-        ],
-        [
-            54,
-            {}
-        ],
-        [
-            55,
-            {}
-        ],
-        [
-            56,
-            {}
-        ],
-        [
-            57,
-            {}
-        ],
-        [
-            58,
-            {}
-        ],
-        [
-            59,
-            {}
-        ],
-        [
-            60,
-            {}
-        ],
-        [
-            61,
-            {}
-        ],
-        [
-            62,
-            {}
-        ],
-        [
-            63,
-            {}
-        ],
-        [
-            64,
-            {}
-        ],
-        [
-            65,
-            {}
-        ],
-        [
-            66,
-            {}
-        ],
-        [
-            67,
-            {}
-        ],
-        [
-            68,
-            {}
-        ],
-        [
-            69,
-            {}
-        ],
-        [
-            70,
-            {}
-        ],
-        [
-            71,
-            {}
-        ],
-        [
-            72,
-            {}
-        ],
-        [
-            73,
-            {}
-        ],
-        [
-            74,
-            {}
-        ],
-        [
-            75,
-            {}
-        ],
-        [
-            76,
-            {}
-        ],
-        [
-            77,
-            {}
-        ],
-        [
-            78,
-            {}
-        ],
-        [
-            79,
-            {}
-        ],
-        [
-            82,
-            {}
-        ],
-        [
-            83,
-            {}
-        ],
-        [
-            84,
-            {}
-        ],
-        [
-            87,
-            {}
-        ],
-        [
-            88,
-            {}
-        ],
-        [
-            89,
-            {}
-        ],
-        [
-            90,
-            {}
-        ],
-        [
-            91,
-            {}
-        ],
-        [
-            93,
-            {}
-        ],
-        [
-            94,
-            {}
-        ],
-        [
-            95,
-            {}
-        ],
-        [
-            98,
-            {}
-        ],
-        [
-            99,
-            {}
-        ],
-        [
-            102,
-            {}
-        ],
-        [
-            103,
-            {}
-        ],
-        [
-            104,
-            {}
-        ],
-        [
-            105,
-            {}
-        ],
-        [
-            106,
-            {}
-        ],
-        [
-            107,
-            {}
-        ],
-        [
-            108,
-            {}
-        ],
-        [
-            109,
-            {}
-        ],
-        [
-            110,
-            {}
-        ],
-        [
-            111,
-            {}
-        ],
-        [
-            112,
-            {}
-        ],
-        [
-            113,
-            {}
-        ],
-        [
-            116,
+            101,
             {}
         ]
     ]

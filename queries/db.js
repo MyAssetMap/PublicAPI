@@ -114,7 +114,7 @@ module.exports = class DB {
     }else if (typeof value === 'object') {
       value = JSON.stringify(value);
     }
-    if (value === null) {
+    if (value == null) {
       value = "null";
     }else{
       if (value === '') {

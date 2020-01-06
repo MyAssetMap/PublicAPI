@@ -36,7 +36,25 @@ const toSlug = (str) => {
   return res;
 }
 
-const processLayerID = (layerID) => {
+const extractLayerInt = (layerID) => {
+  if (isNaN(layerID) && layerID != null) {
+    var layerIDArr = layerID.split("_");
+    if (layerIDArr.length > 1) layerID = layerIDArr.end();
+    console.log('Layer ID is being parsed: '+layerID);
+  }
+  return layerID;
+}
+
+const intToLayer = (layerID) => {
+  if (isNaN(layerID) && layerID != null) {
+    var layerIDArr = layerID.split("_");
+    if (layerIDArr.length > 1) layerID = layerIDArr.end();
+    console.log('Layer ID is being parsed: '+layerID);
+  }
+  return layerID;
+}
+
+const intToLayerGroup = (layerGroupID) => {
   if (isNaN(layerID) && layerID != null) {
     var layerIDArr = layerID.split("_");
     if (layerIDArr.length > 1) layerID = layerIDArr.end();
@@ -62,6 +80,8 @@ function generateRandomString(length, numOnly) {
 
 module.exports = {
   toSlug,
-  processLayerID,
+  extractLayerInt,
+  intToLayer,
+  intToLayerGroup,
   generateRandomString
 }

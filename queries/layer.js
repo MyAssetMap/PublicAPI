@@ -15,7 +15,10 @@ module.exports = class General {
   // ========================
   // = CUSTOM LOGIC QUERIES =
   // ========================
-
+  
+  // ===================================
+  // = TOC AND GENERAL LAYER FUNCTIONS =
+  // ===================================
   static createLayer(payload, callback) {
     var thisClass = this;
       //Create Group First
@@ -220,7 +223,7 @@ module.exports = class General {
                       groupObj[0].children.groupIds.push(child.group);
                     }
                     if (child.layer != null){
-                      groupObj[0].children.layerIds.push(util.processLayerID(child.layer));
+                      groupObj[0].children.layerIds.push(util.extractLayerInt(child.layer));
                     }
                   })
                 }
@@ -229,7 +232,7 @@ module.exports = class General {
               delete userRef[orderItem.group];
             }else console.error('orderItem: Group Passed does not exist: '+orderItem.group)
           }else if (orderItem.layer != null) {
-            var layerID = util.processLayerID(orderItem.layer);
+            var layerID = util.extractLayerInt(orderItem.layer);
             if (userRef[layerID] != null) {
               newUserLayers.push(userRef[layerID]);
               delete userRef[layerID];
@@ -495,5 +498,10 @@ module.exports = class General {
         })
       })
     })
+  }
+  
+  static updateLayer(layerID, payload, callback) {
+    var thisClass = this;
+    DB.bulkUpdateRow(pool, 'LayerGroup', payload, 'id', layerID, callback)
   }
 }

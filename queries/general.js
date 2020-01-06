@@ -17,7 +17,7 @@ module.exports = class General {
 
   static getUsers(callback) {
     var thisClass = this;
-    DB.runQuery(pool, 'SELECT * FROM public."User"', callback);
+    DB.getRowFromTable(pool, 'User', ['id','firstName','lastName','lastName','isDisabled','lastLogin','dateUpdated','dateCreated'], callback)
   }
 
   static getAccounts(callback) {

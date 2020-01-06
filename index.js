@@ -66,15 +66,15 @@ function checkAPIKey(req, res) {
   // console.log(req.header('Auth-DEV'));
   // console.log(req.header('Auth-PROD'));
   // var auth = false;
-//   if (req.header('Auth-DEV') == config.auth.DEV) auth = true;
-//   if (req.header('Auth-PROD') == config.auth.PROD) auth = true;
-//
-//   if (!auth) {
-//     APIReturn(res,
-//       false, 'Unauthorized'
-//     )
-//   }
-  return auth;
+  // if (req.header('Auth-DEV') == config.auth.DEV) auth = true;
+  // if (req.header('Auth-PROD') == config.auth.PROD) auth = true;
+  //
+  // if (!auth) {
+  //   APIReturn(res,
+  //     false, 'Unauthorized'
+  //   )
+  // }
+  // return auth;
 }
 
 function checkAuthentication(req, res, callback) {
@@ -96,73 +96,16 @@ function checkAuthentication(req, res, callback) {
   });
 }
 
+// ===========
+// = GENERAL =
+// ===========
+
 app.get('/', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
   return APIReturn(res,
     true, 'Welcome to the MY ASSET MAP endpoint v1.0'
   )
-})
-
-//ADD COL
-//'ALTER TABLE "User" ADD COLUMN "passwordHash" VARCHAR;'
-
-//UPDATE TABLE FIELD VALUE
-//'ALTER TABLE "User" ADD COLUMN "passwordHash" VARCHAR;'
-
-
-// WHERE "id" = 1
-//Default
-// app.get('/run', function (req, res) {
-// 	db.runQuery(
-// 		'UPDATE "User" SET "passwordHash" = \'secure!\';'
-// 		,function(data) {
-// 			return APIReturn(res,
-// 				true,'Query has been run!',data
-// 			)
-// 		}
-// 	);
-// })
-
-// =========================
-// = HANDLER FOR LAYER API =
-// =========================
-// app.get('/layer/mvt/:layerName/:zoom/:x/:y', function(req, res) {
-//   if (!checkAPIKey(req, res)) return;
-//   var payload = {
-//     layer: req.params.layerName,
-//     z: req.params.zoom,
-//     x: req.params.x,
-//     y: req.params.y,
-//   }
-//
-//   Q.PostGIS.getMVTLayer(payload, function(error, result) {
-//     if (error) return APIReturn(res,false, result)
-//
-//     return APIReturn(res,
-//       true, 'MVT has been generated.', result
-//     )
-//   })
-// })
-
-
-
-
-// =================
-// = GET ENDPOINTS =
-// =================
-
-
-app.get('/postgis', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-
-  Q.PostGIS.testPG(function(error,result) {
-    if (error) return APIReturn(res,false, result)
-    
-    return APIReturn(res,
-      true, 'DatabaseInfo.', result
-    )
-  })
 })
 
 app.get('/db', function(req, res) {
@@ -177,42 +120,26 @@ app.get('/db', function(req, res) {
   })
 })
 
-
-app.get('/users', function(req, res) {
+app.get('/postgis', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  Q.General.getUsers(function(error,users) {
-    if (error) return APIReturn(res,false, users)
+  Q.PostGIS.testPG(function(error,result) {
+    if (error) return APIReturn(res,false, result)
     
     return APIReturn(res,
-      true, 'User information has been returned.', users
+      true, 'DatabaseInfo.', result
     )
-  });
+  })
 })
 
-// app.get('/emails', function(req, res) {
-//   if (!checkAPIKey(req, res)) return;
-//
-//   db.getEmails(function(error,emails) {
-//     if (error) return APIReturn(res,false, emails)
-//
-//     return APIReturn(res,
-//       true, 'Emails information has been returned.', emails
-//     )
-//   });
-// })
 
-app.get('/accounts', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
 
-  Q.General.getAccounts(function(error,accounts) {
-    if (error) return APIReturn(res,false, accounts)
-    
-    return APIReturn(res,
-      true, 'Accounts information has been returned.', accounts
-    )
-  });
-})
+
+
+
+// =========
+// = USERS =
+// =========
 
 app.get('/addons', function(req, res) {
   if (!checkAPIKey(req, res)) return;
@@ -230,7 +157,31 @@ app.get('/addons', function(req, res) {
   });
 })
 
-app.get('/superusers', function(req, res) {
+app.get('/accounts', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+
+  Q.General.getAccounts(function(error,accounts) {
+    if (error) return APIReturn(res,false, accounts)
+    
+    return APIReturn(res,
+      true, 'Accounts information has been returned.', accounts
+    )
+  });
+})
+
+app.get('/users', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+
+  Q.General.getUsers(function(error,users) {
+    if (error) return APIReturn(res,false, users)
+    
+    return APIReturn(res,
+      true, 'User information has been returned.', users
+    )
+  });
+})
+
+app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
   if (!checkAPIKey(req, res)) return;
 
   Q.General.getSuperUsers(function(error,accounts) {
@@ -258,52 +209,514 @@ app.get('/userpreference', function(req, res) {
     })
 })
 
-app.get('/layers/public', function(req, res) {
-    if (!checkAPIKey(req, res)) return;
-
-    checkAuthentication(req, res, function(isLoggedIn, userID) {
-      if (!isLoggedIn) return authRequired(res, userID);
-      
-      var mapID = 0;
+// ========== = USER INFO = ==========
+    app.get('/users/init', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
     
-      Q.Layer.getGlobalLayers(mapID, function(error,layers) {
-      if (error) return APIReturn(res,false, layers)
-    
-        return APIReturn(res,
-          true, 'Public Layers have been returned', layers
-        )
-      });
-    });
-})
-
-app.get('/layers/user', function(req, res) {
-    if (!checkAPIKey(req, res)) return;
-    
-    checkAuthentication(req, res, function(isLoggedIn, userID) {
-      if (!isLoggedIn) return authRequired(res, userID);
-      
-      var mapID = req.query.mapID;
-    
-      if (mapID == null) mapID = 0;
-      if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
-    
-      Q.Layer.getLayers(mapID, userID, function(error,layers) {
-      if (error) return APIReturn(res,false, layers)
-    
-        return APIReturn(res,
-          true, 'User Layers have been returned for user #'+userID, layers
-        )
-      });
-      
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (isLoggedIn) {
+            // return authRequired(res, userID);
+          Q.User.getUserPayload(userID, function(error, userPayload) {
+            if (error) return APIReturn(res, false, userPayload)
+            
+            return APIReturn(res,
+              true, 'User information obtained successfully.', userPayload
+            )
+          })
+        }else{
+          Q.User.createUser(req.query.userID,"–","–", function(error,userID) {
+            if (error) return APIReturn(res, false, userID)
+              
+            Q.User.getUserPayload(userID, function(error, userPayload) {
+              if (error) return APIReturn(res, false, userPayload)
+            
+              return APIReturn(res,
+                true, 'User did not exist. User has been created.', userPayload
+              )
+            })
+          })
+        }
+      })
     })
-})
 
-  // ==================
-  // = POST ENDPOINTS =
-  // ==================
+    app.post('/users/login', function(req, res) { //TODO: REMOVE THIS IF NEEDED. IS USERS/INIT THE SAME THING?
+      if (!checkAPIKey(req, res)) return;
+    
+      if (typeof req.body.UUID == 'undefined') return APIReturn(res, false, 'UUID of user must be provided.')
+    
+      Q.User.getUserIDByUUID(req.body.UUID, function(error,user) {
+        if (error) return APIReturn(res, false, user)
+       
+        console.log(user)
+        if (user != 0) {
+         
+          return APIReturn(res,
+            false, 'UUID located!', user
+          )
+    
+        } else {
+          if ((typeof req.body.firstName == 'undefined') || (typeof req.body.lastName == 'undefined')) return APIReturn(res, false, 'User does not exist. To create, supply firstName and lastName of user.')
+           
+          Q.User.createUser(req.body.UUID,req.body.firstName,req.body.lastName, function(error,users) {
+            if (error) return APIReturn(res, false, users)
+           
+            console.log(users);
+           
+            return APIReturn(res,
+              true, 'UUID created! User has been created.'
+            )
+          })
+        }
+      });
+    })
 
-//LAYERS
-app.post('/layer/geojson/create', function(req, res) {
+// ========== = USER LAYERS = ==========
+    app.get('/layers/user', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+      
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+        
+        var mapID = req.query.mapID;
+      
+        if (mapID == null) mapID = 0;
+        if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+      
+        Q.Layer.getLayers(mapID, userID, function(error,layers) {
+        if (error) return APIReturn(res,false, layers)
+      
+          return APIReturn(res,
+            true, 'User Layers have been returned for user #'+userID, layers
+          )
+        });
+        
+      })
+    })
+
+    app.get('/layers/public', function(req, res) { //TODO: REMOVE THIS OF FIX IT
+      if (!checkAPIKey(req, res)) return;
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+        
+        var mapID = 0;
+      
+        Q.Layer.getGlobalLayers(mapID, function(error,layers) {
+        if (error) return APIReturn(res,false, layers)
+      
+          return APIReturn(res,
+            true, 'Public Layers have been returned', layers
+          )
+        });
+      });
+    })
+
+    app.post('/layers/order', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+      
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+        
+        var orderObj = req.body.order;
+        var deleteGroups = req.body.delete;
+        
+        Q.Layer.updateLayerOrder(userID, orderObj, deleteGroups, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'User Layers & Groups has been reordered.', result
+          )
+        })
+      })
+    });
+
+// ========== = USER GROUPS = ==========
+    app.post('/group/add', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+      
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+    
+        var payload = {
+          userID: userID,
+          label: req.body.label,
+          color: req.body.color
+        };
+    
+        Q.Layer.createUserGroup(payload, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'User Group has been created.', result
+          )
+        })
+      })
+    });
+
+    app.post('/group/delete', function(req, res) { //TODO: REMOVE THIS OF INTEGRATE IT FULLY. CURRENTLY USING /LAYER/ORDER FOR THE SAME CAPABILITY.
+      if (!checkAPIKey(req, res)) return;
+      
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+        
+        var groupID = req.body.groupID;
+        
+        Q.Layer.deleteUserGroup(userID, groupID, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'User Group has been deleted.', result
+          )
+        })
+      })
+    });
+
+
+
+
+
+
+// ========================================
+// = LAYER AND LAYER GROUP/TOC MANAGEMENT =
+// ========================================
+
+// ========== = LAYER GROUPS (TOC) = ==========
+    app.post('/layer/add', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+    
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+    
+        // var userID = req.body.userID;
+        var mapID = req.body.mapID;
+        var groupID = req.body.groupID;
+        var type = req.body.type;
+    
+        //SOURCE
+        var label = req.body.label;
+        var sourceType = req.body.sourceType;
+        var sourceLayer = req.body.sourceLayer;
+        var interactive = req.body.interactive
+        var minzoom = req.body.minzoom;
+        var layout = req.body.layout;
+        var paint = req.body.paint;
+        var metadata = req.body.metadata;
+    
+        if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+        if (groupID == null) groupID = 0;
+        if (type == null) return APIReturn(res,false, 'Type (`type`) must be supplied.');
+    
+        if (sourceType == null) return APIReturn(res,false, 'Source Type (`sourceType`) must be supplied.');
+        if (!['global','org','user'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
+    
+        if (!['line','fill','circle','polygon','point'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+        if (type == 'point') type = 'circle';
+        if (type == 'polygon') type = 'fill';
+    
+        if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
+        if (sourceLayer == null) sourceLayer = util.toSlug(label);
+        if (interactive == null) interactive = true;
+        if (minzoom == null) minzoom = 8;
+        if (layout == null) layout = {"visibility": "none"};
+        if (paint == null) paint = {};
+        if (metadata == null) metadata = {};
+    
+        var payload = {
+          userID: userID, 
+          mapID: mapID,
+          groupID: groupID, 
+          type: type, 
+    
+          label: label, 
+          sourceType: sourceType,
+          sourceLayer: sourceLayer, 
+          interactive: interactive,
+          minzoom: minzoom,
+          layout: layout,
+          paint: paint,
+          metadata: metadata,
+        };
+    
+        Q.Layer.createLayer(payload, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'Layer has been created.', result
+          )
+        })
+      })
+    });
+    
+    app.post('/layer/update', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+    
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+        
+        var payload = {};
+        
+        if (req.body.mapID != null)       payload.mapID = req.body.mapID
+        if (req.body.label != null)       payload.label = req.body.label
+        if (req.body.description != null) payload.description = req.body.description
+        if (req.body.canOrgView != null)  payload.canOrgView = req.body.canOrgView
+        if (req.body.canOrgEdit != null)  payload.canOrgEdit = req.body.canOrgEdit
+    
+        Q.Layer.updateLayer(req.body.layerID, payload, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'Layer has been updated.', result
+          )
+        })
+      })
+    });
+    
+    app.post('/layer/delete', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+    
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+    
+        // var userID = req.body.userID;
+        var layerID = util.extractLayerInt(req.body.layerID);
+    
+        if (layerID == null) return APIReturn(res,false, 'Layer Group ID (`layerID`) must be supplied.');
+        if (isNaN(layerID)) return APIReturn(res,false, 'Layer Group ID (`layerID`) is being passed in the incorrect format.');
+    
+        Q.Layer.deleteLayer(layerID, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'Layer has been deleted.', result
+          )
+        })
+      })
+    });
+
+// ========== = LAYER = ==========
+    app.post('/layer/add/layer', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+    
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+    
+        // var userID = req.body.userID;
+        var mapID = req.body.mapID;
+        var groupID = req.body.groupID;
+        var type = req.body.type;
+    
+        //SOURCE
+        var label = req.body.label;
+        var sourceType = req.body.sourceType;
+        var sourceLayer = req.body.sourceLayer;
+        var interactive = req.body.interactive
+        var minzoom = req.body.minzoom;
+        var layout = req.body.layout;
+        var paint = req.body.paint;
+        var metadata = req.body.metadata;
+    
+        if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+        if (groupID == null) groupID = 0;
+        if (type == null) return APIReturn(res,false, 'Type (`type`) must be supplied.');
+    
+        if (sourceType == null) return APIReturn(res,false, 'Source Type (`sourceType`) must be supplied.');
+        if (!['global','org','user'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
+    
+        if (!['line','fill','circle','polygon','point'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+        if (type == 'point') type = 'circle';
+        if (type == 'polygon') type = 'fill';
+    
+        if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
+        if (sourceLayer == null) sourceLayer = util.toSlug(label);
+        if (interactive == null) interactive = true;
+        if (minzoom == null) minzoom = 8;
+        if (layout == null) layout = {"visibility": "none"};
+        if (paint == null) paint = {};
+        if (metadata == null) metadata = {};
+    
+        var payload = {
+          userID: userID, 
+          mapID: mapID,
+          groupID: groupID, 
+          type: type, 
+    
+          label: label, 
+          sourceType: sourceType,
+          sourceLayer: sourceLayer, 
+          interactive: interactive,
+          minzoom: minzoom,
+          layout: layout,
+          paint: paint,
+          metadata: metadata,
+        };
+    
+        Q.Layer.createLayer(payload, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'Layer has been created.', result
+          )
+        })
+      })
+    });
+    
+    app.post('/layer/update/layer', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+    
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+    
+        return APIReturn(res,
+          true, 'Layer updating is not yet built.', userID
+        )
+      })
+    });
+    
+    app.post('/layer/delete/layer', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+    
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+    
+        // var userID = req.body.userID;
+        var layerID = util.extractLayerInt(req.body.layerID);
+    
+        if (layerID == null) return APIReturn(res,false, 'Layer Group ID (`layerID`) must be supplied.');
+        if (isNaN(layerID)) return APIReturn(res,false, 'Layer Group ID (`layerID`) is being passed in the incorrect format.');
+    
+        Q.Layer.deleteLayer(layerID, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'Layer has been deleted.', result
+          )
+        })
+      })
+    });
+
+// ========== = LAYER SUBLAYER = ==========
+    app.post('/layer/add/sublayer', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+    
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+    
+        // var userID = req.body.userID;
+        var mapID = req.body.mapID;
+        var groupID = req.body.groupID;
+        var type = req.body.type;
+    
+        //SOURCE
+        var label = req.body.label;
+        var sourceType = req.body.sourceType;
+        var sourceLayer = req.body.sourceLayer;
+        var interactive = req.body.interactive
+        var minzoom = req.body.minzoom;
+        var layout = req.body.layout;
+        var paint = req.body.paint;
+        var metadata = req.body.metadata;
+    
+        if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+        if (groupID == null) groupID = 0;
+        if (type == null) return APIReturn(res,false, 'Type (`type`) must be supplied.');
+    
+        if (sourceType == null) return APIReturn(res,false, 'Source Type (`sourceType`) must be supplied.');
+        if (!['global','org','user'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
+    
+        if (!['line','fill','circle','polygon','point'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+        if (type == 'point') type = 'circle';
+        if (type == 'polygon') type = 'fill';
+    
+        if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
+        if (sourceLayer == null) sourceLayer = util.toSlug(label);
+        if (interactive == null) interactive = true;
+        if (minzoom == null) minzoom = 8;
+        if (layout == null) layout = {"visibility": "none"};
+        if (paint == null) paint = {};
+        if (metadata == null) metadata = {};
+    
+        var payload = {
+          userID: userID, 
+          mapID: mapID,
+          groupID: groupID, 
+          type: type, 
+    
+          label: label, 
+          sourceType: sourceType,
+          sourceLayer: sourceLayer, 
+          interactive: interactive,
+          minzoom: minzoom,
+          layout: layout,
+          paint: paint,
+          metadata: metadata,
+        };
+    
+        Q.Layer.createLayer(payload, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'Layer has been created.', result
+          )
+        })
+      })
+    });
+    
+    app.post('/layer/update/sublayer', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+    
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+    
+        return APIReturn(res,
+          true, 'Layer updating is not yet built.', userID
+        )
+      })
+    });
+    
+    app.post('/layer/delete/sublayer', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+    
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+    
+        // var userID = req.body.userID;
+        var layerID = util.extractLayerInt(req.body.layerID);
+    
+        if (layerID == null) return APIReturn(res,false, 'Layer Group ID (`layerID`) must be supplied.');
+        if (isNaN(layerID)) return APIReturn(res,false, 'Layer Group ID (`layerID`) is being passed in the incorrect format.');
+    
+        Q.Layer.deleteLayer(layerID, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'Layer has been deleted.', result
+          )
+        })
+      })
+    });
+    
+// ========== = LAYER SOURCE = ==========
+    app.post('/layer/update/source', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+    
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (!isLoggedIn) return authRequired(res, userID);
+    
+        return APIReturn(res,
+          true, 'Layer updating is not yet built.', userID
+        )
+      })
+    });
+
+
+
+
+
+
+// ================================================
+// = LAYER DATA (GEOJSON, FEATURES, & PROPERTIES) =
+// ================================================
+
+app.post('/layer/geojson/add', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
   checkAuthentication(req, res, function(isLoggedIn, userID) {
@@ -311,7 +724,7 @@ app.post('/layer/geojson/create', function(req, res) {
   
     var mapID = req.body.mapID
     var type = req.body.type;
-    var layerID = util.processLayerID(req.body.layerID);
+    var layerID = util.extractLayerInt(req.body.layerID);
     var json = req.body.json;
   
     if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
@@ -322,10 +735,11 @@ app.post('/layer/geojson/create', function(req, res) {
   
     if (json == null || json == '') return APIReturn(res,false, 'GEOJSON (`json`) must be supplied.');
     console.log(json);
+    var geoJSON;
     if (typeof json === 'string') {
-      var geoJSON = JSON.parse(json);
+      geoJSON = JSON.parse(json);
     }else if (typeof json === 'object') {
-      var geoJSON = json;
+      geoJSON = json;
     }
     
     if (geoJSON.type == 'FeatureCollection') {
@@ -351,7 +765,45 @@ app.post('/layer/geojson/create', function(req, res) {
   });
 });
 
-//LAYERS
+app.post('/layer/geojson/get', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+    
+    var mapID = req.body.mapID
+    var type = req.body.type;
+    var layerID = util.extractLayerInt(req.body.layerID);
+    var featureID = req.body.featureID;
+  
+    if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+    if (layerID == null && featureID == null) return APIReturn(res,false, 'Layer ID (`layerID`) or Feature ID (`featureID`) must be supplied.');
+
+    if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
+    if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+
+    if (layerID != null) {
+      //console.log(geoJSON);
+      tiles.getJSONByLayerID(mapID, type, layerID, function(error, result) {
+        if (error) return APIReturn(res,false, result)
+
+        return APIReturn(res,
+          true, 'GEOJson for this layer has been returned.', result
+        )
+      })
+    }else if (featureID != null) {
+      //console.log(geoJSON);
+      tiles.getJSONByFeatureID(mapID, type, featureID, function(error, result) {
+        if (error) return APIReturn(res,false, result)
+
+        return APIReturn(res,
+          true, 'GEOJson for this feature has been returned.', result
+        )
+      })
+    }
+  });
+});
+
 app.post('/layer/geojson/update', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
@@ -388,47 +840,6 @@ app.post('/layer/geojson/update', function(req, res) {
   });
 });
 
-//LAYERS
-app.post('/layer/geojson/get', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-  
-  checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (!isLoggedIn) return authRequired(res, userID);
-    
-    var mapID = req.body.mapID
-    var type = req.body.type;
-    var layerID = util.processLayerID(req.body.layerID);
-    var featureID = req.body.featureID;
-  
-    if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
-    if (layerID == null && featureID == null) return APIReturn(res,false, 'Layer ID (`layerID`) or Feature ID (`featureID`) must be supplied.');
-
-    if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
-    if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
-
-    if (layerID != null) {
-      //console.log(geoJSON);
-      tiles.getJSONByLayerID(mapID, type, layerID, function(error, result) {
-        if (error) return APIReturn(res,false, result)
-
-        return APIReturn(res,
-          true, 'GEOJson for this layer has been returned.', result
-        )
-      })
-    }else if (featureID != null) {
-      //console.log(geoJSON);
-      tiles.getJSONByFeatureID(mapID, type, featureID, function(error, result) {
-        if (error) return APIReturn(res,false, result)
-
-        return APIReturn(res,
-          true, 'GEOJson for this feature has been returned.', result
-        )
-      })
-    }
-  });
-});
-
-//LAYERS
 app.post('/layer/geojson/delete', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
@@ -437,7 +848,7 @@ app.post('/layer/geojson/delete', function(req, res) {
     
     var mapID = req.body.mapID
     var type = req.body.type;
-    var layerID = util.processLayerID(req.body.layerID);
+    var layerID = util.extractLayerInt(req.body.layerID);
     var featureID = req.body.featureID;
   
     if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
@@ -468,274 +879,12 @@ app.post('/layer/geojson/delete', function(req, res) {
   });
 });
 
-//USER Groups
-app.post('/group/add', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-  
-  checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (!isLoggedIn) return authRequired(res, userID);
-
-    var payload = {
-      userID: userID,
-      label: req.body.label,
-      color: req.body.color
-    };
-
-    Q.Layer.createUserGroup(payload, function(error, result) {
-      if (error) return APIReturn(res,false, result)
-
-      return APIReturn(res,
-        true, 'User Group has been created.', result
-      )
-    })
-  })
-});
-
-//USER Groups
 
 
-//USER Groups
-app.post('/group/delete', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-  
-  checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (!isLoggedIn) return authRequired(res, userID);
-    
-    var groupID = req.body.groupID;
-    
-    Q.Layer.deleteUserGroup(userID, groupID, function(error, result) {
-      if (error) return APIReturn(res,false, result)
 
-      return APIReturn(res,
-        true, 'User Group has been deleted.', result
-      )
-    })
-  })
-});
 
-//LAYERS
-app.post('/layer/add', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-  
-  checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (!isLoggedIn) return authRequired(res, userID);
-  
-    // var userID = req.body.userID;
-    var mapID = req.body.mapID;
-    var groupID = req.body.groupID;
-    var type = req.body.type;
 
-    //SOURCE
-    var label = req.body.label;
-    var sourceType = req.body.sourceType;
-    var sourceLayer = req.body.sourceLayer;
-    var interactive = req.body.interactive
-    var minzoom = req.body.minzoom;
-    var layout = req.body.layout;
-    var paint = req.body.paint;
-    var metadata = req.body.metadata;
-  
-    if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
-    if (groupID == null) groupID = 0;
-    if (type == null) return APIReturn(res,false, 'Type (`type`) must be supplied.');
-  
-    if (sourceType == null) return APIReturn(res,false, 'Source Type (`sourceType`) must be supplied.');
-    if (!['global','org','user'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
-  
-    if (!['line','fill','circle','polygon','point'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
-    if (type == 'point') type = 'circle';
-    if (type == 'polygon') type = 'fill';
-  
-    if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
-    if (sourceLayer == null) sourceLayer = util.toSlug(label);
-    if (interactive == null) interactive = true;
-    if (minzoom == null) minzoom = 8;
-    if (layout == null) layout = {"visibility": "none"};
-    if (paint == null) paint = {};
-    if (metadata == null) metadata = {};
 
-    var payload = {
-      userID: userID, 
-      mapID: mapID,
-      groupID: groupID, 
-      type: type, 
 
-      label: label, 
-      sourceType: sourceType,
-      sourceLayer: sourceLayer, 
-      interactive: interactive,
-      minzoom: minzoom,
-      layout: layout,
-      paint: paint,
-      metadata: metadata,
-    };
-
-    Q.Layer.createLayer(payload, function(error, result) {
-      if (error) return APIReturn(res,false, result)
-
-      return APIReturn(res,
-        true, 'Layer has been created.', result
-      )
-    })
-  })
-});
-
-app.post('/layer/order', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-  
-  checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (!isLoggedIn) return authRequired(res, userID);
-    
-    var orderObj = req.body.order;
-    var deleteGroups = req.body.delete;
-    
-    Q.Layer.updateLayerOrder(userID, orderObj, deleteGroups, function(error, result) {
-      if (error) return APIReturn(res,false, result)
-
-      return APIReturn(res,
-        true, 'User Layers & Groups has been reordered.', result
-      )
-    })
-  })
-});
-
-app.post('/layer/update', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-  
-  checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (!isLoggedIn) return authRequired(res, userID);
-  
-    return APIReturn(res,
-      true, 'Layer updating is not yet built.', userID
-    )
-  })
-});
-
-app.post('/layer/delete', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-  
-  checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (!isLoggedIn) return authRequired(res, userID);
-  
-    // var userID = req.body.userID;
-    var layerID = util.processLayerID(req.body.layerID);
-
-    if (layerID == null) return APIReturn(res,false, 'Layer Group ID (`layerID`) must be supplied.');
-    if (isNaN(layerID)) return APIReturn(res,false, 'Layer Group ID (`layerID`) is being passed in the incorrect format.');
-
-    Q.Layer.deleteLayer(layerID, function(error, result) {
-      if (error) return APIReturn(res,false, result)
-
-      return APIReturn(res,
-        true, 'Layer has been deleted.', result
-      )
-    })
-  })
-});
-
-app.post('/users/add', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-  
-  checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (!isLoggedIn) return authRequired(res, userID);
-  
-
-    // console.log(req.body);
-    if (typeof req.body.email == 'undefined') return APIReturn(res, false, 'Email address must be provided.')
-    if (typeof req.body.password == 'undefined') return APIReturn(res, false, 'Password must be provided.')
-
-    var emailAddress = req.body.email;
-    var password = req.body.password;
-    var passwordHash = password;
-
-    Q.User.getUserByEmail(emailAddress, function(error,users) {
-      if (error) return APIReturn(res, false, users)
-    
-      console.log('USERS')
-      console.log(users)
-      if (users.length !== 0) {
-        var user = users[0];
-
-        console.log(user.passwordHash);
-        console.log(password);
-
-        if (user.passwordHash == password) {
-          return APIReturn(res,
-            true, 'User has been located and authenticated.', users
-          )
-        } else {
-          return APIReturn(res,
-            true, 'Password is incorrect.' //,users
-          )
-        }
-
-      } else {
-        return APIReturn(res,
-          false, 'Email address is not associated with an account.'
-        )
-      }
-    });
-  })
-})
-
-app.post('/users/login', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-
-  if (typeof req.body.UUID == 'undefined') return APIReturn(res, false, 'UUID of user must be provided.')
-
-  Q.User.getUserIDByUUID(req.body.UUID, function(error,user) {
-    if (error) return APIReturn(res, false, user)
-    
-    console.log(user)
-    if (user != 0) {
-      
-      return APIReturn(res,
-        false, 'UUID located!', user
-      )
-
-    } else {
-      if ((typeof req.body.firstName == 'undefined') || (typeof req.body.lastName == 'undefined')) return APIReturn(res, false, 'User does not exist. To create, supply firstName and lastName of user.')
-        
-      db.createUser(req.body.UUID,req.body.firstName,req.body.lastName, function(error,users) {
-        if (error) return APIReturn(res, false, users)
-        
-        console.log(users);
-        
-        return APIReturn(res,
-          true, 'UUID created! User has been created.'
-        )
-      })
-    }
-  });
-})
-
-app.get('/users/init', function(req, res) {
-  if (!checkAPIKey(req, res)) return;
-
-  checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (isLoggedIn) {
-        // return authRequired(res, userID);
-      Q.User.getUserPayload(userID, function(error, userPayload) {
-        if (error) return APIReturn(res, false, userPayload)
-        
-        return APIReturn(res,
-          true, 'User information obtained successfully.', userPayload
-        )
-      })
-    }else{
-      Q.User.createUser(req.query.userID,"–","–", function(error,userID) {
-        if (error) return APIReturn(res, false, userID)
-          
-        Q.User.getUserPayload(userID, function(error, userPayload) {
-          if (error) return APIReturn(res, false, userPayload)
-        
-          return APIReturn(res,
-            true, 'User did not exist. User has been created.', userPayload
-          )
-        })
-      })
-    }
-  })
-})
 
 module.exports.handler = serverless(app);

@@ -193,22 +193,6 @@ app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
   });
 })
 
-app.get('/userpreference', function(req, res) {
-    if (!checkAPIKey(req, res)) return;
-    
-    checkAuthentication(req, res, function(isLoggedIn, userID) {
-      if (!isLoggedIn) return authRequired(res, userID);
-
-      Q.User.getUserPreference(userID, function(error,preferences) {
-      if (error) return APIReturn(res,false, preferences)
-    
-        return APIReturn(res,
-          true, 'User preference information has been returned.', preferences
-        )
-      });
-    })
-})
-
 // ========== = USER INFO = ==========
     app.get('/users/init', function(req, res) {
       if (!checkAPIKey(req, res)) return;
@@ -239,7 +223,7 @@ app.get('/userpreference', function(req, res) {
       })
     })
 
-    app.post('/users/login', function(req, res) { //TODO: REMOVE THIS IF NEEDED. IS USERS/INIT THE SAME THING?
+    app.post('/user/login', function(req, res) { //TODO: REMOVE THIS IF NEEDED. IS USERS/INIT THE SAME THING?
       if (!checkAPIKey(req, res)) return;
     
       if (typeof req.body.UUID == 'undefined') return APIReturn(res, false, 'UUID of user must be provided.')
@@ -268,6 +252,87 @@ app.get('/userpreference', function(req, res) {
           })
         }
       });
+    })
+
+// ========== = USER PREFERENCES = ==========
+    app.post('/user/preferences/add', function(req, res) {
+        if (!checkAPIKey(req, res)) return;
+    
+        checkAuthentication(req, res, function(isLoggedIn, userID) {
+          if (!isLoggedIn) return authRequired(res, userID);
+    
+          var key = req.body.key;
+    
+          if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+    
+          Q.User.getUserPreferences(userID, key, function(error,preferences) {
+          if (error) return APIReturn(res,false, preferences)
+    
+            return APIReturn(res,
+              true, 'User preferences have been returned.', preferences
+            )
+          });
+        })
+    })
+
+    app.post('/user/preferences/get', function(req, res) {
+        if (!checkAPIKey(req, res)) return;
+    
+        checkAuthentication(req, res, function(isLoggedIn, userID) {
+          if (!isLoggedIn) return authRequired(res, userID);
+    
+          var key = req.body.key;
+    
+          if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+    
+          Q.User.getUserPreferences(userID, key, function(error,preferences) {
+          if (error) return APIReturn(res,false, preferences)
+    
+            return APIReturn(res,
+              true, 'User preferences have been returned.', preferences
+            )
+          });
+        })
+    })
+
+    app.post('/user/preferences/update', function(req, res) {
+        if (!checkAPIKey(req, res)) return;
+    
+        checkAuthentication(req, res, function(isLoggedIn, userID) {
+          if (!isLoggedIn) return authRequired(res, userID);
+    
+          var key = req.body.key;
+    
+          if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+    
+          Q.User.getUserPreferences(userID, key, function(error,preferences) {
+          if (error) return APIReturn(res,false, preferences)
+    
+            return APIReturn(res,
+              true, 'User preferences have been returned.', preferences
+            )
+          });
+        })
+    })
+    
+    app.post('/user/preferences/delete', function(req, res) {
+        if (!checkAPIKey(req, res)) return;
+    
+        checkAuthentication(req, res, function(isLoggedIn, userID) {
+          if (!isLoggedIn) return authRequired(res, userID);
+    
+          var key = req.body.key;
+    
+          if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
+    
+          Q.User.getUserPreferences(userID, key, function(error,preferences) {
+          if (error) return APIReturn(res,false, preferences)
+    
+            return APIReturn(res,
+              true, 'User preferences have been returned.', preferences
+            )
+          });
+        })
     })
 
 // ========== = USER LAYERS = ==========
@@ -342,7 +407,7 @@ app.get('/userpreference', function(req, res) {
           color: req.body.color
         };
     
-        Q.Layer.createUserGroup(payload, function(error, result) {
+        Q.User.createUserGroup(payload, function(error, result) {
           if (error) return APIReturn(res,false, result)
     
           return APIReturn(res,

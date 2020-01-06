@@ -9,6 +9,14 @@ if (!Array.prototype.end){
     };
 };
 
+Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
+
 /**
  * Object.prototype.forEach() polyfill
  * https://gomakethings.com/looping-through-objects-with-es6/

@@ -452,19 +452,23 @@ app.get('/userpreference', function(req, res) {
       checkAuthentication(req, res, function(isLoggedIn, userID) {
         if (!isLoggedIn) return authRequired(res, userID);
         
-        var payload = {};
+        var layerGroupID = util.extractLayerInt(req.body.layerID);
+    
+        if (layerGroupID == null) return APIReturn(res,false, 'Layer Group ID (`layerID`) must be supplied.');
+        if (isNaN(layerGroupID)) return APIReturn(res,false, 'Layer Group ID (`layerID`) is being passed in the incorrect format.');
         
+        var payload = {};
         if (req.body.mapID != null)       payload.mapID = req.body.mapID
         if (req.body.label != null)       payload.label = req.body.label
         if (req.body.description != null) payload.description = req.body.description
         if (req.body.canOrgView != null)  payload.canOrgView = req.body.canOrgView
         if (req.body.canOrgEdit != null)  payload.canOrgEdit = req.body.canOrgEdit
     
-        Q.Layer.updateLayer(req.body.layerID, payload, function(error, result) {
+        Q.Layer.updateLayerGroup(layerGroupID, payload, function(error, result) {
           if (error) return APIReturn(res,false, result)
     
           return APIReturn(res,
-            true, 'Layer has been updated.', result
+            true, 'Layer Group (TOC) has been updated.', result
           )
         })
       })
@@ -564,10 +568,29 @@ app.get('/userpreference', function(req, res) {
     
       checkAuthentication(req, res, function(isLoggedIn, userID) {
         if (!isLoggedIn) return authRequired(res, userID);
+        
+        var layerID = util.extractLayerInt(req.body.layerID);
     
-        return APIReturn(res,
-          true, 'Layer updating is not yet built.', userID
-        )
+        if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
+        if (isNaN(layerID)) return APIReturn(res,false, 'Layer ID (`layerID`) is being passed in the incorrect format.');
+        
+        var payload = {};
+        if (req.body.groupID != null)     payload.groupID = req.body.groupID
+        if (req.body.label != null)       payload.label = req.body.label
+        if (req.body.interactive != null) payload.interactive = req.body.interactive
+        if (req.body.minzoom != null)     payload.minzoom = req.body.minzoom
+        if (req.body.layout != null)      payload.layout = req.body.layout
+        if (req.body.paint != null)       payload.paint = req.body.paint
+        if (req.body.metadata != null)    payload.metadata = req.body.metadata
+        if (req.body.filter != null)      payload.filter = req.body.filter
+    
+        Q.Layer.updateLayer(layerID, payload, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'Layer has been updated.', result
+          )
+        })
       })
     });
     
@@ -580,8 +603,8 @@ app.get('/userpreference', function(req, res) {
         // var userID = req.body.userID;
         var layerID = util.extractLayerInt(req.body.layerID);
     
-        if (layerID == null) return APIReturn(res,false, 'Layer Group ID (`layerID`) must be supplied.');
-        if (isNaN(layerID)) return APIReturn(res,false, 'Layer Group ID (`layerID`) is being passed in the incorrect format.');
+        if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
+        if (isNaN(layerID)) return APIReturn(res,false, 'Layer ID (`layerID`) is being passed in the incorrect format.');
     
         Q.Layer.deleteLayer(layerID, function(error, result) {
           if (error) return APIReturn(res,false, result)
@@ -665,10 +688,31 @@ app.get('/userpreference', function(req, res) {
     
       checkAuthentication(req, res, function(isLoggedIn, userID) {
         if (!isLoggedIn) return authRequired(res, userID);
+        
+        var layerID = util.extractLayerInt(req.body.layerID);
+        var key = req.body.key;
+        
+        if (layerID == null) return APIReturn(res,false, 'Sublayer ID (`layerID`) must be supplied.');
+        if (isNaN(layerID)) return APIReturn(res,false, 'Sublayer ID (`layerID`) is being passed in the incorrect format.');
     
-        return APIReturn(res,
-          true, 'Layer updating is not yet built.', userID
-        )
+        if (key == null) return APIReturn(res,false, 'Sublayer Key (`key`) must be supplied.');
+        
+        var payload = {};
+        if (req.body.type != null)        payload.type = req.body.type
+        if (req.body.label != null)       payload.label = req.body.label
+        if (req.body.interactive != null) payload.interactive = req.body.interactive
+        if (req.body.minzoom != null)     payload.minzoom = req.body.minzoom
+        if (req.body.layout != null)      payload.layout = req.body.layout
+        if (req.body.paint != null)       payload.paint = req.body.paint
+        if (req.body.metadata != null)    payload.metadata = req.body.metadata
+    
+        Q.Layer.updateSublayer(layerID, key, payload, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'Sublayer has been updated.', result
+          )
+        })
       })
     });
     
@@ -700,10 +744,24 @@ app.get('/userpreference', function(req, res) {
     
       checkAuthentication(req, res, function(isLoggedIn, userID) {
         if (!isLoggedIn) return authRequired(res, userID);
+        
+        var layerID = util.extractLayerInt(req.body.layerID);
     
-        return APIReturn(res,
-          true, 'Layer updating is not yet built.', userID
-        )
+        if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
+        if (isNaN(layerID)) return APIReturn(res,false, 'Layer ID (`layerID`) is being passed in the incorrect format.');
+        
+        var payload = {};
+        if (req.body.type != null)        payload.type = req.body.type
+        if (req.body.tiles != null)       payload.tiles = req.body.tiles
+        if (req.body.maxzoom != null)     payload.maxzoom = req.body.maxzoom
+    
+        Q.Layer.updateLayerSource(layerID, payload, function(error, result) {
+          if (error) return APIReturn(res,false, result)
+    
+          return APIReturn(res,
+            true, 'Layer Source has been updated.', result
+          )
+        })
       })
     });
 

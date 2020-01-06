@@ -500,8 +500,32 @@ module.exports = class General {
     })
   }
   
-  static updateLayer(layerID, payload, callback) {
-    var thisClass = this;
-    DB.bulkUpdateRow(pool, 'LayerGroup', payload, 'id', layerID, callback)
+  // =======================
+  // = TOC GROUP FUNCTIONS =
+  // =======================
+  static updateLayerGroup(layerGroupID, payload, callback) {
+    DB.bulkUpdateRow(pool, 'LayerGroup', payload, 'id', layerGroupID, callback)
   }
+  
+  // ===================
+  // = LAYER FUNCTIONS =
+  // ===================
+  static updateLayer(layerID, payload, callback) {
+    DB.bulkUpdateRow(pool, 'Layer', payload, 'id', layerID, callback)
+  }
+  
+  // ======================
+  // = SUBLAYER FUNCTIONS =
+  // ======================
+  static updateSublayer(layerID, key, payload, callback) {
+    DB.bulkUpdateRow(pool, 'LayerSublayer', payload, ['layerID','key'], [layerID,key], callback)
+  }
+  
+  // ====================
+  // = SOURCE FUNCTIONS =
+  // ====================
+  static updateLayerSource(layerID, payload, callback) {
+    DB.bulkUpdateRow(pool, 'LayerSource', payload, 'layerID', layerID, callback)
+  }
+  
 }

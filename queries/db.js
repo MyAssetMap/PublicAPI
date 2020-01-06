@@ -27,23 +27,14 @@ module.exports = class DB {
     this.runQuery(pool, 'SELECT ' + this.fromSingleValueToValues(row,'"') + ' FROM public."' + table + '"', callback);
   }
 
-  static getTableWhere(pool, table, fieldName, value, callback) {
-    var thisClass = this;
-    if (!Array.isArray(value)) {
-      thisClass.runQuery(pool, 'SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" = ' + thisClass.processValue(value) + ';', callback);
-    }else{
-      if (value.length == 0) return callback(false, [])
-      thisClass.runQuery(pool, 'SELECT * FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + thisClass.fromSingleValueToValues(value) + ');', callback);
-    }
+  static getTableWhere(pool, table, identifierColumn, identifier, callback) {
+    if (Array.isArray(identifier) && identifier.length == 0) return callback(false, [])
+    this.runQuery(pool, 'SELECT * FROM public."' + table + '" WHERE ' + this.processWhere(identifierColumn,identifier,callback) + ';', callback);
   }
 
-  static getRowFromTableWhere(pool, table, row, fieldName, value, callback) {
-    if (!Array.isArray(value)) {
-      this.runQuery(pool, 'SELECT ' + this.fromSingleValueToValues(row,'"') + ' FROM public."' + table + '" WHERE "' + fieldName + '" = ' + this.processValue(value) + ';', callback);
-    }else{
-      if (value.length == 0) return callback(false, [])
-      this.runQuery(pool, 'SELECT ' + this.fromSingleValueToValues(row,'"') + ' FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + this.fromSingleValueToValues(value) + ');', callback);
-    }
+  static getRowFromTableWhere(pool, table, row, identifierColumn, identifier, callback) {
+    if (Array.isArray(identifier) && identifier.length == 0) return callback(false, [])
+    this.runQuery(pool, 'SELECT ' + this.fromSingleValueToValues(row,'"') + ' FROM public."' + table + '" WHERE ' + this.processWhere(identifierColumn,identifier,callback) + ';', callback);
   }
 
   static getInnerJoin(pool, fields, firstTable, firstIdentifier, secondTable, secondIdentifier, callback) {
@@ -51,25 +42,26 @@ module.exports = class DB {
   }
 
   static bulkUpdateRow(pool, table, changes, identifierColumn, identifier, callback) {
+    var thisClass = this;
     if (typeof changes !== 'object') return callback(true, 'Changes were invalid.')
       
     var changeText = [];
     changes.forEach(function(value, column) {
-      changeText.push('"' + column + '" = ' + this.processValue(value));
+      changeText.push('"' + column + '" = ' + thisClass.processValue(value));
     })
-    this.runQuery(pool, 'UPDATE public."' + table + '" SET ' + changeText.join(`, `) + ' WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
+    this.runQuery(pool, 'UPDATE public."' + table + '" SET ' + changeText.join(`, `) + ' WHERE ' + this.processWhere(identifierColumn,identifier,callback) + ';', callback);
   }
 
   static updateRow(pool, table, column, value, identifierColumn, identifier, callback) {
-    this.runQuery(pool, 'UPDATE public."' + table + '" SET "' + column + '" = ' + this.processValue(value) + ' WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
+    this.runQuery(pool, 'UPDATE public."' + table + '" SET "' + column + '" = ' + this.processValue(value) + ' WHERE ' + this.processWhere(identifierColumn,identifier,callback) + ';', callback);
   }
 
   static appendToJSONRow(pool, table, column, value, identifierColumn, identifier, callback) {
-    this.runQuery(pool, 'UPDATE public."' + table + '" SET "' + column + '" = "' + column + '"::jsonb || '+this.processValue(value)+'::jsonb WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
+    this.runQuery(pool, 'UPDATE public."' + table + '" SET "' + column + '" = "' + column + '"::jsonb || '+this.processValue(value)+'::jsonb WHERE ' + this.processWhere(identifierColumn,identifier,callback) + ';', callback);
   }
 
   static deleteFromJSONRow(pool, table, column, value, identifierColumn, identifier, callback) {
-    this.runQuery(pool, 'UPDATE public."' + table + '" SET "' + column + '" = "' + column + '"::jsonb || '+this.processValue(value)+'::jsonb WHERE "' + identifierColumn + '" = \'' + identifier + '\';', callback);
+    this.runQuery(pool, 'UPDATE public."' + table + '" SET "' + column + '" = "' + column + '"::jsonb || '+this.processValue(value)+'::jsonb WHERE ' + this.processWhere(identifierColumn,identifier,callback) + ';', callback);
   }
 
   static insertRow(pool, table, columns, values, callback) {
@@ -79,19 +71,41 @@ module.exports = class DB {
     });
   }
 
-  static deleteTableWhere(pool, table, fieldName, value, callback) {
-    var thisClass = this;
-    if (!Array.isArray(value)) {
-      thisClass.runQuery(pool, 'DELETE FROM public."' + table + '" WHERE "' + fieldName + '" = ' + thisClass.processValue(value) + ';', callback);
-    }else{
-      if (value.length == 0) callback(false, [])
-      thisClass.runQuery(pool, 'DELETE FROM public."' + table + '" WHERE "' + fieldName + '" IN (' + thisClass.fromSingleValueToValues(value) + ');', callback);
-    }
+  static deleteTableWhere(pool, table, identifierColumn, identifier, callback) {
+    if (Array.isArray(identifier) && identifier.length == 0) return callback(false, [])
+    this.runQuery(pool, 'DELETE FROM public."' + table + '" WHERE ' + this.processWhere(identifierColumn,identifier,callback) + ';', callback);
   }
   
   // ========================
   // = PROCESSING FUNCTIONS =
   // ========================
+  static processWhere(identifierColumn, identifier, callback) {
+    if (Array.isArray(identifierColumn) && identifierColumn.length == 0) return callback(false, [])
+    if (Array.isArray(identifier) && identifier.length == 0) return callback(false, [])
+    
+    if (!Array.isArray(identifierColumn)) {
+      if (!Array.isArray(identifier)) {
+        return '"' + identifierColumn + '" = ' + this.processValue(identifier);
+      }else{
+        if (identifier.length == 0) return callback(false, [])
+        return '"' + identifierColumn + '" IN (' + this.fromSingleValueToValues(identifier) + ')';
+      }
+    }else{
+      if (!Array.isArray(identifier)) {
+        return '"' + identifierColumn[0] + '" = ' + this.processValue(identifier);
+      }else{
+        var thisClass = this;
+        var whereText = [];
+        var key = 0;
+        identifierColumn.forEach(function(iColumn) {
+          whereText.push('"' + iColumn + '" = ' + thisClass.processValue(identifier[key]))
+          key++
+        })
+        return whereText.join(' AND ');
+      }
+    }
+  }
+  
   static processValue(value,char) {
     if (typeof char === 'undefined') char = `'`;
   

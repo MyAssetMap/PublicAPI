@@ -100,7 +100,11 @@ module.exports = class Users {
                   lastName: user.lastName,
                   displayName: user.firstName+' '+user.lastName
                 },
-
+                
+                tools: {
+                  printLayouts: user.printLayouts
+                },
+                
                 superUserID: superID,
                 accountID: accountID,
                 mapID: mapID

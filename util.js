@@ -45,8 +45,23 @@ const processLayerID = (layerID) => {
   return layerID;
 }
 
+function generateRandomString(length, numOnly) {
+  const allCapsAlpha = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"]; 
+  const allLowerAlpha = [..."abcdefghijklmnopqrstuvwxyz"]; 
+  const allNumbers = [..."0123456789"];
+
+  var base = [...allNumbers];
+  if (!numOnly) {
+    base = [...base,...allCapsAlpha,...allLowerAlpha]
+  }
+  return [...Array(length)]
+   .map(i => base[Math.random()*base.length|0])
+   .join('');
+}
+
 
 module.exports = {
   toSlug,
-  processLayerID
+  processLayerID,
+  generateRandomString
 }

@@ -14,8 +14,8 @@ const app = express();
 const config = require('./config');
 const util = require('./util');
 
-const db = require('./queries')
-const postgis = require('./postgis')
+const Q = require('./queries/')
+
 const tiles = require('./tiles')
 
 // ============
@@ -90,7 +90,7 @@ function checkAuthentication(req, res, callback) {
   
   if (userUUID == null || typeof userUUID == 'undefined') return APIReturn(res, false, 'Authentication Failed: User UUID (`userID`) was not passed.');
   
-  db.getUserIDByUUID(userUUID, function(error, userID) {
+  Q.User.getUserIDByUUID(userUUID, function(error, userID) {
     console.log('userID',userUUID,userID);
     return callback(!error, userID);
   });
@@ -136,7 +136,7 @@ app.get('/', function(req, res) {
 //     y: req.params.y,
 //   }
 //
-//   postgis.getMVTLayer(payload, function(error, result) {
+//   Q.PostGIS.getMVTLayer(payload, function(error, result) {
 //     if (error) return APIReturn(res,false, result)
 //
 //     return APIReturn(res,
@@ -156,7 +156,7 @@ app.get('/', function(req, res) {
 app.get('/postgis', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  postgis.testPG(function(error,result) {
+  Q.PostGIS.testPG(function(error,result) {
     if (error) return APIReturn(res,false, result)
     
     return APIReturn(res,
@@ -168,7 +168,7 @@ app.get('/postgis', function(req, res) {
 app.get('/db', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  db.testPG(function(error,result) {
+  Q.General.testDB(function(error,result) {
     if (error) return APIReturn(res,false, result)
     
     return APIReturn(res,
@@ -181,7 +181,7 @@ app.get('/db', function(req, res) {
 app.get('/users', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  db.getUsers(function(error,users) {
+  Q.General.getUsers(function(error,users) {
     if (error) return APIReturn(res,false, users)
     
     return APIReturn(res,
@@ -205,7 +205,7 @@ app.get('/users', function(req, res) {
 app.get('/accounts', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  db.getAccounts(function(error,accounts) {
+  Q.General.getAccounts(function(error,accounts) {
     if (error) return APIReturn(res,false, accounts)
     
     return APIReturn(res,
@@ -220,7 +220,7 @@ app.get('/addons', function(req, res) {
   checkAuthentication(req, res, function(isLoggedIn, userID) {
     //if (!isLoggedIn) return authRequired(res, userID);
   
-    db.getAddons(function(error,accounts) {
+    Q.General.getAddons(function(error,accounts) {
       if (error) return APIReturn(res,false, accounts)
     
       return APIReturn(res,
@@ -233,7 +233,7 @@ app.get('/addons', function(req, res) {
 app.get('/superusers', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
-  db.getSuperUsers(function(error,accounts) {
+  Q.General.getSuperUsers(function(error,accounts) {
     if (error) return APIReturn(res,false, accounts)
     
     return APIReturn(res,
@@ -248,11 +248,11 @@ app.get('/userpreference', function(req, res) {
     checkAuthentication(req, res, function(isLoggedIn, userID) {
       if (!isLoggedIn) return authRequired(res, userID);
 
-      db.getUserPreference(function(error,accounts) {
-      if (error) return APIReturn(res,false, accounts)
+      Q.User.getUserPreference(userID, function(error,accounts) {
+      if (error) return APIReturn(res,false, preferences)
     
         return APIReturn(res,
-          true, 'User preference information has been returned.', accounts
+          true, 'User preference information has been returned.', preferences
         )
       });
     })
@@ -266,7 +266,7 @@ app.get('/layers/public', function(req, res) {
       
       var mapID = 0;
     
-      db.getGlobalLayers(mapID, function(error,layers) {
+      Q.Layer.getGlobalLayers(mapID, function(error,layers) {
       if (error) return APIReturn(res,false, layers)
     
         return APIReturn(res,
@@ -287,7 +287,7 @@ app.get('/layers/user', function(req, res) {
       if (mapID == null) mapID = 0;
       if (userID == null) return APIReturn(res,false, 'User ID (`userID`) must be supplied.');
     
-      db.getLayers(mapID, userID, function(error,layers) {
+      Q.Layer.getLayers(mapID, userID, function(error,layers) {
       if (error) return APIReturn(res,false, layers)
     
         return APIReturn(res,
@@ -337,7 +337,7 @@ app.post('/layer/geojson/create', function(req, res) {
 
         var payload = {mapID: mapID, type: type, layerID: layerID, geom: geometry, prop: properties};
 
-        postgis.insertLayer(payload, function(error, result) {
+        Q.PostGIS.insertLayer(payload, function(error, result) {
           if (error) return APIReturn(res,false, result)
 
           return APIReturn(res,
@@ -378,7 +378,7 @@ app.post('/layer/geojson/update', function(req, res) {
     var geometry = geoJSON.geometry;
     var properties = geoJSON.properties;
 
-    postgis.updateFeature(mapID, type, featureID, geometry, properties, function(error, result) {
+    Q.PostGIS.updateFeature(mapID, type, featureID, geometry, properties, function(error, result) {
       if (error) return APIReturn(res,false, result)
 
       return APIReturn(res,
@@ -448,7 +448,7 @@ app.post('/layer/geojson/delete', function(req, res) {
 
     if (layerID != null) {
       //console.log(geoJSON);
-      postgis.deleteLayer(mapID, type, layerID, function(error, result) {
+      Q.PostGIS.deleteLayer(mapID, type, layerID, function(error, result) {
         if (error) return APIReturn(res,false, result)
 
         return APIReturn(res,
@@ -457,7 +457,7 @@ app.post('/layer/geojson/delete', function(req, res) {
       })
     }else if (featureID != null) {
       //console.log(geoJSON);
-      postgis.deleteFeature(mapID, type, featureID, function(error, result) {
+      Q.PostGIS.deleteFeature(mapID, type, featureID, function(error, result) {
         if (error) return APIReturn(res,false, result)
 
         return APIReturn(res,
@@ -481,7 +481,7 @@ app.post('/group/add', function(req, res) {
       color: req.body.color
     };
 
-    db.createUserGroup(payload, function(error, result) {
+    Q.Layer.createUserGroup(payload, function(error, result) {
       if (error) return APIReturn(res,false, result)
 
       return APIReturn(res,
@@ -503,7 +503,7 @@ app.post('/group/delete', function(req, res) {
     
     var groupID = req.body.groupID;
     
-    db.deleteUserGroup(userID, groupID, function(error, result) {
+    Q.Layer.deleteUserGroup(userID, groupID, function(error, result) {
       if (error) return APIReturn(res,false, result)
 
       return APIReturn(res,
@@ -549,7 +549,7 @@ app.post('/layer/add', function(req, res) {
     if (label == null) return APIReturn(res,false, 'Label (`label`) must be supplied.');
     if (sourceLayer == null) sourceLayer = util.toSlug(label);
     if (interactive == null) interactive = true;
-    if (minzoom == null) minzoom = 10;
+    if (minzoom == null) minzoom = 8;
     if (layout == null) layout = {"visibility": "none"};
     if (paint == null) paint = {};
     if (metadata == null) metadata = {};
@@ -570,7 +570,7 @@ app.post('/layer/add', function(req, res) {
       metadata: metadata,
     };
 
-    db.createLayer(payload, function(error, result) {
+    Q.Layer.createLayer(payload, function(error, result) {
       if (error) return APIReturn(res,false, result)
 
       return APIReturn(res,
@@ -589,7 +589,7 @@ app.post('/layer/order', function(req, res) {
     var orderObj = req.body.order;
     var deleteGroups = req.body.delete;
     
-    db.updateLayerOrder(userID, orderObj, deleteGroups, function(error, result) {
+    Q.Layer.updateLayerOrder(userID, orderObj, deleteGroups, function(error, result) {
       if (error) return APIReturn(res,false, result)
 
       return APIReturn(res,
@@ -605,9 +605,8 @@ app.post('/layer/update', function(req, res) {
   checkAuthentication(req, res, function(isLoggedIn, userID) {
     if (!isLoggedIn) return authRequired(res, userID);
   
-  
     return APIReturn(res,
-      true, 'Layer saving is not yet built.', result
+      true, 'Layer updating is not yet built.', result
     )
   })
 });
@@ -624,7 +623,7 @@ app.post('/layer/delete', function(req, res) {
     if (layerID == null) return APIReturn(res,false, 'Layer Group ID (`layerID`) must be supplied.');
     if (isNaN(layerID)) return APIReturn(res,false, 'Layer Group ID (`layerID`) is being passed in the incorrect format.');
 
-    db.deleteLayer(layerID, function(error, result) {
+    Q.Layer.deleteLayer(layerID, function(error, result) {
       if (error) return APIReturn(res,false, result)
 
       return APIReturn(res,
@@ -649,7 +648,7 @@ app.post('/users/add', function(req, res) {
     var password = req.body.password;
     var passwordHash = password;
 
-    db.getUserByEmail(emailAddress, function(error,users) {
+    Q.User.getUserByEmail(emailAddress, function(error,users) {
       if (error) return APIReturn(res, false, users)
     
       console.log('USERS')
@@ -684,7 +683,7 @@ app.post('/users/login', function(req, res) {
 
   if (typeof req.body.UUID == 'undefined') return APIReturn(res, false, 'UUID of user must be provided.')
 
-  db.getUserIDByUUID(req.body.UUID, function(error,user) {
+  Q.User.getUserIDByUUID(req.body.UUID, function(error,user) {
     if (error) return APIReturn(res, false, user)
     
     console.log(user)
@@ -716,7 +715,7 @@ app.get('/users/init', function(req, res) {
   checkAuthentication(req, res, function(isLoggedIn, userID) {
     if (isLoggedIn) {
         // return authRequired(res, userID);
-      db.getUserPayload(userID, function(error, userPayload) {
+      Q.User.getUserPayload(userID, function(error, userPayload) {
         if (error) return APIReturn(res, false, userPayload)
         
         return APIReturn(res,
@@ -724,10 +723,10 @@ app.get('/users/init', function(req, res) {
         )
       })
     }else{
-      db.createUser(req.query.userID,"–","–", function(error,userID) {
+      Q.User.createUser(req.query.userID,"–","–", function(error,userID) {
         if (error) return APIReturn(res, false, userID)
           
-        db.getUserPayload(userID, function(error, userPayload) {
+        Q.User.getUserPayload(userID, function(error, userPayload) {
           if (error) return APIReturn(res, false, userPayload)
         
           return APIReturn(res,

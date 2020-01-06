@@ -83,7 +83,7 @@ module.exports = class General {
     var tableName = `layer_`+mapID+((type != '') ? '_'+type : type);
     tableName = tableName.toLowerCase();
   
-    return DB.deleteTableWhere(tableName, 'layer', layerID, callback)
+    return DB.deleteTableWhere(pool,tableName, 'layer', layerID, callback)
   }
 
   static deleteFeature(mapID, type, featureID, callback) {
@@ -96,7 +96,7 @@ module.exports = class General {
     var tableName = `layer_`+mapID+((type != '') ? '_'+type : type);
     tableName = tableName.toLowerCase();
   
-    return DB.deleteTableWhere(tableName, 'id', featureID, callback)
+    return DB.deleteTableWhere(pool,tableName, 'id', featureID, callback)
   }
 
 

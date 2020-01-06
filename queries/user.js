@@ -17,9 +17,9 @@ module.exports = class Users {
     DB.runQuery(pool, 'SELECT * FROM public."SuperUser"', callback);
   }
 
-  static getUserPreference(callback) {
+  static getUserPreference(userID, callback) {
     var thisClass = this;
-    DB.runQuery(pool, 'SELECT * FROM public."UserPreference"', callback);
+    DB.getTableWhere(pool, 'UserPreference', 'id', userID, callback)
   }
 
   static getUserByEmail(emailAddress, callback) {

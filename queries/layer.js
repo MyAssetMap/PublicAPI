@@ -439,7 +439,7 @@ module.exports = class General {
       var itemsProcessed = 0;
       groups.forEach(function(group) {
       
-        DB.getGroupByID(0, group.id, function(error, currentKey, layerTitle, layerTOC) {
+        thisClass.getGroupByID(0, group.id, function(error, currentKey, layerTitle, layerTOC) {
           if (error) return callback(true,layerTOC);
         
           finalReturn.push(layerTOC);

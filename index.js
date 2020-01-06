@@ -248,7 +248,7 @@ app.get('/userpreference', function(req, res) {
     checkAuthentication(req, res, function(isLoggedIn, userID) {
       if (!isLoggedIn) return authRequired(res, userID);
 
-      Q.User.getUserPreference(userID, function(error,accounts) {
+      Q.User.getUserPreference(userID, function(error,preferences) {
       if (error) return APIReturn(res,false, preferences)
     
         return APIReturn(res,
@@ -606,7 +606,7 @@ app.post('/layer/update', function(req, res) {
     if (!isLoggedIn) return authRequired(res, userID);
   
     return APIReturn(res,
-      true, 'Layer updating is not yet built.', result
+      true, 'Layer updating is not yet built.', userID
     )
   })
 });

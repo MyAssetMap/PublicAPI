@@ -194,7 +194,7 @@ app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
 })
 
 // ========== = USER INFO = ==========
-    app.get('/users/init', function(req, res) {
+    app.get('/user/init', function(req, res) {
       if (!checkAPIKey(req, res)) return;
     
       checkAuthentication(req, res, function(isLoggedIn, userID) {

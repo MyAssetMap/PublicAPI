@@ -42,6 +42,9 @@ module.exports = class Users {
       DB.getTableWhere(pool, 'UserPreference', 'userID', userID, function(error, prefs) {
         if (error) return callback(true, prefs);
         
+        if (Array.isArray(prefs) && prefs.length == 0) return callback(false,{})
+        
+        
         var prefReturn = {}
         var prefKeyID
         prefs.forEach(function(pref, i) {
@@ -92,6 +95,8 @@ module.exports = class Users {
       
         DB.getTableWhere(pool, 'UserPreference', ['userID','key'], [userID,prefKeyID], function(error, prefs) {
           if (error) return callback(true, prefs);
+          
+          if (Array.isArray(prefs) && prefs.length == 0) return callback(false,{})
         
           var prefReturn = {}
           var prefKeyID
@@ -205,6 +210,8 @@ module.exports = class Users {
               mapID.sort();
               
               thisClass.getUserPreferences(userID, null, function(error,userPrefs) {
+                if (error) userPrefs = {};
+                
                 callback(false, {
                   isActive: isActive,
               

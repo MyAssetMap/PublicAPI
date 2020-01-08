@@ -222,6 +222,35 @@ app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
         }
       })
     })
+    
+    app.get('/users/init', function(req, res) {
+      if (!checkAPIKey(req, res)) return;
+    
+      checkAuthentication(req, res, function(isLoggedIn, userID) {
+        if (isLoggedIn) {
+            // return authRequired(res, userID);
+          Q.User.getUserPayload(userID, function(error, userPayload) {
+            if (error) return APIReturn(res, false, userPayload)
+            
+            return APIReturn(res,
+              true, 'User information obtained successfully.', userPayload
+            )
+          })
+        }else{
+          Q.User.createUser(req.query.userID,"–","–", function(error,userID) {
+            if (error) return APIReturn(res, false, userID)
+              
+            Q.User.getUserPayload(userID, function(error, userPayload) {
+              if (error) return APIReturn(res, false, userPayload)
+            
+              return APIReturn(res,
+                true, 'User did not exist. User has been created.', userPayload
+              )
+            })
+          })
+        }
+      })
+    })
 
     app.post('/user/login', function(req, res) { //TODO: REMOVE THIS IF NEEDED. IS USERS/INIT THE SAME THING?
       if (!checkAPIKey(req, res)) return;

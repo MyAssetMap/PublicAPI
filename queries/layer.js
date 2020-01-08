@@ -475,7 +475,7 @@ module.exports = class General {
         
           var layerTitle = layer[0];
           var layerCustomize = layer[1];
-    
+          
           thisClass.getGroupByID(currentKey, layerTitle, function(error,currentKey,layerTitle,layerTOC) {
             if (error) {
               console.error('TOC ERROR',layerTitle,layerTOC);
@@ -489,14 +489,83 @@ module.exports = class General {
 
             itemsProcessed++;
             if (itemsProcessed === userLayers.length) {
-            
+          
               //NOW THAT EVERYTHING IS DONE, CONTINUE.
-              callback(false, {user: finalReturn});
+              thisClass.finalGroupsProcess(finalReturn, function(error, processedReturn) {
+                if (error) return callback(true, processedReturn);
+                
+                callback(false, {user: processedReturn});
+              })
             }
           })
           currentKey++;
         })
       })
+    })
+  }
+  
+  static finalGroupsProcess(userGroups, callback) {
+    var processedLayers = 0;
+    console.log('Processing Begins');
+    userGroups.forEach(function(userLayer, key) {
+      
+      if (typeof userLayer === 'object' && typeof userLayer.groupId !== 'undefined' && typeof userLayer.children !== 'undefined') {
+        // console.error('PP',userLayer);
+
+        var layerIDs = userLayer.children.layerIds;
+  
+        if (Array.isArray(layerIDs)) {
+          var layerIDKey = 0;
+          var itemsProcessed = 0;
+          var totalItems = layerIDs.length;
+          if (totalItems == 0) processedLayers++;
+          
+          layerIDs.forEach(function(gLayerID) {
+            DB.getRowFromTableWhere(pool, 'LayerGroup', 'label', 'id', gLayerID, function(error, layerLabel) {
+              console.error('LL',gLayerID,layerLabel);
+              if (error) {
+                layerIDs[layerIDKey] = gLayerID;
+              }else{
+                if (!Array.isArray(layerLabel) || (Array.isArray(layerLabel) && layerLabel.length == 0)) {
+                  layerIDs[layerIDKey] = gLayerID;
+                }else {
+                  var layerIDString = util.toSlug(layerLabel[0].label)+'_'+gLayerID;
+                  if (!layerIDs.includes(layerIDString)) {
+                    layerIDs[layerIDKey] = layerIDString;
+                  }else{
+                    layerIDs.splice(layerIDKey, 1);
+                  }
+                }
+              }
+              
+              itemsProcessed++;
+              if (itemsProcessed === totalItems) {
+                
+                userGroups[key].children.layerIds = layerIDs;
+                // console.log('++ Group',userLayer)
+                processedLayers++;
+              }
+              // console.log(processedLayers === Object.size(userGroups),processedLayers,Object.size(userGroups));
+              if (processedLayers === Object.size(userGroups)) {
+
+                //NOW THAT EVERYTHING IS DONE, CONTINUE.
+                callback(false, userGroups);
+              }
+              layerIDKey++;
+            })
+          })
+        }
+      }else{
+        // console.log('++ Layer',userLayer)
+        processedLayers++;
+      }
+      
+      // console.log(processedLayers === Object.size(userGroups),processedLayers,Object.size(userGroups));
+      if (processedLayers === Object.size(userGroups)) {
+
+        //NOW THAT EVERYTHING IS DONE, CONTINUE.
+        callback(false, userGroups);
+      }
     })
   }
   

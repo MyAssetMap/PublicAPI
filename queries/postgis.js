@@ -59,15 +59,27 @@ module.exports = class PostGIS {
   static getPropertyField(layerID, propName, callback) {
     var thisClass = this;
     
-    propName = propName.toLowerCase();
+    var whereField = ['layer'];
+    var whereValue = [layerID];
+    if (propName != null) {
+      propName = propName.toLowerCase();
+      
+      whereField.push('name');
+      whereValue.push(propName);
+    }
     
-    DB.getTableWhere(pool, 'LayerProperty', ['layer','name'], [layerID, propName], function(error, props) {
+    
+    DB.getTableWhere(pool, 'LayerProperty', whereField, whereValue, function(error, props) {
       if (error) return callback(true, props);
       
       if (Array.isArray(props)) {
         if (props.length == 0) return callback(false, false);
-        if (props.length == 1) return callback(false, props[0]);
-        if (props.length >= 2) return callback(true, 'More than one property found for this ID.');
+        if (propName == null) {
+          if (props.length >= 1) return callback(false, props);
+        }else{
+          if (props.length == 1) return callback(false, props[0]);
+          if (props.length >= 2) return callback(true, 'More than one property found for this layer and name.');
+        }
       }
       callback(error, props)
     })

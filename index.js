@@ -1075,6 +1075,32 @@ app.post('/layer/properties/add', function(req, res) {
   });
 });
 
+app.post('/layer/properties/get', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+  
+    var layerID = util.extractLayerInt(req.body.layerID);
+    var propName = req.body.name;
+
+    if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
+    
+    // if (propName == null) return APIReturn(res,false, 'Property Name (`name`) must be supplied.');
+    // if (propName == '') return APIReturn(res,false, 'Property Name (`name`) cannot be empty');
+
+    Q.PostGIS.getPropertyField(layerID, propName, function(error, result) {
+      if (error) return APIReturn(res,false, result)
+        
+        if (result === false) return APIReturn(res, false, 'The property with this name (`'+propName+'`) does not exist.');
+
+      return APIReturn(res,
+        true, 'Property information has been returned.', result
+      )
+    })
+  });
+});
+
 app.post('/layer/properties/update', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   

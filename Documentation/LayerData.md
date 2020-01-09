@@ -17,7 +17,7 @@ layer\_{mapID}\_{dataType}
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
 
 + Body:
 ```
@@ -64,7 +64,7 @@ json — {
 
 
 # Create & Save GEOJSON by layerID
-## `POST` /alpha/layer/geojson/add
+## `POST` /dev/layer/geojson/add
 
 *Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
 
@@ -79,7 +79,7 @@ json — {
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
 
 + Body:
 ```
@@ -136,7 +136,7 @@ json — {
 
 
 # Get GEOJSON by featureID/layerID
-## `POST` /alpha/layer/geojson/get
+## `POST` /dev/layer/geojson/get
 
 *Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
 
@@ -155,7 +155,7 @@ json — {
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
 
 + Body:
 ```
@@ -422,7 +422,7 @@ json — {
 
 
 # Update GEOJSON by featureID
-## `POST` /alpha/layer/geojson/update
+## `POST` /dev/layer/geojson/update
 
 *Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
 
@@ -441,7 +441,7 @@ _**Note:** json that is passed should be a singular feature. It can contain just
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
 
 + Body:
 ```
@@ -497,7 +497,7 @@ _**Note:** json that is passed should be a singular feature. It can contain just
 
 
 # Delete GEOMETRY by layerID
-## `POST` /alpha/layer/geojson/delete
+## `POST` /dev/layer/geojson/delete
 
 *`WIP` Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
 
@@ -517,7 +517,7 @@ _**Note:** json that is passed should be a singular feature. It can contain just
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
 
 + Body:
 ```
@@ -562,7 +562,7 @@ _**Note:** json that is passed should be a singular feature. It can contain just
 
 
 # Create Property by layerID
-## `POST` /alpha/layer/properties/add
+## `POST` /dev/layer/properties/add
 
 *Create a new property element that is used by every feature on a layerID.
 
@@ -585,7 +585,7 @@ _**Note:** json that is passed should be a singular feature. It can contain just
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
 
 + Body:
 ```
@@ -643,8 +643,94 @@ _**Note:** json that is passed should be a singular feature. It can contain just
 </details>
 
 
+# Get Property by layerID
+## `POST` /dev/layer/properties/get
+
+*Get the information regarding the property element that is used by every feature on a layerID.
+
+- **layerID (Required):** The Layer ID you wish to import to.
+- **name (Optional):** If included, will only return props that match the name of property (Will always be lowercased). If ignored, will return array list of all props that match layerID.
+*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+
++ Body:
+```
+{
+    "layerID": "polygon_polygon_83"
+}
+```
+
+***
+
+
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Property information has been returned.",
+    "data": [
+        {
+            "id": 3,
+            "layer": 83,
+            "type": 1,
+            "name": "new",
+            "value": "float",
+            "default": "Test"
+        }
+    ]
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Property information has been returned.",
+    "data": {
+        "id": 3,
+        "layer": 83,
+        "type": 1,
+        "name": "new",
+        "value": "float",
+        "default": "Test"
+    }
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": false,
+    "message": "The property with this name (`help`) does not exist."
+}
+```
+</details>
+
+
 # Update Property by layerID 
-## `POST` /alpha/layer/properties/update
+## `POST` /dev/layer/properties/update
 
 *Update an existing property element that is used by every feature on a layerID. Allows you to update the type, value, or default value.
 
@@ -669,7 +755,7 @@ _**Note:** json that is passed should be a singular feature. It can contain just
     –
 
 + Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
 
 + Body:
 ```

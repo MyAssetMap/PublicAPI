@@ -46,8 +46,8 @@ module.exports = class Layer {
   
     DB.insertRow(pool,
       'LayerGroup',
-      ["ownerID", "mapID", "groupID", "label", "description", "canExpand", "canOrgView", "canOrgEdit"],
-      [userID, mapID, groupID, label, description, canExpand, canOrgView, canOrgEdit],
+      ["ownerID", "mapID", "groupID", "source-label", "label", "description", "canExpand", "canOrgView", "canOrgEdit"],
+      [userID, mapID, groupID, util.toSlug(label), label, description, canExpand, canOrgView, canOrgEdit],
       function(error, groupID) {
         if (error) return callback(true, groupID);
         console.log('GroupID:',groupID)
@@ -55,7 +55,7 @@ module.exports = class Layer {
         thisClass.setupLayer(payload, groupID, function(error, setupLayer) {
           if (error) callback(error, setupLayer);
         
-          var newLayerName = groupID.toString();
+          var newLayerName = util.toSlug(label) + '_' + groupID.toString();
           callback(false, newLayerName)
         })
       }
@@ -308,7 +308,7 @@ module.exports = class Layer {
         var processedGroup = group;
       
         if (processedGroup.label !== null)
-          processedGroup.id = processedGroup.id.toString();
+          processedGroup.id = processedGroup['source-label'] + '_' + processedGroup.id.toString();
       
         processedGroup.group = "dataLayer"
       
@@ -341,7 +341,7 @@ module.exports = class Layer {
           
             var layerLabel = '';
             if (processedGroup.label !== null) {
-              layerLabel = util.toSlug(layer['source-layer']) + '_';
+              layerLabel = layer['source-layer'] + '_';
             
               layer.id = layerLabel + layer.id.toString();
               layer.source = layerLabel + 'source';
@@ -506,7 +506,7 @@ module.exports = class Layer {
   
   static finalGroupsProcess(userGroups, callback) {
     var processedLayers = 0;
-    console.log('Processing Begins');
+    // console.log('Processing Begins');
     userGroups.forEach(function(userLayer, key) {
       
       if (typeof userLayer === 'object' && typeof userLayer.groupId !== 'undefined' && typeof userLayer.children !== 'undefined') {
@@ -521,15 +521,15 @@ module.exports = class Layer {
           if (totalItems == 0) processedLayers++;
           
           layerIDs.forEach(function(gLayerID) {
-            DB.getRowFromTableWhere(pool, 'LayerGroup', 'label', 'id', gLayerID, function(error, layerLabel) {
-              console.error('LL',gLayerID,layerLabel);
+            DB.getRowFromTableWhere(pool, 'LayerGroup', 'source-label', 'id', gLayerID, function(error, layerLabel) {
+              // console.error('LL',gLayerID,layerLabel);
               if (error) {
                 layerIDs[layerIDKey] = gLayerID;
               }else{
                 if (!Array.isArray(layerLabel) || (Array.isArray(layerLabel) && layerLabel.length == 0)) {
                   layerIDs[layerIDKey] = gLayerID;
                 }else {
-                  var layerIDString = gLayerID.toString();
+                  var layerIDString = layerLabel[0]['source-label'] + '_' + gLayerID.toString();
                   if (!layerIDs.includes(layerIDString)) {
                     layerIDs[layerIDKey] = layerIDString;
                   }else{

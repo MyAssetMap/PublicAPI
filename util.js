@@ -44,6 +44,15 @@ const toSlug = (str) => {
   return res;
 }
 
+const isValidJSON = (str) => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
 const extractLayerInt = (layerID) => {
   if (isNaN(layerID) && layerID != null) {
     var layerIDArr = layerID.split("_");
@@ -88,6 +97,7 @@ function generateRandomString(length, numOnly) {
 
 module.exports = {
   toSlug,
+  isValidJSON,
   extractLayerInt,
   intToLayer,
   intToLayerGroup,

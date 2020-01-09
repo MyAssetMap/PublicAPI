@@ -64,7 +64,7 @@ json — {
 
 
 # Create & Save GEOJSON by layerID
-## `POST` /alpha/layer/geojson/create
+## `POST` /alpha/layer/geojson/add
 
 *Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
 
@@ -135,135 +135,6 @@ json — {
 </details>
 
 
-# Create & Save GEOJSON by layerID Duplicate
-## `POST` /alpha/layer/geojson/create
-
-*Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
-
-- **mapID (Required):** The Map ID you wish to import to.
-- **type (Optional):** The type of layer you are importing to (user, org, global). Defaults to _user_
-- **layerID (Required):** The Layer ID you wish to import to.
-- **json (Required):** The json you are importing.*
-
-### Request:
-
-+ Headers:
-    –
-
-+ Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
-
-+ Body:
-```
-{
-    "mapID": "1",
-    "layerID": "85",
-    "json": "{\n  \"type\": \"FeatureCollection\",\n  \"features\": [\n    {\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [\n            [\n              84.375,\n              53.74871079689897\n            ],\n            [\n              132.1875,\n              38.548165423046584\n            ],\n            [\n              119.17968749999999,\n              71.52490903732816\n            ],\n            [\n              84.375,\n              53.74871079689897\n            ]\n          ]\n        ]\n      }\n    }\n  ]\n}"
-}
-```
-
-***
-
-
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "success": true,
-    "message": "GEOJson has been created.",
-    "data": []
-}
-```
-</details>
-
-
-# Update GEOJSON by featureID
-## `POST` /alpha/layer/geojson/update
-
-*Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
-
-- **mapID (Required):** The Map ID you wish to import to.
-- **type (Optional):** The type of layer you are importing to (user, org, global). Defaults to _user_
-- **featureID (Required):** The featureID of the you are importing to (user, org, public)
-- **json (Required):** The updated json you are updating.
-
-_**Note:** json that is passed should be a singular feature. It can contain just geometry to update only the geometry ignoring properties, just properties to update only the properties ignoring geometry, or both geometry and properties to update both._ 
-
-*
-
-### Request:
-
-+ Headers:
-    –
-
-+ Url Params:
-    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
-
-+ Body:
-```
-mapID — 1
-featureID — 25
-json — {
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -109.6875,
-          36.03133177633187
-        ]
-      }
-    }
-```
-
-***
-
-
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "success": true,
-    "message": "Feature has been updated."
-}
-```
-</details>
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "success": false,
-    "message": "Please only pass one GEOJSON feature to endpoint for updating."
-}
-```
-</details>
-
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "success": false,
-    "message": "Feature ID (`featureID`) must be supplied."
-}
-```
-</details>
-
-
 # Get GEOJSON by featureID/layerID
 ## `POST` /alpha/layer/geojson/get
 
@@ -288,8 +159,11 @@ json — {
 
 + Body:
 ```
-mapID — 1
-layerID — 899
+{
+    "mapID": "1",
+    "layerID": "85",
+    "featureID": "85"
+}
 ```
 
 ***
@@ -547,6 +421,81 @@ layerID — 899
 </details>
 
 
+# Update GEOJSON by featureID
+## `POST` /alpha/layer/geojson/update
+
+*Post the JSON you want to upload using this api, and it will convert that to geometry and properties for use with the PG database.
+
+- **mapID (Required):** The Map ID you wish to import to.
+- **type (Optional):** The type of layer you are importing to (user, org, global). Defaults to _user_
+- **featureID (Required):** The featureID of the data you are updating
+- **json (Required):** The updated json you are updating.
+
+_**Note:** json that is passed should be a singular feature. It can contain just geometry to update only the geometry ignoring properties, just properties to update only the properties ignoring geometry, or both geometry and properties to update both._ 
+
+*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+
++ Body:
+```
+{
+    "mapID": "1",
+    "featureID": "25",
+    "json": "{\n      \"type\": \"Feature\",\n      \"properties\": {},\n      \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [\n          -109.6875,\n          36.03133177633187\n        ]\n      }\n    }"
+}
+```
+
+***
+
+
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Feature has been updated."
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": false,
+    "message": "Please only pass one GEOJSON feature to endpoint for updating."
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": false,
+    "message": "Feature ID (`featureID`) must be supplied."
+}
+```
+</details>
+
+
 # Delete GEOMETRY by layerID
 ## `POST` /alpha/layer/geojson/delete
 
@@ -572,9 +521,11 @@ layerID — 899
 
 + Body:
 ```
-mapID — 1
-type — user
-layerID — 85
+{
+    "mapID": "1",
+    "type": "user",
+    "layerID": "85"
+}
 ```
 
 ***
@@ -604,6 +555,173 @@ layerID — 85
 {
     "success": true,
     "message": "Data for this feature has been deleted.",
+    "data": []
+}
+```
+</details>
+
+
+# Create Property by layerID
+## `POST` /alpha/layer/properties/add
+
+*Create a new property element that is used by every feature on a layerID.
+
+- **layerID (Required):** The Layer ID you wish to import to.
+- **type (Optional):** The type of property (text,checkbox,dropdown) (Defaults to text)
+- **name (Required):** The name of property (Will always be lowercased)
+- **value (Required):** The type of property (
+- **default (Optional):** The default if not set value of property (Defaults to 0/false)
+
+*Valid Types:*
+- **text:** Text
+- **number** An integer or float (Ex: 1 OR 3.1415)
+- **date:** A valid UNIX timestamp. (Ex. Date.now() [1578535183033])
+- **dropdown:** A valid UNIX timestamp. (Ex. Date.now() [1578535183033])
+- **image:** The URL of the image that is stored in S3.*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+
++ Body:
+```
+{
+    "layerID": "polygon_polygon_83",
+    "type": "integer",
+    "name": "help",
+    "value": "Test",
+    "default": "Test"
+}
+```
+
+***
+
+
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": false,
+    "message": "Property Field Type (`type`) is invalid."
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": false,
+    "message": "Property Field Type (`type`) is invalid."
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Property has been created.",
+    "data": "Property Field Type (`type`) is invalid."
+}
+```
+</details>
+
+
+# Update Property by layerID 
+## `POST` /alpha/layer/properties/update
+
+*Update an existing property element that is used by every feature on a layerID. Allows you to update the type, value, or default value.
+
+
+- **layerID (Required):** The Layer ID you wish to import to.
+- **name (Required):** The name of property (Will always be lowercased)
+- **type (Optional):** The update to the type of property*
+- **value (Optional):** The update to the value of property (
+- **default (Optional):** The default if not set value of property (Defaults to 0/false)
+
+
+*Valid Types:*
+- **text:** Text
+- **number** An integer or float (Ex: 1 OR 3.1415)
+- **date:** A valid UNIX timestamp. (Ex. Date.now() [1578535183033])
+- **dropdown:** A valid UNIX timestamp. (Ex. Date.now() [1578535183033])
+- **image:** The URL of the image that is stored in S3.*
+
+### Request:
+
++ Headers:
+    –
+
++ Url Params:
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
+
++ Body:
+```
+{
+    "layerID": "polygon_polygon_83",
+    "name": "new",
+    "type": "number",
+    "value": "float"
+}
+```
+
+***
+
+
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Property has been updated.",
+    "data": []
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Property has been updated.",
+    "data": []
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Property has been updated.",
     "data": []
 }
 ```

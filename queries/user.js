@@ -8,7 +8,7 @@ const pool = new pg.Pool(config.dbPool)
 
 const DB = require('./db')
 
-module.exports = class Users {
+module.exports = class User {
   // ========================
   // = CUSTOM LOGIC QUERIES =
   // ========================
@@ -363,13 +363,16 @@ module.exports = class Users {
   //TODO:CREATE FUNCTION FOR THIS
   //with userID get user superuser user ID if SuperUser
   static getAccountsSuperByUserID(userID, callback) {
-    var thisClass = this;DB.getTableWhere(pool, 'SuperUser','userID',userID,callback)}
+    DB.getTableWhere(pool, 'SuperUser','userID',userID,callback)
+  }
 
   //TODO:CREATE FUNCTION FOR THIS
   //with userID get account the user belongs.
   static getAccountsByUserID(userID, callback) {
-    var thisClass = this;DB.getRowFromTableWhere(pool, 'AccountUser','accountID','userID',userID,callback)}
+    DB.getRowFromTableWhere(pool, 'AccountUser','accountID','userID',userID,callback)
+  }
 
   static getMapsByAccountID(accountID, callback) {
-    var thisClass = this;DB.getRowFromTableWhere(pool, 'Map','id','accountID',accountID,callback)}
+    DB.getRowFromTableWhere(pool, 'Map','id','accountID',accountID,callback)
+  }
 }

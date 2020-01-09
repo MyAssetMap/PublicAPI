@@ -11,7 +11,7 @@ const pool = new pg.Pool(config.dbPool)
 
 const DB = require('./db')
 
-module.exports = class General {
+module.exports = class Layer {
   // ========================
   // = CUSTOM LOGIC QUERIES =
   // ========================

@@ -8,7 +8,7 @@ const pool = new pg.Pool(config.pgPool)
 
 const DB = require('./db')
 
-module.exports = class General {
+module.exports = class PostGIS {
   
   static testPG(callback) {
     var thisClass = this;
@@ -52,7 +52,97 @@ module.exports = class General {
       return DB.runQuery(pool, sqlQuery, callback)
     });
   }
+  
+  // ============================
+  // = DATA PROPERTY MANAGEMENT =
+  // ============================
+  static getPropertyField(layerID, propName, callback) {
+    var thisClass = this;
+    
+    propName = propName.toLowerCase();
+    
+    DB.getTableWhere(pool, 'LayerProperty', ['layer','name'], [layerID, propName], function(error, props) {
+      if (error) return callback(true, props);
+      
+      if (Array.isArray(props)) {
+        if (props.length == 0) return callback(false, false);
+        if (props.length == 1) return callback(false, props[0]);
+        if (props.length >= 2) return callback(true, 'More than one property found for this ID.');
+      }
+      callback(error, props)
+    })
+  }
+  
+  static createProperty(layerID, propName, propType, propValue, propDefault, callback) {
+    var thisClass = this;
+    
+    propName = propName.toLowerCase();
+    
+    //Fix propValue
+    if (!util.isValidJSON(propValue)) propValue = JSON.stringify(propValue);
+    
+    //Default type is text
+    if (propType == null) propType = 'text';
+    
+    //Check if the propType Exists for layerID
+    thisClass.getPropertyField(layerID, propName, function(error, result) {
+      if (error) return callback(true, result)
+      
+      if (result !== false) return callback(true, 'A property for this name (`'+propName+'`) and layer already exists.');
+      
+      DB.getRowFromTableWhere(pool, 'LayerPropertyKey', 'id', 'name', propType, function(error, propTypeID) {
+        if (error) return callback(true, propTypeID);
+        
+        if (!Array.isArray(propTypeID) || propTypeID.length != 1) {
+          return callback(true, 'Property Field Type (`type`) is invalid.');
+        }else propTypeID = propTypeID[0].id;
+      
+        return DB.insertRow(pool, 'LayerProperty', ['layer','type','name','value','default'], [layerID, propTypeID, propName, propValue, propDefault], callback);
+      })
+    });
+  }
+  
+  static updateProperty(layerID, propName, propType, propValue, propDefault, callback) {
+    var thisClass = this;
+    
+    propName = propName.toLowerCase();
+    
+    //Fix propValue
+    if (!util.isValidJSON(propValue)) propValue = JSON.stringify(propValue);
+    
+    //Check for anything to update
+    if (propType == null && propValue == null & propDefault == null) return callback(true,'Please specify a `type`, `value`, or `default` to update for this layerID.');
+    
+    //Check if the propType Exists for layerID
+    thisClass.getPropertyField(layerID, propName, function(error, result) {
+      if (error) return callback(true, result)
+      
+      if (result === false) return callback(true, 'The property with this name (`'+propName+'`) does not exist.');
+      
+      var changes = {}
+      if (propValue != null) changes.value = propValue;
+      if (propDefault != null) changes.default = propDefault;
+      if (propType == null) {
+        return DB.bulkUpdateRow(pool, 'LayerProperty', changes, ['layer','name'], [layerID, propName], callback);
+      }else{
+        DB.getRowFromTableWhere(pool, 'LayerPropertyKey', 'id', 'name', propType, function(error, propTypeID) {
+          if (error) return callback(true, propTypeID);
+        
+          if (!Array.isArray(propTypeID) || propTypeID.length != 1) {
+            propTypeID = 0; //return callback(false, 'User Preference Key (`key`) is invalid.');
+          }else propTypeID = propTypeID[0].id;
+        
+          if (result.type != propTypeID) changes.type = propTypeID;
+      
+          return DB.bulkUpdateRow(pool, 'LayerProperty', changes, ['layer','name'], [layerID, propName], callback);
+        })
+      }
+    });
+  }
 
+// ==================================
+// = FEATURE AND GEOJSON MANAGEMENT =
+// ==================================
   static updateFeature(mapID, type, featureID, geom, prop, callback) {
     var thisClass = this;
   

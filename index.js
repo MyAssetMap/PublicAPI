@@ -880,6 +880,7 @@ app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
 // = LAYER DATA (GEOJSON, FEATURES, & PROPERTIES) =
 // ================================================
 
+// ========== = GEOJSON = ==========
 app.post('/layer/geojson/add', function(req, res) {
   if (!checkAPIKey(req, res)) return;
   
@@ -1043,8 +1044,64 @@ app.post('/layer/geojson/delete', function(req, res) {
   });
 });
 
+// ========== = DATA PROPS = ==========
+app.post('/layer/properties/add', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+  
+    var layerID = util.extractLayerInt(req.body.layerID);
+    var propName = req.body.name;
+    
+    var propType = req.body.type;
+    var propValue = req.body.value;
+    var propDefault = req.body.default;
 
+    if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
+    
+    if (propName == null) return APIReturn(res,false, 'Property Name (`name`) must be supplied.');
+    if (propName == '') return APIReturn(res,false, 'Property Name (`name`) cannot be empty');
+    
+    if (propValue == null) propValue = '';
 
+    Q.PostGIS.createProperty(layerID, propName, propType, propValue, propDefault, function(error, result) {
+      if (error) return APIReturn(res,false, result)
+
+      return APIReturn(res,
+        true, 'Property has been created.', result
+      )
+    })
+  });
+});
+
+app.post('/layer/properties/update', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+  
+    var layerID = util.extractLayerInt(req.body.layerID);
+    var propName = req.body.name;
+    
+    var propType = req.body.type;
+    var propValue = req.body.value;
+    var propDefault = req.body.default;
+
+    if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
+    
+    if (propName == null) return APIReturn(res,false, 'Property Name (`name`) must be supplied.');
+    if (propName == '') return APIReturn(res,false, 'Property Name (`name`) cannot be empty');
+
+    Q.PostGIS.updateProperty(layerID, propName, propType, propValue, propDefault, function(error, result) {
+      if (error) return APIReturn(res,false, result)
+
+      return APIReturn(res,
+        true, 'Property has been updated.', result
+      )
+    })
+  });
+});
 
 
 

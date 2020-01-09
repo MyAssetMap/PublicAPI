@@ -55,7 +55,7 @@ module.exports = class Layer {
         thisClass.setupLayer(payload, groupID, function(error, setupLayer) {
           if (error) callback(error, setupLayer);
         
-          var newLayerName = util.toSlug(label) + '_' + groupID.toString();
+          var newLayerName = groupID.toString();
           callback(false, newLayerName)
         })
       }
@@ -308,7 +308,7 @@ module.exports = class Layer {
         var processedGroup = group;
       
         if (processedGroup.label !== null)
-          processedGroup.id = util.toSlug(processedGroup.label) + '_' + processedGroup.id.toString();
+          processedGroup.id = processedGroup.id.toString();
       
         processedGroup.group = "dataLayer"
       
@@ -341,7 +341,7 @@ module.exports = class Layer {
           
             var layerLabel = '';
             if (processedGroup.label !== null) {
-              layerLabel = util.toSlug(processedGroup.label) + '_' + util.toSlug(layer['source-layer']) + '_';
+              layerLabel = util.toSlug(layer['source-layer']) + '_';
             
               layer.id = layerLabel + layer.id.toString();
               layer.source = layerLabel + 'source';
@@ -529,7 +529,7 @@ module.exports = class Layer {
                 if (!Array.isArray(layerLabel) || (Array.isArray(layerLabel) && layerLabel.length == 0)) {
                   layerIDs[layerIDKey] = gLayerID;
                 }else {
-                  var layerIDString = util.toSlug(layerLabel[0].label)+'_'+gLayerID;
+                  var layerIDString = gLayerID.toString();
                   if (!layerIDs.includes(layerIDString)) {
                     layerIDs[layerIDKey] = layerIDString;
                   }else{

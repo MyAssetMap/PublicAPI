@@ -14,23 +14,9 @@ module.exports = class PostGIS {
     var thisClass = this;
     DB.runQuery(pool, 'SELECT tablename FROM pg_tables WHERE schemaname != \'pg_catalog\' AND schemaname != \'information_schema\';', callback);
   }
-
-  static insertLayer(payload, callback) {
+  
+  static processGEOJSON(tableName, layerID, json, callback) {
     var thisClass = this;
-  
-    var mapID = payload.mapID;
-    var type = payload.type;
-    var layerID = payload.layerID;
-    var geometry = JSON.stringify(payload.geom);
-    var properties = JSON.stringify(payload.prop);
-  
-    if (properties == null) {
-      console.log('No Properties passed');
-    }
-  
-    var tableName = `"public"."layer_`+mapID+((type != '') ? '_'+type : type)+`"`;
-    tableName = tableName.toLowerCase();
-  
     var sqlCreate = `CREATE TABLE IF NOT EXISTS `+tableName+` (
       "id" serial,
       "layer" integer,
@@ -42,23 +28,58 @@ module.exports = class PostGIS {
     DB.runQuery(pool, sqlCreate, function(error, result) {
       if (error) return callback(true, result)
     
-      var sqlQuery = `INSERT INTO `+tableName+` (layer, geom, prop)
-      VALUES
-      (
-        '`+layerID+`',
-        ST_TRANSFORM(ST_SetSRID(ST_GeomFromGeoJSON('`+geometry+`'),4326),4326),
-        '`+properties+`'
-      )`;
-      return DB.runQuery(pool, sqlQuery, callback)
+      // console.log(json);
+      var geoJSON;
+      if (typeof json === 'string') {
+        geoJSON = JSON.parse(json);
+      }else if (typeof json === 'object') {
+        geoJSON = json;
+      }
+    
+      if (geoJSON.type == 'FeatureCollection') {
+        var featuresProcessed = 0;
+        geoJSON.features.forEach(function(feature) {
+          if (feature.type != 'Feature') return callback(true, 'GEOJSON have invalid features: '+feature.type);
+    
+          var geometry = feature.geometry;
+          var properties = feature.properties;
+          
+          thisClass.insertLayer(tableName, layerID, geometry, properties, function(error, result) {
+            featuresProcessed++;
+            if (error) return callback(true, result)
+
+            if (featuresProcessed == geoJSON.features.length) {
+              return callback(false, 'GEOJson Data has been imported.', result)
+            }
+          })
+          //console.log(type,geometry,properties);
+        })
+      }else return callback(true, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
     });
+  }
+
+  static insertLayer(tableName, layerID, geom, prop, callback) {
+    var geometry = JSON.stringify(geom);
+    var properties = JSON.stringify(prop);
+  
+    if (properties == null) {
+      console.log('No Properties passed');
+    }
+    
+    var sqlQuery = `INSERT INTO `+tableName+` (layer, geom, prop)
+    VALUES
+    (
+      '`+layerID+`',
+      ST_TRANSFORM(ST_SetSRID(ST_GeomFromGeoJSON('`+geometry+`'),4326),4326),
+      '`+properties+`'
+    )`;
+    return DB.runQuery(pool, sqlQuery, callback)
   }
   
   // ============================
   // = DATA PROPERTY MANAGEMENT =
   // ============================
   static getPropertyField(layerID, propName, callback) {
-    var thisClass = this;
-    
     var whereField = ['layer'];
     var whereValue = [layerID];
     if (propName != null) {

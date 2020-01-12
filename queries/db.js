@@ -10,12 +10,19 @@ module.exports = class DB {
   // ===================
 
   static runQuery(pool, queryMsg, callback) {
-    console.log('QUERY:',queryMsg)
+    //console.log('QUERY:',queryMsg)
   
     pool.query(queryMsg, (error, results) => {
       if (error) {
-        callback(true, error.message)
-      }else callback(false, results.rows);
+        console.error('DB Error:',error.message,error.stack)
+        return callback(true, error.message)
+      }else{
+        console.log('DB:',queryMsg.substr(0, 50)+(queryMsg.length > 50 ? '…' : ''));
+      
+        if (typeof results === 'undefined') return callback(false, []);
+        if (typeof results.rows === 'undefined') return callback(false, results);
+        return callback(false, results.rows);
+      }
     })
   }
 

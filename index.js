@@ -899,34 +899,17 @@ app.post('/layer/geojson/add', function(req, res) {
     if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
   
     if (json == null || json == '') return APIReturn(res,false, 'GEOJSON (`json`) must be supplied.');
-    console.log(json);
-    var geoJSON;
-    if (typeof json === 'string') {
-      geoJSON = JSON.parse(json);
-    }else if (typeof json === 'object') {
-      geoJSON = json;
-    }
     
-    if (geoJSON.type == 'FeatureCollection') {
-      geoJSON.features.forEach(function(feature) {
-        if (feature.type != 'Feature') return APIReturn(res,false, 'GEOJSON have invalid features: '+feature.type);
+    var tableName = `"public"."layer_`+mapID+((type != '') ? '_'+type : type)+`"`;
+    tableName = tableName.toLowerCase();
     
-        var geometry = feature.geometry;
-        var properties = feature.properties;
-
-        var payload = {mapID: mapID, type: type, layerID: layerID, geom: geometry, prop: properties};
-
-        Q.PostGIS.insertLayer(payload, function(error, result) {
-          if (error) return APIReturn(res,false, result)
-
-          return APIReturn(res,
-            true, 'GEOJson has been created.', result
-          )
-        })
-
-        //console.log(type,geometry,properties);
-      })
-    }else return APIReturn(res,false, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
+    Q.PostGIS.processGEOJSON(tableName, layerID, json, function(error, result) {
+      if (error) return APIReturn(res, false, result)
+      
+      return APIReturn(res,
+        true, 'GEOJSON has been imported successfully to layer: '+req.body.layerID
+      )
+    });
   });
 });
 

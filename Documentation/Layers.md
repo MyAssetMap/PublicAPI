@@ -1,5 +1,5 @@
 # Create Layer (Entire Structure)
-## `POST` /alpha/layer/add
+## `POST` /dev/layer/add
 
 *Create a new TOC, Layer, Sublayers, and applicable sources with the name specified all with one endpoint. Once created, you can then import geojson as normal.
 
@@ -25,14 +25,14 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
 {
-    "label": "Fill Test",
+    "label": "Testing Layer Adding",
     "sourceType": "user",
-    "type": "fill",
+    "type": "point",
     "mapID": "1"
 }
 ```
@@ -85,12 +85,13 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 
 
 # Update Layer Group
-## `POST` /alpha/layer/update
+## `POST` /dev/layer/update
 
 *`WIP` Takes a layerID, and updates whichever fields are passed, leaving the value untouched of fields that are not passed.
 
 - **userID (Required):** The User ID of the user who is making the change.
 - **layerID (Required):** The layerGroupID of the layer group you would like to update.
+- **——OPTIONAL——** 
 - **mapID (Optional):** The map ID that this layer belongs to.
 - **label (Optional):** The label/title of the layer TOC.
 - **description (Optional):** The description of the layer TOC.
@@ -108,17 +109,15 @@ _**Note:** The layerGroupID can be passed as a integer, or as the mapbox layerID
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
 {
     "layerID": "layer_group_16",
-    "mapID": 0,
-    "groupID": 1,
-    "label": "New Layer",
-    "canOrgView": true,
-    "canOrgEdit": true
+    "label": "New Layer Name",
+    "description": "Test Layer by Dakotah",
+    "canOrgView": true
 }
 ```
 
@@ -126,9 +125,50 @@ _**Note:** The layerGroupID can be passed as a integer, or as the mapbox layerID
 
 
 
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Layer Group (TOC) has been updated.",
+    "data": []
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Layer has been updated.",
+    "data": []
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": false,
+    "message": "invalid input syntax for integer: \"layer_group_16\""
+}
+```
+</details>
+
 
 # Delete Layer (Entire Structure)
-## `POST` /alpha/layer/delete
+## `POST` /dev/layer/delete
 
 *Delete an existing layer.
 `FUTURE` Optionally delete the data associated permanently?
@@ -146,7 +186,7 @@ _**Note:** The layerGroupID can be passed as a integer, or as the mapbox layerID
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
@@ -186,7 +226,7 @@ _**Note:** The layerGroupID can be passed as a integer, or as the mapbox layerID
 
 
 # Create Layer
-## `POST` /alpha/layer/add/layer
+## `POST` /dev/layer/add/layer
 
 *Create a new TOC, Layer, Sublayers, and applicable sources with the name specified all with one endpoint. Once created, you can then import geojson as normal.
 
@@ -212,7 +252,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
@@ -230,18 +270,19 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 
 
 # Update Layer 
-## `POST` /alpha/layer/update/layer
+## `POST` /dev/layer/update/layer
 
 *`WIP` Takes a layerID, and updates whichever fields are passed, leaving the value untouched of fields that are not passed.
 
 - **userID (Required):** The User ID of the user who is making the change.
 - **layerID (Required):** The layer ID of the layer group you would like to update.
+- **——OPTIONAL——** 
 - **groupID (Optional):** To combine multiple layers into one layer group TOC, define the group here.
 - **label (Optional):** The label/title of the layer TOC.
 - **interactive (Optional):** Should the layer be interactive?
 - **minzoom (Optional):** The minzoom of the layer.
 - **layout (Optional):** Update the layout properties. Will overwrite any objects passed.
-- **paint (Optional):** Update the default paint properties (not the user paint properties). Will overwrite any objects passed.
+- **paint (Optional):** Update the default paint properties. Will save as usual to global or user. Will overwrite any objects passed.
 - **metadata (Optional):** Update the metadata properties. Will overwrite any objects passed.
 - **filter (Optional):** Update the filter properties. Will overwrite any objects passed.
 
@@ -254,17 +295,18 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
 {
-    "layerID": "layer_group_16",
-    "mapID": 0,
-    "groupID": 1,
+    "layerID": "layer_layer_15",
     "label": "New Layer",
-    "canOrgView": true,
-    "canOrgEdit": true
+    "interactive": true,
+    "minzoom": 11,
+    "filter": {
+        "test": "true"
+    }
 }
 ```
 
@@ -272,9 +314,37 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 
 
 
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Layer has been updated.",
+    "data": []
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Layer has been updated.",
+    "data": []
+}
+```
+</details>
+
 
 # Delete Layer
-## `POST` /alpha/layer/delete/layer
+## `POST` /dev/layer/delete/layer
 
 *Delete an existing layer.
 `FUTURE` Optionally delete the data associated permanently?
@@ -292,7 +362,7 @@ _**Note:** The layerID can be passed as a integer, or as the mapbox layerID (lay
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
@@ -307,7 +377,7 @@ _**Note:** The layerID can be passed as a integer, or as the mapbox layerID (lay
 
 
 # Create Sublayer
-## `POST` /alpha/layer/add/sublayer
+## `POST` /dev/layer/add/sublayer
 
 *Create a new sublayer with the name specified.
 
@@ -332,7 +402,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
@@ -350,13 +420,14 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 
 
 # Update Sublayer
-## `POST` /alpha/layer/update/sublayer
+## `POST` /dev/layer/update/sublayer
 
 *`WIP` Takes a layerID, and updates whichever key fields are passed, leaving the value untouched of fields that are not passed.
 
 - **userID (Required):** The User ID of the user who is making the change.
-- **sublayerID (Required):** The layer ID of the layer group you would like to update.
-- **key (Optional):** The sublayer object key that is used to reference the key.
+- **layerID (Required):** The layer ID of the layer you would like to update the sublayer info for (NOT THE SUBLAYER ID)
+- **key (Required):** The sublayer object key that is used to reference the specific sublayer you are editing.
+- **——OPTIONAL——** 
 - **type (Optional):** The type of the sublayer.
 - **label (Optional):** The label/title of the layer TOC.
 - **interactive (Optional):** Should the layer be interactive?
@@ -374,17 +445,16 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
 {
-    "layerID": "layer_group_16",
-    "mapID": 0,
-    "groupID": 1,
-    "label": "New Layer",
-    "canOrgView": true,
-    "canOrgEdit": true
+    "layerID": "layer_group_81",
+    "key": "symbol",
+    "metadata": {
+        "test": "true"
+    }
 }
 ```
 
@@ -392,9 +462,51 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 
 
 
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Sublayer has been updated.",
+    "data": []
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Sublayer has been updated.",
+    "data": []
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Sublayer has been updated.",
+    "data": []
+}
+```
+</details>
+
 
 # Delete Sublayer
-## `POST` /alpha/layer/delete/sublayer
+## `POST` /dev/layer/delete/sublayer
 
 *Delete an existing sublayer.
 `FUTURE` Optionally delete the data associated permanently?
@@ -412,7 +524,7 @@ _**Note:** The layerGroupID can be passed as a integer, or as the mapbox layerID
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
@@ -427,12 +539,13 @@ _**Note:** The layerGroupID can be passed as a integer, or as the mapbox layerID
 
 
 # Update Layer Source
-## `POST` /alpha/layer/update/source
+## `POST` /dev/layer/update/source
 
 *`WIP` Takes a layerID, gets the source, and updates whichever fields are passed, leaving the value untouched of fields that are not passed.
 
 - **userID (Required):** The User ID of the user who is making the change.
-- **layerID (Required):** The layer ID of the layer group you would like to update.
+- **layerID (Required):** The layer ID of the layer you would like to update the source info of (NOT THE SOURCE ID)
+- **——OPTIONAL——** 
 - **type (Optional):** The type of the layer. (Note: Updating this might make the data for the layer source break.) If the data is dynamic using PostGIS, the following values are typical: user, org, global.
 - **tiles (Optional):** The tiles should be empty if PostGIS is being used. If static, you can update it using this.
 - **maxzoom (Optional):** The maxzoom of the value.
@@ -446,7 +559,7 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
     –
 
 + Url Params:
-    + `userID`: 6b3fd4ca-9e4b-49e6-9beb-6cf31e7d780c
+    + `userID`: 6872305e-65e3-48f1-a785-08ce114c8e49
 
 + Body:
 ```
@@ -463,5 +576,33 @@ _**Note:** Instead of passing a userID, it should be passed automatically using 
 ***
 
 
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Layer updating is not yet built.",
+    "data": 16
+}
+```
+</details>
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": true,
+    "message": "Layer updating is not yet built.",
+    "data": 16
+}
+```
+</details>
 
 

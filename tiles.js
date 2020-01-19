@@ -52,6 +52,7 @@ module.exports = class GEOJSONTILES {
                 })
                 //Overwrite the props
                 jsonReturn.features[i].properties.prop = props;
+                // delete jsonReturn.features[i].properties.prop;
               }
               
               if (i === jsonReturn.features.length) {

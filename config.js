@@ -42,9 +42,14 @@ const pgPool = {
     connectionTimeoutMillis: DBInfo.connectionTimeoutMillis, // return an error after 1 second if connection could not be established
 }
 
+const s3 = {
+  bucket: "my-asset-map-data"
+}
+
 
 
 module.exports = {
   dbPool,
-  pgPool
+  pgPool,
+  s3
 }	

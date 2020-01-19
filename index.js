@@ -17,6 +17,7 @@ const util = require('./util');
 const Q = require('./queries/')
 
 const tiles = require('./tiles')
+const s3 = require('./s3')
 
 // ============
 // = SETTINGS =
@@ -104,9 +105,27 @@ app.get('/', function(req, res) {
   if (!checkAPIKey(req, res)) return;
 
   return APIReturn(res,
-    true, 'Welcome to the MY ASSET MAP endpoint v1.0'
+    true, 'Welcome to the MY ASSET MAP endpoint v1.01'
   )
 })
+
+app.post('/s3', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+    
+    var file = req.body.file;
+
+    s3.getFile(file, function(error, result) {
+      if (error) return APIReturn(res,false, result)
+
+      return APIReturn(res,
+        true, 'File has been located.', result
+      )
+    })
+  });
+});
 
 app.get('/db', function(req, res) {
   if (!checkAPIKey(req, res)) return;
@@ -891,25 +910,44 @@ app.post('/layer/geojson/add', function(req, res) {
     var type = req.body.type;
     var layerID = util.extractLayerInt(req.body.layerID);
     var json = req.body.json;
+    var file = req.body.file;
   
     if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
     if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
 
     if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
     if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
-  
-    if (json == null || json == '') return APIReturn(res,false, 'GEOJSON (`json`) must be supplied.');
+    
+    if (json == null && file == null) return APIReturn(res,false, 'GEOJSON (`json`) or S3 file path (`file`) must be supplied.');
     
     var tableName = `"public"."layer_`+mapID+((type != '') ? '_'+type : type)+`"`;
     tableName = tableName.toLowerCase();
     
-    Q.PostGIS.processGEOJSON(tableName, layerID, json, function(error, result) {
-      if (error) return APIReturn(res, false, result)
+    if (json != null) {
+      Q.PostGIS.processGEOJSON(tableName, layerID, json, function(error, result) {
+        if (error) return APIReturn(res, false, result)
       
-      return APIReturn(res,
-        true, 'GEOJSON has been imported successfully to layer: '+req.body.layerID
-      )
-    });
+        return APIReturn(res,
+          true, 'GEOJSON has been imported successfully to layer: '+req.body.layerID
+        )
+      });
+    }else if (file != null) {
+      s3.getFile(file, function (error, fileContents) {
+        if (error) return APIReturn(res, false, 'File contents could not located in S3.', fileContents)
+        
+        if (typeof fileContents === 'string' && util.isValidJSON(fileContents)) {
+          json = JSON.parse(fileContents);
+          
+          Q.PostGIS.processGEOJSON(tableName, layerID, json, function(error, result) {
+            if (error) return APIReturn(res, false, result)
+      
+            return APIReturn(res,
+              true, 'GEOJSON has been imported successfully to layer: '+req.body.layerID
+            )
+          });
+        }else return APIReturn(res, false, 'File contents could not parsed from the file. Please ensure the file is a valid GeoJSON file.',)
+      })
+    }
   });
 });
 
@@ -1148,6 +1186,7 @@ app.post('/layer/properties/update', function(req, res) {
     })
   });
 });
+
 
 
 

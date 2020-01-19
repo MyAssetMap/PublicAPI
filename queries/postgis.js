@@ -37,22 +37,24 @@ module.exports = class PostGIS {
       }
     
       if (geoJSON.type == 'FeatureCollection') {
-        var featuresProcessed = 0;
+        
+        var featuresToInsert = [];
         geoJSON.features.forEach(function(feature) {
+          
           if (feature.type != 'Feature') return callback(true, 'GEOJSON have invalid features: '+feature.type);
     
           var geometry = feature.geometry;
           var properties = feature.properties;
           
-          thisClass.insertLayer(tableName, layerID, geometry, properties, function(error, result) {
-            featuresProcessed++;
-            if (error) return callback(true, result)
+          featuresToInsert.push([layerID, geometry, properties]);
+        })
+        console.log('Feature Count: '+featuresToInsert.length)
+        
+        thisClass.insertLayers(tableName, featuresToInsert, function(error, result) {
+          if (error) return callback(true, result)
 
-            if (featuresProcessed == geoJSON.features.length) {
-              return callback(false, 'GEOJson Data has been imported.', result)
-            }
-          })
-          //console.log(type,geometry,properties);
+          return callback(false, 'GEOJson Data has been imported.', result)
+          
         })
       }else return callback(true, 'Type of GEOJSON Data: '+geoJSON.type+' is not supported.');
     });
@@ -73,6 +75,23 @@ module.exports = class PostGIS {
       ST_TRANSFORM(ST_SetSRID(ST_GeomFromGeoJSON('`+geometry+`'),4326),4326),
       '`+properties+`'
     )`;
+    return DB.runQuery(pool, sqlQuery, callback)
+  }
+  
+  static insertLayers(tableName, features, callback) {
+    
+    var featureList = [];
+    features.forEach(function (featureData) {
+      if (Array.isArray(featureData) && featureData.length == 3) {
+        var newFeature = `('`+featureData[0]+`', ST_TRANSFORM(ST_SetSRID(ST_GeomFromGeoJSON('`+JSON.stringify(featureData[1])+`'),4326),4326),'`+JSON.stringify(featureData[2])+`')`
+        featureList.push(newFeature);
+      }
+    })
+    
+    var sqlQuery = `INSERT INTO `+tableName+` (layer, geom, prop)
+    VALUES
+    `+featureList.join(',');
+    
     return DB.runQuery(pool, sqlQuery, callback)
   }
   
@@ -146,7 +165,7 @@ module.exports = class PostGIS {
                     return callback(false, fixedFeatures);
                   }
                 }else{
-                  console.log('Updating Feature ID #'+featureID,props);
+                  //console.log('Updating Feature ID #'+featureID,props);
                   DB.bulkUpdateRow(pool, tableName, {prop: props}, 'id', featureID, function (error, update) {
                     if (error) return callback(true,update);
                     fixedFeatures++;

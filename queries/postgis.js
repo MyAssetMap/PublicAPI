@@ -79,6 +79,20 @@ module.exports = class PostGIS {
   // ============================
   // = DATA PROPERTY MANAGEMENT =
   // ============================
+  
+  static getLayerByFeatureID(table, featureID, callback) {
+    DB.getRowFromTableWhere(pool, table, 'layer', 'id', featureID, function (error, layerID) {
+      if (error) return callback(true, layerID);
+      
+      if (Array.isArray(layerID)) {
+        if (layerID.length == 0) return callback(false, false);
+        if (layerID.length == 1) return callback(false, layerID[0].layer);
+        if (layerID.length >= 2) return callback(true, 'More than one property found for this feature ID.');
+      }
+      callback(error, layerID)
+    })
+  }
+  
   static getPropertyField(layerID, propKey, callback) {
     var whereField = ['layer'];
     var whereValue = [layerID];
@@ -88,7 +102,6 @@ module.exports = class PostGIS {
       whereField.push('key');
       whereValue.push(propKey);
     }
-    
     
     DB.getTableWhere(pool, 'LayerProperty', whereField, whereValue, function(error, props) {
       if (error) return callback(true, props);

@@ -93,6 +93,78 @@ module.exports = class PostGIS {
     })
   }
   
+  static cleanupProps(layerID,props,callback) {
+    callback(false,props);
+  }
+  
+  static cleanupLayerID(mapID, type, layerID, callback) {
+    var thisClass = this;
+    
+    if (mapID == null) callback(true, 'Map ID (`mapID`) must be provided.');
+    if (type == null) type = 'user';
+    if (layerID == null) callback(true, 'Layer ID (`layerID`) must be provided.');
+  
+    var tableName = `layer_`+mapID+((type != '') ? '_'+type : type);
+    tableName = tableName.toLowerCase();
+    
+    DB.getTableWhere(pool, tableName, 'layer', layerID, function(error, features) {
+      if (error) return callback(true, features);
+      
+      if (features.length == 0) return callback(true, 'No data found for this Layer ID (`'+layerID+'`)');
+      
+      if (typeof features === 'object') {
+        if (Array.isArray(features)) {
+          
+          //Calculate Correct Fields
+          thisClass.getPropertyField(layerID, null, function (error, properties) {
+            if (error) return callback(true,properties);
+            
+            var featuresProcessed = 0;
+            var fixedFeatures = 0;
+            features.forEach(function (feature) {
+              let featureID = feature.id;
+              
+              if (typeof feature.prop !== 'object') {
+                featuresProcessed++;
+                if (featuresProcessed === features.length) {
+                  //NOW THAT EVERYTHING IS DONE, CONTINUE.
+                  return callback(false, fixedFeatures);
+                }
+              }else{
+                var props = feature.prop;
+                var changed = false;
+                properties.forEach(function (prop) {
+                  if (typeof props[prop.key] !== 'undefined' && props[prop.key] === prop.default) {
+                    delete props[prop.key];
+                    changed = true;
+                  }
+                })
+                if (!changed) {
+                  featuresProcessed++;
+                  if (featuresProcessed === features.length) {
+                    //NOW THAT EVERYTHING IS DONE, CONTINUE.
+                    return callback(false, fixedFeatures);
+                  }
+                }else{
+                  console.log('Updating Feature ID #'+featureID,props);
+                  DB.bulkUpdateRow(pool, tableName, {prop: props}, 'id', featureID, function (error, update) {
+                    if (error) return callback(true,update);
+                    fixedFeatures++;
+                    featuresProcessed++;
+                    if (featuresProcessed === features.length) {
+                      //NOW THAT EVERYTHING IS DONE, CONTINUE.
+                      return callback(false, fixedFeatures);
+                    }
+                  })
+                }
+              }
+            })
+          })
+        }
+      }
+    })
+  }
+  
   static getPropertyField(layerID, propKey, callback) {
     var whereField = ['layer'];
     var whereValue = [layerID];

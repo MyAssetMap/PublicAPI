@@ -1027,6 +1027,39 @@ app.post('/layer/geojson/delete', function(req, res) {
   });
 });
 
+app.post('/layer/geojson/cleanup', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+    
+    var mapID = req.body.mapID
+    var type = req.body.type;
+    var layerID = util.extractLayerInt(req.body.layerID);
+  
+    if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+    if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
+
+    if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
+    if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+
+    //console.log(geoJSON);
+    Q.PostGIS.cleanupLayerID(mapID, type, layerID, function(error, result) {
+      if (error) return APIReturn(res,false, result)
+      
+      if (result == 0) {
+        return APIReturn(res,
+          true, 'Properties for this layer are already optimized.'
+        )
+      }else{
+        return APIReturn(res,
+          true, 'Properties for this layer have been optimized.', {changes: result}
+        )
+      }
+    })
+  });
+});
+
 // ========== = DATA PROPS = ==========
 app.post('/layer/properties/add', function(req, res) {
   if (!checkAPIKey(req, res)) return;

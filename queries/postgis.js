@@ -197,17 +197,39 @@ module.exports = class PostGIS {
     DB.getTableWhere(pool, 'LayerProperty', whereField, whereValue, function(error, props) {
       if (error) return callback(true, props);
       
-      if (Array.isArray(props)) {
-        if (props.length == 0) return callback(false, false);
-        if (propKey == null) {
-          if (props.length >= 1) return callback(false, props);
-        }else{
-          if (props.length == 1) return callback(false, props[0]);
-          if (props.length >= 2) return callback(true, 'More than one property found for this layer and name.');
+      thisClass.processProperties(props, function (error, props) {
+        if (error) return callback(true, props);
+        
+        if (Array.isArray(props)) {
+          if (props.length == 0) return callback(false, false);
+          if (propKey == null) {
+            if (props.length >= 1) return callback(false, props);
+          }else{
+            if (props.length == 1) return callback(false, props[0]);
+            if (props.length >= 2) return callback(true, 'More than one property found for this layer and name.');
+          }
         }
-      }
-      callback(error, props)
+        callback(error, props)
+      })
     })
+  }
+  
+  static processProperty(properties, callback) {
+    
+    DB.getTable('LayerPropertyKey', function (error, layerKeys) {
+      if (error) return callback(true, layerKeys);
+      
+      console.log(layerKeys);
+      
+      var propKey = 0;
+      properties.forEach(function (prop) {
+        console.log(prop);
+        properties[propKey];
+        propKey++;
+      })
+      callback(error, properties)
+    })
+
   }
   
   static createProperty(layerID, propKey, propName, propType, propValue, propDefault, callback) {

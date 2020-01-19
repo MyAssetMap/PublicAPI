@@ -79,14 +79,14 @@ module.exports = class PostGIS {
   // ============================
   // = DATA PROPERTY MANAGEMENT =
   // ============================
-  static getPropertyField(layerID, propName, callback) {
+  static getPropertyField(layerID, propKey, callback) {
     var whereField = ['layer'];
     var whereValue = [layerID];
-    if (propName != null) {
-      propName = propName.toLowerCase();
+    if (propKey != null) {
+      propKey = propKey.toLowerCase();
       
-      whereField.push('name');
-      whereValue.push(propName);
+      whereField.push('key');
+      whereValue.push(propKey);
     }
     
     
@@ -95,7 +95,7 @@ module.exports = class PostGIS {
       
       if (Array.isArray(props)) {
         if (props.length == 0) return callback(false, false);
-        if (propName == null) {
+        if (propKey == null) {
           if (props.length >= 1) return callback(false, props);
         }else{
           if (props.length == 1) return callback(false, props[0]);
@@ -106,22 +106,22 @@ module.exports = class PostGIS {
     })
   }
   
-  static createProperty(layerID, propName, propType, propValue, propDefault, callback) {
+  static createProperty(layerID, propKey, propName, propType, propValue, propDefault, callback) {
     var thisClass = this;
     
-    propName = propName.toLowerCase();
+    propKey = propKey.toLowerCase();
     
     //Fix propValue
-    if (!util.isValidJSON(propValue)) propValue = JSON.stringify(propValue);
-    
+    if (!util.isValidJSON(propValue) && propValue !== null) propValue = JSON.stringify(propValue);
+    console.log(propValue,propDefault)
     //Default type is text
     if (propType == null) propType = 'text';
     
     //Check if the propType Exists for layerID
-    thisClass.getPropertyField(layerID, propName, function(error, result) {
+    thisClass.getPropertyField(layerID, propKey, function(error, result) {
       if (error) return callback(true, result)
       
-      if (result !== false) return callback(true, 'A property for this name (`'+propName+'`) and layer already exists.');
+      if (result !== false) return callback(true, 'A property for this key (`'+propKey+'`) and layer already exists.');
       
       DB.getRowFromTableWhere(pool, 'LayerPropertyKey', 'id', 'name', propType, function(error, propTypeID) {
         if (error) return callback(true, propTypeID);
@@ -130,33 +130,34 @@ module.exports = class PostGIS {
           return callback(true, 'Property Field Type (`type`) is invalid.');
         }else propTypeID = propTypeID[0].id;
       
-        return DB.insertRow(pool, 'LayerProperty', ['layer','type','name','value','default'], [layerID, propTypeID, propName, propValue, propDefault], callback);
+        return DB.insertRow(pool, 'LayerProperty', ['layer','type','key','name','value','default'], [layerID, propTypeID, propKey, propName, propValue, propDefault], callback);
       })
     });
   }
   
-  static updateProperty(layerID, propName, propType, propValue, propDefault, callback) {
+  static updateProperty(layerID, propKey, propName, propType, propValue, propDefault, callback) {
     var thisClass = this;
     
-    propName = propName.toLowerCase();
+    propKey = propKey.toLowerCase();
     
     //Fix propValue
-    if (!util.isValidJSON(propValue)) propValue = JSON.stringify(propValue);
+    if (!util.isValidJSON(propValue) && propValue !== null) propValue = JSON.stringify(propValue);
     
     //Check for anything to update
-    if (propType == null && propValue == null & propDefault == null) return callback(true,'Please specify a `type`, `value`, or `default` to update for this layerID.');
+    if (propName == null && propType == null && propValue == null && propDefault == null) return callback(true,'Please specify a `type`, `value`, or `default` to update for this layerID.');
     
     //Check if the propType Exists for layerID
-    thisClass.getPropertyField(layerID, propName, function(error, result) {
+    thisClass.getPropertyField(layerID, propKey, function(error, result) {
       if (error) return callback(true, result)
       
-      if (result === false) return callback(true, 'The property with this name (`'+propName+'`) does not exist.');
+      if (result === false) return callback(true, 'The property with this key (`'+propKey+'`) does not exist.');
       
       var changes = {}
+      if (propName != null) changes.name = propName;
       if (propValue != null) changes.value = propValue;
       if (propDefault != null) changes.default = propDefault;
       if (propType == null) {
-        return DB.bulkUpdateRow(pool, 'LayerProperty', changes, ['layer','name'], [layerID, propName], callback);
+        return DB.bulkUpdateRow(pool, 'LayerProperty', changes, ['layer','key'], [layerID, propKey], callback);
       }else{
         DB.getRowFromTableWhere(pool, 'LayerPropertyKey', 'id', 'name', propType, function(error, propTypeID) {
           if (error) return callback(true, propTypeID);
@@ -167,7 +168,7 @@ module.exports = class PostGIS {
         
           if (result.type != propTypeID) changes.type = propTypeID;
       
-          return DB.bulkUpdateRow(pool, 'LayerProperty', changes, ['layer','name'], [layerID, propName], callback);
+          return DB.bulkUpdateRow(pool, 'LayerProperty', changes, ['layer','key'], [layerID, propKey], callback);
         })
       }
     });

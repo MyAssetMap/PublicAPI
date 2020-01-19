@@ -25,9 +25,14 @@ module.exports = class GEOJSONTILES {
       // The whole response has been received. Print out the result.
       resp.on('end', () => {
         var jsonReturn = JSON.parse(data);
-        console.log(jsonReturn.explanation);
-      
-        callback(false,jsonReturn)
+        
+        if (jsonReturn.type != 'FeatureCollection') return callback(false,jsonReturn)
+          
+        if (typeof jsonReturn.features === 'object') {
+          if (Array.isArray(jsonReturn.features)) {
+            callback(false,jsonReturn)
+          }else callback(false,jsonReturn)
+        }else callback(false,jsonReturn)
       });
 
     }).on("error", (e) => {

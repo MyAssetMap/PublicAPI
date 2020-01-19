@@ -1035,6 +1035,7 @@ app.post('/layer/properties/add', function(req, res) {
     if (!isLoggedIn) return authRequired(res, userID);
   
     var layerID = util.extractLayerInt(req.body.layerID);
+    var propKey = req.body.key;
     var propName = req.body.name;
     
     var propType = req.body.type;
@@ -1046,13 +1047,15 @@ app.post('/layer/properties/add', function(req, res) {
     if (propName == null) return APIReturn(res,false, 'Property Name (`name`) must be supplied.');
     if (propName == '') return APIReturn(res,false, 'Property Name (`name`) cannot be empty');
     
-    if (propValue == null) propValue = '';
+    if (propKey == null) propKey = util.toSlug(propName);
+    
+    // if (propValue == null) propValue = '';
 
-    Q.PostGIS.createProperty(layerID, propName, propType, propValue, propDefault, function(error, result) {
+    Q.PostGIS.createProperty(layerID, propKey, propName, propType, propValue, propDefault, function(error, result) {
       if (error) return APIReturn(res,false, result)
 
       return APIReturn(res,
-        true, 'Property has been created.', result
+        true, 'Property has been created.', {id: result, key: propKey, name: propName}
       )
     })
   });
@@ -1065,17 +1068,17 @@ app.post('/layer/properties/get', function(req, res) {
     if (!isLoggedIn) return authRequired(res, userID);
   
     var layerID = util.extractLayerInt(req.body.layerID);
-    var propName = req.body.name;
+    var propKey = req.body.key;
 
     if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
     
     // if (propName == null) return APIReturn(res,false, 'Property Name (`name`) must be supplied.');
     // if (propName == '') return APIReturn(res,false, 'Property Name (`name`) cannot be empty');
 
-    Q.PostGIS.getPropertyField(layerID, propName, function(error, result) {
+    Q.PostGIS.getPropertyField(layerID, propKey, function(error, result) {
       if (error) return APIReturn(res,false, result)
         
-        if (result === false) return APIReturn(res, false, 'The property with this name (`'+propName+'`) does not exist.');
+        if (result === false) return APIReturn(res, false, 'The property with this key (`'+propKey+'`) does not exist.');
 
       return APIReturn(res,
         true, 'Property information has been returned.', result
@@ -1091,6 +1094,7 @@ app.post('/layer/properties/update', function(req, res) {
     if (!isLoggedIn) return authRequired(res, userID);
   
     var layerID = util.extractLayerInt(req.body.layerID);
+    var propKey = req.body.key;
     var propName = req.body.name;
     
     var propType = req.body.type;
@@ -1099,10 +1103,10 @@ app.post('/layer/properties/update', function(req, res) {
 
     if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
     
-    if (propName == null) return APIReturn(res,false, 'Property Name (`name`) must be supplied.');
-    if (propName == '') return APIReturn(res,false, 'Property Name (`name`) cannot be empty');
+    if (propKey == null) return APIReturn(res,false, 'Property Key (`key`) must be supplied.');
+    if (propKey == '') return APIReturn(res,false, 'Property Name (`key`) cannot be empty');
 
-    Q.PostGIS.updateProperty(layerID, propName, propType, propValue, propDefault, function(error, result) {
+    Q.PostGIS.updateProperty(layerID, propKey, propName, propType, propValue, propDefault, function(error, result) {
       if (error) return APIReturn(res,false, result)
 
       return APIReturn(res,

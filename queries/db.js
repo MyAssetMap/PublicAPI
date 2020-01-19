@@ -15,9 +15,10 @@ module.exports = class DB {
     pool.query(queryMsg, (error, results) => {
       if (error) {
         console.error('DB Error:',error.message,error.stack)
+        console.error(queryMsg)
         return callback(true, error.message)
       }else{
-        console.log('DB:',queryMsg.substr(0, 50)+(queryMsg.length > 50 ? '…' : ''));
+        console.log('DB:',queryMsg.substr(0, 150)+(queryMsg.length > 150 ? '…' : ''));
       
         if (typeof results === 'undefined') return callback(false, []);
         if (typeof results.rows === 'undefined') return callback(false, results);
@@ -115,12 +116,13 @@ module.exports = class DB {
   
   static processValue(value,char) {
     if (typeof char === 'undefined') char = `'`;
-  
+
     if (typeof value === 'string') {
       value = value.trim(); //We remove any extra space used between values
-    }else if (typeof value === 'object') {
+    }else if (typeof value === 'object' && value !== null) {
       value = JSON.stringify(value);
     }
+
     if (value == null) {
       value = "null";
     }else{
@@ -130,7 +132,7 @@ module.exports = class DB {
         if (isNaN(value)) value = char + value + char;
       }
     }
-  
+
     return value;
   }
 

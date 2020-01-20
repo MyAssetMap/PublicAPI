@@ -504,6 +504,36 @@ module.exports = class Layer {
     })
   }
   
+  static getLayerInfo(layerID, callback) {
+    var thisClass = this;
+    var finalReturn = {};
+  
+    DB.getTableWhere(pool, 'Layer','id',layerID,function(error,layer) {
+      if (error) return callback(true, layer);
+    
+      if (layer.length !== 1) return callback(false, false);
+      
+      layer = layer[0];
+      
+      finalReturn.ownerID = layer.ownerID;
+      finalReturn.groupID = layer.groupID;
+
+      //Get Group
+      DB.getTableWhere(pool, 'LayerGroup','id',layer.groupID,function(error,group) {
+        if (error) return callback(true, group);
+        
+        if (group.length !== 1) return callback(false, false);
+        
+        group = group[0];
+        
+        finalReturn.mapID = group.mapID;
+        
+        callback(false,finalReturn);
+        
+      })
+    })
+  }
+  
   static finalGroupsProcess(userGroups, callback) {
     var processedLayers = 0;
     // console.log('Processing Begins');

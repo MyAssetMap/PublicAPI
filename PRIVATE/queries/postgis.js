@@ -3,6 +3,8 @@
 const config = require('../config');
 const util = require('../util');
 
+const Layer = require('./layer')
+
 const pg = require('pg')
 const pool = new pg.Pool(config.pgPool)
 
@@ -184,25 +186,71 @@ module.exports = class PostGIS {
     })
   }
   
-  static processProperties(properties, callback) {
-    
-    DB.getTable(pool, 'LayerPropertyKey', function (error, layerKeys) {
-      if (error) return callback(true, layerKeys);
-      var keyLookup = {}
-      layerKeys.forEach(function (propKey,) {
-        keyLookup[propKey.id] = propKey.name;
-      })
+  static processProperties(layerID, properties, callback) {
+
+    Layer.getLayerInfo(layerID, function (error, layerInfo) {
+      if (error) return callback(true,layerInfo);
       
-      var propKey = 0;
-      properties.forEach(function (prop) {
-        var type = prop.type;
-        
-        if (typeof keyLookup[type] !== 'undefined') {
-          properties[propKey].type = keyLookup[type];
+      var mapID = layerInfo.mapID;
+      var type = 'user';
+
+      var tableName = 'layer_'+mapID+((type != '') ? '_'+type : type);
+      tableName = tableName.toLowerCase();
+      
+      //console.log(layerInfo)
+      
+      DB.getTableWhere(pool, tableName, 'layer', layerID, function (error, features) {
+        if (error) return callback(true,features);
+        var uniqueValues = {}
+        if (Array.isArray(features)) {
+          features.forEach(function (feature) {
+            if (typeof feature.prop === 'object') {
+              feature.prop.forEach(function (value, key) {
+                //console.log(value, key);
+                if (typeof uniqueValues[key] === 'undefined') uniqueValues[key] = []
+                  if (!uniqueValues[key].includes(value)) uniqueValues[key].push(value);
+              })
+            }
+          })
+          //console.log('Unique Values:', uniqueValues);
         }
-        propKey++;
+        
+        DB.getTable(pool, 'LayerPropertyKey', function (error, layerKeys) {
+          if (error) return callback(true, layerKeys);
+          var keyLookup = {}
+          layerKeys.forEach(function (propKey,) {
+            keyLookup[propKey.id] = propKey.name;
+          })
+      
+          var propKey = 0;
+          properties.forEach(function (prop) {
+            // =============================
+            // = TYPE CONVERT ID TO STRING =
+            // =============================
+            var type = prop.type;
+        
+            if (typeof keyLookup[type] !== 'undefined') {
+              properties[propKey].type = keyLookup[type];
+            }
+            
+            // ========================
+            // = UNIQUE VALUES OBTAIN =
+            // ========================
+            var key = prop.key;
+            if (typeof uniqueValues[key] !== 'undefined') {
+              properties[propKey].unique = uniqueValues[key];
+            }else properties[propKey].unique = [];
+          
+            propKey++;
+          
+          })
+          callback(error, properties)
+      
+        })
       })
-      callback(error, properties)
+    
+      
+    
     })
 
   }
@@ -222,7 +270,9 @@ module.exports = class PostGIS {
     DB.getTableWhere(pool, 'LayerProperty', whereField, whereValue, function(error, props) {
       if (error) return callback(true, props);
       
-      thisClass.processProperties(props, function (error, props) {
+      if (!props.length) return callback(false, []);
+      
+      thisClass.processProperties(layerID, props, function (error, props) {
         if (error) return callback(true, props);
         
         if (Array.isArray(props)) {

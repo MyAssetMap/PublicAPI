@@ -306,6 +306,31 @@ module.exports = class PostGIS {
       }
     });
   }
+  
+  static deleteProperty(layerID, propKey, callback) {
+    var thisClass = this;
+
+    if (propKey == null) return callback(true,'Property Key is invalid.');
+    
+    propKey = propKey.toLowerCase();
+    
+    DB.getTableWhere(pool, 'LayerProperty', ['layer','key'], [layerID,propKey], function(error, props) {
+      if (error) return callback(true, props);
+        
+      if (Array.isArray(props)) {
+        if (props.length == 0) return callback(false, false);
+        if (props.length == 1) {
+          DB.deleteTableWhere(pool, 'LayerProperty', ['layer','key'], [layerID,propKey], function(error, deleteCheck) {
+            if (error) return callback(true, deleteCheck);
+            
+            return callback(false, deleteCheck);
+          })
+        }
+        if (props.length >= 2) return callback(true, 'More than one property found for this layer and name.');
+      }
+      // callback(error, props)
+    })
+  }
 
 // ==================================
 // = FEATURE AND GEOJSON MANAGEMENT =

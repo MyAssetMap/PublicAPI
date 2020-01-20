@@ -1188,6 +1188,34 @@ app.post('/layer/properties/update', function(req, res) {
 });
 
 
+app.post('/layer/properties/delete', function(req, res) {
+  if (!checkAPIKey(req, res)) return;
+  
+  checkAuthentication(req, res, function(isLoggedIn, userID) {
+    if (!isLoggedIn) return authRequired(res, userID);
+  
+    var layerID = util.extractLayerInt(req.body.layerID);
+    var propKey = req.body.key;
+    var deleteData = req.body.delete;
+
+    if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
+    if (propKey == null) return APIReturn(res,false, 'Property Key (`key`) must be supplied.');
+    
+    if (deleteData == null) deleteData = false;
+
+    Q.PostGIS.deleteProperty(layerID, propKey, function(error, result) {
+      if (error) return APIReturn(res,false, result)
+        
+        if (result === false) return APIReturn(res, false, 'The property with this key (`'+propKey+'`) does not exist.');
+
+      return APIReturn(res,
+        true, 'Property has been deleted.', result
+      )
+    })
+  });
+});
+
+
 
 
 

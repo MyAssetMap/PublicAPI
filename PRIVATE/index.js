@@ -11,13 +11,13 @@ const bodyParser = require("body-parser");
 // = DATABASE ENDPOINT SETTINGS =
 // ==============================
 const app = express();
-const config = require('./config');
-const util = require('./util');
+const config = require('./tools/config');
+const util = require('./tools/util');
 
 const Q = require('./queries/')
 
-const tiles = require('./tiles')
-const s3 = require('./s3')
+const tiles = require('./tools/tiles')
+const s3 = require('./tools/s3')
 
 // ============
 // = SETTINGS =

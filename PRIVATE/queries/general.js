@@ -1,7 +1,7 @@
 'use strict';
 
-const config = require('../config');
-const util = require('../util');
+const config = require('../tools/config');
+const util = require('../tools/util');
 
 const pg = require('pg')
 const pool = new pg.Pool(config.dbPool)

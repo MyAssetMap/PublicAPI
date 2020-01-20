@@ -1,7 +1,7 @@
 'use strict';
 
-const config = require('../config');
-const util = require('../util');
+const config = require('../tools/config');
+const util = require('../tools/util');
 
 const Layer = require('./layer')
 
@@ -212,8 +212,8 @@ module.exports = class PostGIS {
               })
             }
           })
-          //console.log('Unique Values:', uniqueValues);
         }
+        //console.log('Unique Values:', uniqueValues);
         
         DB.getTable(pool, 'LayerPropertyKey', function (error, layerKeys) {
           if (error) return callback(true, layerKeys);
@@ -248,11 +248,7 @@ module.exports = class PostGIS {
       
         })
       })
-    
-      
-    
     })
-
   }
   
   static getPropertyField(layerID, propKey, callback) {
@@ -270,13 +266,13 @@ module.exports = class PostGIS {
     DB.getTableWhere(pool, 'LayerProperty', whereField, whereValue, function(error, props) {
       if (error) return callback(true, props);
       
-      if (!props.length) return callback(false, []);
+      if (props.length == 0) return callback(false, []);
       
       thisClass.processProperties(layerID, props, function (error, props) {
         if (error) return callback(true, props);
         
         if (Array.isArray(props)) {
-          if (props.length == 0) return callback(false, false);
+          if (props.length == 0) return callback(false, []);
           if (propKey == null) {
             if (props.length >= 1) return callback(false, props);
           }else{
@@ -296,15 +292,16 @@ module.exports = class PostGIS {
     
     //Fix propValue
     if (!util.isValidJSON(propValue) && propValue !== null) propValue = JSON.stringify(propValue);
-    console.log(propValue,propDefault)
+    // console.log(propValue,propDefault)
+    
     //Default type is text
     if (propType == null) propType = 'text';
     
     //Check if the propType Exists for layerID
     thisClass.getPropertyField(layerID, propKey, function(error, result) {
       if (error) return callback(true, result)
-      
-      if (result !== false) return callback(true, 'A property for this key (`'+propKey+'`) and layer already exists.');
+        
+      if (Array.isArray(result) && result.length !== 0) return callback(true, 'A property for this key (`'+propKey+'`) and layer already exists.');
       
       DB.getRowFromTableWhere(pool, 'LayerPropertyKey', 'id', 'name', propType, function(error, propTypeID) {
         if (error) return callback(true, propTypeID);

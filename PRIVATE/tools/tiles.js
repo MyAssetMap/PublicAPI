@@ -1,6 +1,6 @@
 const https = require('https');
 
-const Q = require('./queries/')
+const Q = require('../queries/')
 // ========================
 // = CUSTOM LOGIC QUERIES =
 // ========================

@@ -1011,11 +1011,20 @@ app.post('/layer/geojson/update', function(req, res) {
     if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
   
     if (json == null || json == '') return APIReturn(res,false, 'GEOJSON (`json`) must be supplied.');
-    var geoJSON = JSON.parse(json);
+
+    var geoJSON;
+    if (typeof json === 'string') {
+      geoJSON = JSON.parse(json);
+    }else if (typeof json === 'object') {
+      geoJSON = json;
+    }
+
     //console.log(geoJSON);
   
     if (geoJSON.type != 'Feature') return APIReturn(res,false, 'Please only pass one GEOJSON feature to endpoint for updating.');
-
+    console.log(geoJSON.geometry)
+    if (geoJSON.geometry == {}) delete geoJSON.geometry;
+    console.log(geoJSON.geometry)
     var geometry = geoJSON.geometry;
     var properties = geoJSON.properties;
 

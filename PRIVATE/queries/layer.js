@@ -393,6 +393,9 @@ module.exports = class Layer {
                   if (layerSource.type == 'image') {
                     delete layerSource.tiles;
                     delete layerSource.maxzoom;
+                    
+                    if (layerSource.coordinates == '') layerSource.coordinates = [[-180,0],[-179,1],[-179,1],[-180,0]];
+                    if (layerSource.url == '') layerSource.url = 'https://my-asset-map-data.s3.amazonaws.com/client_data/mam_constants/empty.png';
                   }else {
                     delete layerSource.coordinates;
                     delete layerSource.url;

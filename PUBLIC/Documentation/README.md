@@ -81,13 +81,14 @@ To authenticate into the API, please either pass _apiKey_ as a query variable to
 
 
 # Get MVT Tile
-## `GET` /public/layer/mvt/get/:layerID/:z/:x/:y
+## `GET` /public/layer/mvt/get/:mapID/:layerID/:z/:x/:y
 
 *Returns a mvt file for the given Z, X, Y and tile. Also uses the filter to gather only the information needed.
 
 - **Z (Required):** The Z scaling of the file.
 - **X (Required):** The X position of the file.
 - **Y (Required):** The Y position of the file.
+- **mapID (Required):** The Map ID you wish to pull the layer for.
 - **layerID (Required):** The Layer ID you wish to gather information for.
 *
 
@@ -105,6 +106,19 @@ To authenticate into the API, please either pass _apiKey_ as a query variable to
 ***
 
 
+
+### Response:
+
+<details>
+<summary>Expand</summary>
+
+```
+{
+    "success": false,
+    "message": "Unauthorized for the scope: geojson.read"
+}
+```
+</details>
 
 ### Response:
 
@@ -132,25 +146,17 @@ To authenticate into the API, please either pass _apiKey_ as a query variable to
 <summary>Expand</summary>
 
 ```
-{
-    "statusCode": 400,
-    "error": "Bad Request",
-    "message": "params.z should be integer, params.x should be integer, params.y should be integer"
-}
-```
-</details>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /public/layer/mvt/get/</pre>
+</body>
+</html>
 
-### Response:
-
-<details>
-<summary>Expand</summary>
-
-```
-{
-    "statusCode": 400,
-    "error": "Bad Request",
-    "message": "params.z should be integer, params.x should be integer, params.y should be integer"
-}
 ```
 </details>
 

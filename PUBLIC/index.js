@@ -179,39 +179,29 @@ app.post('/layer/geojson/get', function(req, res) {
 });
 
 // ========== = MVT = ==========
-app.post('/layer/mvt/get/:layerID/:z/:x/:y', function(req, res) {
-  if (!checkAPIKey(req, res,'geojson.read')) return;
-  
+app.get('/layer/mvt/get/:mapID/:layerID/:z/:x/:y', function(req, res) {
+  if (!checkAPIKey(req, res,'mvt.read')) return;
+
   checkAuthentication(req, res, function(isLoggedIn, userID) {
     if (!isLoggedIn) return authRequired(res, userID);
     
     var mapID = req.body.mapID
     var type = req.body.type;
     var layerID = util.extractLayerInt(req.body.layerID);
-    var featureID = req.body.featureID;
   
     if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
-    if (layerID == null && featureID == null) return APIReturn(res,false, 'Layer ID (`layerID`) or Feature ID (`featureID`) must be supplied.');
+    if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
 
     if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
     if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
 
     if (layerID != null) {
       //console.log(geoJSON);
-      tiles.getJSONByLayerID(mapID, type, layerID, function(error, result) {
+      tiles.getMVTByLayerID(mapID, type, layerID, function(error, result) {
         if (error) return APIReturn(res,false, result)
 
         return APIReturn(res,
-          true, 'GEOJson for this layer has been returned.', result
-        )
-      })
-    }else if (featureID != null) {
-      //console.log(geoJSON);
-      tiles.getJSONByFeatureID(mapID, type, featureID, function(error, result) {
-        if (error) return APIReturn(res,false, result)
-
-        return APIReturn(res,
-          true, 'GEOJson for this feature has been returned.', result
+          true, 'MVT for this layer has been returned.', result
         )
       })
     }

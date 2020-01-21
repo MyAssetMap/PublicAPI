@@ -50,12 +50,12 @@ const apiKeys = {
   '3b4e26fc-e158-4c31-94b9-e6095a002696': {
     name: 'Test API Key',
     map: [1,2],
-    scope: ['read','write']
+    scope: ['geojson.read','mvt.read']
   },
   'b1996719-d052-4569-a6b8-7fed48e76f26': {
     name: 'The Aurora Highlands',
     map: [2],
-    scope: ['read']
+    scope: ['geojson.read','mvt.read']
   }
 }
 

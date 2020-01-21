@@ -104,22 +104,22 @@ function checkAPIKey(req, res, scope) {
 }
 
 function checkAuthentication(req, res, callback) {
-  var userUUID = null;
-  var userUUID_GET = req.query.userID;
-  var userUUID_POST = req.body.userID;
-  
-  if (userUUID_GET != null) {
-    userUUID = userUUID_GET;
-  }else if (userUUID_GET == null && userUUID_POST != null) {
-    userUUID = userUUID_POST;
-  }
-  
-  if (userUUID == null || typeof userUUID == 'undefined') return APIReturn(res, false, 'Authentication Failed: User UUID (`userID`) was not passed.');
-  
-  Q.User.getUserIDByUUID(userUUID, function(error, userID) {
-    console.log('userID',userUUID,userID);
-    return callback(!error, userID);
-  });
+  // var userUUID = null;
+  // var userUUID_GET = req.query.userID;
+  // var userUUID_POST = req.body.userID;
+  //
+  // if (userUUID_GET != null) {
+  //   userUUID = userUUID_GET;
+  // }else if (userUUID_GET == null && userUUID_POST != null) {
+  //   userUUID = userUUID_POST;
+  // }
+  //
+  // if (userUUID == null || typeof userUUID == 'undefined') return APIReturn(res, false, 'Authentication Failed: User UUID (`userID`) was not passed.');
+  //
+  // Q.User.getUserIDByUUID(userUUID, function(error, userID) {
+  //   console.log('userID',userUUID,userID);
+  //   return callback(!error, userID);
+  // });
 }
 
 // ===========
@@ -141,71 +141,63 @@ app.get('/', function(req, res) {
 // ========== = GEOJSON = ==========
 app.post('/layer/geojson/get', function(req, res) {
   if (!checkAPIKey(req, res,'geojson.read')) return;
-  
-  checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (!isLoggedIn) return authRequired(res, userID);
     
-    var mapID = req.body.mapID
-    var type = req.body.type;
-    var layerID = util.extractLayerInt(req.body.layerID);
-    var featureID = req.body.featureID;
-  
-    if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
-    if (layerID == null && featureID == null) return APIReturn(res,false, 'Layer ID (`layerID`) or Feature ID (`featureID`) must be supplied.');
+  var mapID = req.body.mapID
+  var type = req.body.type;
+  var layerID = util.extractLayerInt(req.body.layerID);
+  var featureID = req.body.featureID;
 
-    if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
-    if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+  if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+  if (layerID == null && featureID == null) return APIReturn(res,false, 'Layer ID (`layerID`) or Feature ID (`featureID`) must be supplied.');
 
-    if (layerID != null) {
-      //console.log(geoJSON);
-      tiles.getJSONByLayerID(mapID, type, layerID, function(error, result) {
-        if (error) return APIReturn(res,false, result)
+  if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
+  if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
 
-        return APIReturn(res,
-          true, 'GEOJson for this layer has been returned.', result
-        )
-      })
-    }else if (featureID != null) {
-      //console.log(geoJSON);
-      tiles.getJSONByFeatureID(mapID, type, featureID, function(error, result) {
-        if (error) return APIReturn(res,false, result)
+  if (layerID != null) {
+    //console.log(geoJSON);
+    tiles.getJSONByLayerID(mapID, type, layerID, function(error, result) {
+      if (error) return APIReturn(res,false, result)
 
-        return APIReturn(res,
-          true, 'GEOJson for this feature has been returned.', result
-        )
-      })
-    }
-  });
+      return APIReturn(res,
+        true, 'GEOJson for this layer has been returned.', result
+      )
+    })
+  }else if (featureID != null) {
+    //console.log(geoJSON);
+    tiles.getJSONByFeatureID(mapID, type, featureID, function(error, result) {
+      if (error) return APIReturn(res,false, result)
+
+      return APIReturn(res,
+        true, 'GEOJson for this feature has been returned.', result
+      )
+    })
+  }
 });
 
 // ========== = MVT = ==========
 app.get('/layer/mvt/get/:mapID/:layerID/:z/:x/:y', function(req, res) {
   if (!checkAPIKey(req, res,'mvt.read')) return;
-
-  checkAuthentication(req, res, function(isLoggedIn, userID) {
-    if (!isLoggedIn) return authRequired(res, userID);
     
-    var mapID = req.body.mapID
-    var type = req.body.type;
-    var layerID = util.extractLayerInt(req.body.layerID);
-  
-    if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
-    if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
+  var mapID = req.body.mapID
+  var type = req.body.type;
+  var layerID = util.extractLayerInt(req.body.layerID);
 
-    if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
-    if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+  if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
+  if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
 
-    if (layerID != null) {
-      //console.log(geoJSON);
-      tiles.getMVTByLayerID(mapID, type, layerID, function(error, result) {
-        if (error) return APIReturn(res,false, result)
+  if (type == null) type = 'user';//return APIReturn(res,false, 'Layer Type (`type`) be supplied.');
+  if (!['global','org','user'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
 
-        return APIReturn(res,
-          true, 'MVT for this layer has been returned.', result
-        )
-      })
-    }
-  });
+  if (layerID != null) {
+    //console.log(geoJSON);
+    tiles.getMVTByLayerID(mapID, type, layerID, function(error, result) {
+      if (error) return APIReturn(res,false, result)
+
+      return APIReturn(res,
+        true, 'MVT for this layer has been returned.', result
+      )
+    })
+  }
 });
 
 

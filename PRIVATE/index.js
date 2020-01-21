@@ -531,9 +531,9 @@ app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
         if (type == null) return APIReturn(res,false, 'Type (`type`) must be supplied.');
     
         if (sourceType == null) return APIReturn(res,false, 'Source Type (`sourceType`) must be supplied.');
-        if (!['global','org','user'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
+        if (!['global','org','user','image'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
     
-        if (!['line','fill','circle','polygon','point'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+        if (!['line','fill','circle','polygon','point','raster','image'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
         if (type == 'point') type = 'circle';
         if (type == 'polygon') type = 'fill';
     
@@ -650,7 +650,7 @@ app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
         if (sourceType == null) return APIReturn(res,false, 'Source Type (`sourceType`) must be supplied.');
         if (!['global','org','user'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
     
-        if (!['line','fill','circle','polygon','point'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+        if (!['line','fill','circle','polygon','point','raster','image'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
         if (type == 'point') type = 'circle';
         if (type == 'polygon') type = 'fill';
     
@@ -770,7 +770,7 @@ app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
         if (sourceType == null) return APIReturn(res,false, 'Source Type (`sourceType`) must be supplied.');
         if (!['global','org','user'].includes(sourceType)) return APIReturn(res,false, 'Layer Source Type (`sourceType`) is invalid: '+type);
     
-        if (!['line','fill','circle','polygon','point'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
+        if (!['line','fill','circle','polygon','point','raster','image'].includes(type)) return APIReturn(res,false, 'Layer Type (`type`) is invalid: '+type);
         if (type == 'point') type = 'circle';
         if (type == 'polygon') type = 'fill';
     
@@ -879,6 +879,9 @@ app.get('/superusers', function(req, res) { //TODO: REMOVE THIS OF FIX IT
         if (req.body.type != null)        payload.type = req.body.type
         if (req.body.tiles != null)       payload.tiles = req.body.tiles
         if (req.body.maxzoom != null)     payload.maxzoom = req.body.maxzoom
+        //IMAGE
+        if (req.body.url != null)         payload.url = req.body.url
+        if (req.body.coordinates != null) payload.coordinates = req.body.coordinates
     
         Q.Layer.updateLayerSource(layerID, payload, function(error, result) {
           if (error) return APIReturn(res,false, result)

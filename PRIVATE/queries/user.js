@@ -44,7 +44,6 @@ module.exports = class User {
         
         if (Array.isArray(prefs) && prefs.length == 0) return callback(false,{})
         
-        
         var prefReturn = {}
         var prefKeyID
         prefs.forEach(function(pref, i) {
@@ -96,7 +95,7 @@ module.exports = class User {
         DB.getTableWhere(pool, 'UserPreference', ['userID','key'], [userID,prefKeyID], function(error, prefs) {
           if (error) return callback(true, prefs);
           
-          if (Array.isArray(prefs) && prefs.length == 0) return callback(false,{})
+          if (Array.isArray(prefs) && prefs.length == 0) return callback(false,[])
         
           var prefReturn = {}
           var prefKeyID

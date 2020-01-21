@@ -46,10 +46,24 @@ const s3 = {
   bucket: "my-asset-map-data"
 }
 
+const apiKeys = {
+  '3b4e26fc-e158-4c31-94b9-e6095a002696': {
+    name: 'Test API Key',
+    map: [1,2],
+    scope: ['read','write']
+  },
+  'b1996719-d052-4569-a6b8-7fed48e76f26': {
+    name: 'The Aurora Highlands',
+    map: [2],
+    scope: ['read']
+  }
+}
+
 
 
 module.exports = {
   dbPool,
   pgPool,
-  s3
+  s3,
+  apiKeys
 }	

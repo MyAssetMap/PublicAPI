@@ -86,7 +86,7 @@ module.exports = class Layer {
     var canOrgEdit = payload.canOrgEdit;
 
     if (sourceType == null) return callback(true, 'Source Type (`sourceType`) must be supplied.');
-    if (!['global','org','user'].includes(sourceType)) sourceType = "vector";
+    if (!['global','org','user','image'].includes(sourceType)) sourceType = "vector";
   
     if (label == null) return callback(true, 'Label (`label`) must be supplied.');
     if (type == null) return callback(true, 'Type (`type`) must be supplied.');
@@ -109,11 +109,13 @@ module.exports = class Layer {
           function(error, subSymbolID) {
             if (error) return callback(true, subSymbolID);
       
+            var sourceFields = ["type","layerID"];
+            var sourceValues = [sourceType,layerID];
             //Create Layer Source
             DB.insertRow(pool,
               'LayerSource',
-              ["type","layerID"],
-              [sourceType,layerID],
+              sourceFields,
+              sourceValues,
               function(error, sourceID) {
                 if (error) return callback(true, sourceID);
                 console.log('SourceID:',sourceID)
@@ -388,6 +390,13 @@ module.exports = class Layer {
                   layerSource.id = layerLabel + 'source';
               
                   delete layerSource.layerID;
+                  if (layerSource.type == 'image') {
+                    delete layerSource.tiles;
+                    delete layerSource.maxzoom;
+                  }else {
+                    delete layerSource.coordinates;
+                    delete layerSource.url;
+                  }
             
                   if (['global','org','user'].includes(layerSource.type)) {
                     var layerName = 'layer_'+mapID+'_'+layerSource.type;

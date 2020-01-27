@@ -404,7 +404,7 @@ module.exports = class Layer {
                   if (['global','org','user'].includes(layerSource.type)) {
                     var layerName = 'layer_'+mapID+'_'+layerSource.type;
                     layerSource.type = 'vector';
-                    layerSource.tiles = ['https://tiles.myassetmap.com/v1/mvt/'+layerName+'/{z}/{x}/{y}?columns=prop%2Cid&filter=layer%20%3D%20'+layerID];
+                    layerSource.tiles = ['https://tiles.myassetmap.com/v1/mvt/'+layerName+'/{z}/{x}/{y}?filter=layer%20%3D%20'+layerID];
                   
                     //Overwrite each of the source layers to be the correct value needed for the tiling server.
                     processedLayer.forEach(function( layer, key) {

@@ -15,7 +15,7 @@ module.exports = class GEOJSONTILES {
     
     let tableName = 'layer_'+mapID+'_'+type;
   
-    var APIUrl = 'https://tiles.myassetmap.com/v1/geojson/'+tableName+'?geom_column=geom&columns=prop%2Cid&&filter=layer%20%3D%20'+layerID;
+    var APIUrl = 'https://tiles.myassetmap.com/v1/geojson/'+tableName+'?&filter=layer%20%3D%20'+layerID;
   
     https.get(APIUrl, (resp) => {
       let data = '';
@@ -43,15 +43,14 @@ module.exports = class GEOJSONTILES {
                 
                 if (feature.type !== 'Feature') continue; 
                 if (typeof feature.properties !== 'object') continue;
-                if (typeof feature.properties.prop !== 'object') continue;
                 
-                var props = feature.properties.prop;
+                var props = feature.properties;
                 
                 properties.forEach(function (prop) {
                   if (typeof props[prop.key] === 'undefined') props[prop.key] = prop.default;
                 })
                 //Overwrite the props
-                jsonReturn.features[i].properties.prop = props;
+                jsonReturn.features[i].properties = props;
                 // delete jsonReturn.features[i].properties.prop;
               }
               
@@ -77,7 +76,7 @@ module.exports = class GEOJSONTILES {
     
     let tableName = 'layer_'+mapID+'_'+type;
   
-    var APIUrl = 'https://tiles.myassetmap.com/v1/geojson/'+tableName+'?geom_column=geom&columns=prop&filter=id%20%3D%20'+featureID;
+    var APIUrl = 'https://tiles.myassetmap.com/v1/geojson/'+tableName+'?filter=id%20%3D%20'+featureID;
   
     https.get(APIUrl, (resp) => {
       let data = '';
@@ -106,15 +105,14 @@ module.exports = class GEOJSONTILES {
                 
                   if (feature.type !== 'Feature') continue; 
                   if (typeof feature.properties !== 'object') continue;
-                  if (typeof feature.properties.prop !== 'object') continue;
                 
-                  var props = feature.properties.prop;
+                  var props = feature.properties;
                 
                   properties.forEach(function (prop) {
                     if (typeof props[prop.key] === 'undefined') props[prop.key] = prop.default;
                   })
                   //Overwrite the props
-                  jsonReturn.features[i].properties.prop = props;
+                  jsonReturn.features[i].properties = props;
                 }
               
                 if (i === jsonReturn.features.length) {

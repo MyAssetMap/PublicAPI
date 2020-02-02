@@ -64,7 +64,38 @@ module.exports = class GEOJSONTILES {
       });
 
     }).on("error", (e) => {
-      callback(false,'API Error: '+e.message)
+      callback(true,'API Error: '+e.message)
+    });
+  }
+  
+  static getMVTByLayerID(mapID, type, layerID, box, callback) {
+    
+    let x,y,z;
+    [z,x,y,] = box;
+    
+    if (mapID == null) callback(true, 'Map ID (`mapID`) must be provided.');
+    if (type == null) type = 'user';
+    if (layerID == null) callback(true, 'Layer ID (`layerID`) must be provided.');
+    
+    let tableName = 'layer_'+mapID+'_'+type;
+  
+    var APIUrl = 'https://tiles.myassetmap.com/v1/mvt/'+tableName+'/'+z+'/'+x+'/'+y+'?geom_column=geom&columns=prop%2Cid&&filter=layer%20%3D%20'+layerID;
+  
+    https.get(APIUrl, (resp) => {
+      let data = '';
+
+      // A chunk of data has been recieved.
+      resp.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      // The whole response has been received. Print out the result.
+      resp.on('end', () => {
+        return callback(false,data);
+      });
+
+    }).on("error", (e) => {
+      callback(true,'API Error: '+e.message)
     });
   }
 
@@ -127,7 +158,7 @@ module.exports = class GEOJSONTILES {
       });
 
     }).on("error", (e) => {
-      callback(false,'API Error: '+e.message)
+      callback(true,'API Error: '+e.message)
     });
   }
 }

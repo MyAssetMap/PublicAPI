@@ -42,17 +42,21 @@ function APIReturn(res, success, message, data) {
   
   res.set('Cache-Control', 'no-cache, must-revalidate, max-age=0');
 
-  if (typeof data == 'undefined') {
-    res.json({
-      success: success,
-      message: message
-    })
-  } else {
-    res.json({
-      success: success,
-      message: message,
-      data: data
-    })
+  if (typeof message === 'string') {
+    if (typeof data == 'undefined') {
+      res.json({
+        success: success,
+        message: message
+      })
+    } else {
+      res.json({
+        success: success,
+        message: message,
+        data: data
+      })
+    }
+  }else{
+    res.send(message);
   }
 }
 
@@ -178,9 +182,9 @@ app.post('/layer/geojson/get', function(req, res) {
 app.get('/layer/mvt/get/:mapID/:layerID/:z/:x/:y', function(req, res) {
   if (!checkAPIKey(req, res,'mvt.read')) return;
     
-  var mapID = req.body.mapID
-  var type = req.body.type;
-  var layerID = util.extractLayerInt(req.body.layerID);
+  var mapID = req.params.mapID
+  var type = req.params.type;
+  var layerID = util.extractLayerInt(req.params.layerID);
 
   if (mapID == null) return APIReturn(res,false, 'Map ID (`mapID`) must be supplied.');
   if (layerID == null) return APIReturn(res,false, 'Layer ID (`layerID`) must be supplied.');
@@ -190,7 +194,7 @@ app.get('/layer/mvt/get/:mapID/:layerID/:z/:x/:y', function(req, res) {
 
   if (layerID != null) {
     //console.log(geoJSON);
-    tiles.getMVTByLayerID(mapID, type, layerID, function(error, result) {
+    tiles.getMVTByLayerID(mapID, type, layerID, [req.params.z, req.params.x, req.params.y], function(error, result) {
       if (error) return APIReturn(res,false, result)
 
       return APIReturn(res,

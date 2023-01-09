@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "eslint": "^6.3.0",
-    "serverless-offline": "^5.12.1"
+    "serverless-offline": "^12.0.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
